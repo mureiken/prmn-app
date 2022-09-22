@@ -1,57 +1,39 @@
-import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import { useTheme } from '@mui/material';
 
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 const ViolationTrendChart = (props) => {
+  const labels  = [...Array(53).keys()]
   const theme = useTheme();
-
-  const [xAxisSeriesType, setXAxisSeriesType] = useState('day');
-
-  
-
-  useEffect(() => {
-    const { series } = props;
-    console.log("series: ", props);
-      if (series <= 7) {
-        setXAxisSeriesType('day');
-      } else if(series > 7 && series <= 30) {
-        setXAxisSeriesType('week')
-      } else if(series > 30 && series <=90) {
-        setXAxisSeriesType('month')
-      } else if (series > 90) {
-        setXAxisSeriesType('quarter')
-      }
-    
-  }, [props])
-
-
   const data = {
+    labels,
     datasets: [
       {
-        label: 'Violation Cases',
         data: props.data,
         borderColor: theme.colors.secondary.main,
-        backgroundColor: theme.colors.secondary.main,
-        barThickness: 12,
-        maxBarThickness: 15,
-        barPercentage: 0.5,
-        categoryPercentage: 0.5
+        //backgroundColor: theme.colors.secondary.main,
+        // barThickness: 12,
+        // maxBarThickness: 15,
+        // barPercentage: 0.5,
+        // categoryPercentage: 0.5
       }
     ],
   };
 
   const options = {
     responsive: true,
-    elements: {
-        bar: {
-          borderWidth: 5,
-        }
-      },
+    // elements: {
+    //     bar: {
+    //       borderWidth: 5,
+    //     }
+    //   },
     maintainAspectRatio: false,
-    cornerRadius: 1,
+    // cornerRadius: 1,
     legend: {
         display: false
     },
@@ -60,7 +42,7 @@ const ViolationTrendChart = (props) => {
     },
     scales: {
       xAxes: [
-        {
+         {
           gridLines: {
             display: false,
             drawBorder: false
@@ -69,10 +51,11 @@ const ViolationTrendChart = (props) => {
             padding: 18,
             fontColor: theme.palette.text.secondary
           },
-          type: 'time',
-          time: {
-            unit: 'week'
-          },
+          // type: 'time',
+          // distribution: 'linear',
+          // time: {
+          //   unit: 'month'
+          // },
         }
       ],
       yAxes: [
@@ -86,7 +69,10 @@ const ViolationTrendChart = (props) => {
             fontColor: theme.palette.text.secondary,
             beginAtZero: true,
             min: 0,
-            maxTicksLimit: 8
+            maxTicksLimit: 8,
+            callback: function (value) {
+              return numberWithCommas(value);
+            },
           }
         }
       ]
@@ -108,7 +94,7 @@ const ViolationTrendChart = (props) => {
         callbacks: {
           title: () => { },
           label: (tooltipItem) => {
-            return `Victims violated: ${tooltipItem.yLabel}`;
+            return `Violation Cases: ${tooltipItem.yLabel}`;
           }
         }
       }
@@ -116,7 +102,7 @@ const ViolationTrendChart = (props) => {
 
   return (
     <div>
-      <Bar data={data} options={options} />
+      <Line data={data} options={options} />
     </div>
   );
 };

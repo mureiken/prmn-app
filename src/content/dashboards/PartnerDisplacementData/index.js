@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -15,9 +15,17 @@ import FilterDrawer from '../../../components/FilterDrawer';
 import DataTable from './DataTable';
 
 function PartnerDisplacementDashBoard() {
-  const date = new Date();
-  const daysAgo = new Date(date.getTime());
-  const dateStr = (myDate = date, format='en-US') => myDate.toLocaleDateString(format).replace(/\//g, '-');
+  const date = useMemo(
+    () => { return new Date(); }, [],
+  );
+  const daysAgo = new Date(date.getTime());  
+  const dateStr = useCallback(
+    (myDate = date, format='en-US') => {
+      return myDate.toLocaleDateString(format).replace(/\//g, '-');
+    },
+    [date],
+  );
+  
   const startDate = (period) => new Date(daysAgo.setDate(date.getDate() - period)).toLocaleDateString()
   const [tableData, setTableData] = useState([])
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
@@ -112,7 +120,7 @@ function PartnerDisplacementDashBoard() {
     };
 
     getDisplacementData().catch(console.error);
-  }, [filters]);
+  }, [filters, dateStr]);
 
   const handleDrawerOpen = () => {
     setOpenFilterDrawer(true);

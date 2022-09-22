@@ -9,42 +9,25 @@ const ViolationTrendChartWrapper = styled(ViolationTrendChart)(
   `
 );
   
-  
 function ViolationTrend(props) { 
-   console.log("zprops", props);
-    const orderedCases = [];
+   
+    const violationCases = [];
+    const weekNums = [];
     
-    if (props.data.z_daily_cases) {
-        const  { Cases } = props.data.z_daily_cases
-        // Cases.map((k, v)=> {
-        //     let newObj = {};
-        //     newObj.x = Cases[k];
-        //     newObj.y = Cases[v];
-        //     orderedCases.push(newObj);   
-        //     return orderedCases;
-
-        // })
-        Object.keys(Cases).map((key) => {
-            let newObj = {};
-            newObj.x = new Date(Number(key));
-            newObj.y = Cases[key];
-            orderedCases.push(newObj);
-            return orderedCases;
-          });
+    if (props.data.weekly_cases) {
+        props.data.weekly_cases.map(o=> {
+          violationCases.push(o.TotalCases); 
+          weekNums.push(o.Week_Number)  
+          return (violationCases, weekNums);
+        });
     }
-
-    orderedCases.sort(function compare(a, b) {
-        var dateA = new Date(a.x);
-        var dateB = new Date(b.x);
-        return dateA - dateB;
-      });
-      
     
       
     return (
-        <Box height={150}>
+        <Box height={250}>
             <ViolationTrendChartWrapper
-                data={orderedCases}
+            data={violationCases} 
+            labels={weekNums}
             />
         </Box>
     );

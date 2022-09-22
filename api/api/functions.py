@@ -205,7 +205,7 @@ def get_top_displacement_needs(regions, needs, causes, period, *args, **kwargs):
     df1 = df1[df1['Needs'] != '(null)']
     df2 = df1.groupby('Needs')['Needs'].agg('count').nlargest(5)
     
-    #df2 =  (100. * df2 / df2.sum()).round(0)
+    df2 =  (100. * df2 / df2.sum()).round(0)
     
     return df2.to_json()
 
@@ -213,13 +213,13 @@ def get_top_displacement_needs(regions, needs, causes, period, *args, **kwargs):
 def get_top_displacement_causes(regions, needs, causes, period, *args, **kwargs):
     df = pd.read_csv(
         'data/displacement_data.csv',
-        usecols=['CurentRegion', 'Arrival', 'Reason',  'Category', 'Need1', 'Need2',],
+        usecols=['CurentRegion', 'Arrival', 'Reason',  'Category', 'Need1', 'Need2', 'AllPeople'],
         parse_dates=['Arrival'],
         )
     
     df = df_filters_displacement(df, regions, needs, causes, period, *args, **kwargs)
     
-    df1 = df.groupby('Category')['Category'].agg('count').nlargest(5)
+    df1 = df.groupby('Category')['AllPeople'].sum().nlargest(5)
     # df1 =  (100. * df1 / df1.sum()).round(0)
     
     return df1.to_json()
@@ -280,18 +280,15 @@ def get_filtered_daily_displacement_data(regions, needs, causes, period, *args, 
     return daily_displacement_data
 
 def get_weekly_displacement(regions, needs, causes, period, *args, **kwargs):
-    """filter displacement data"""
-    df = get_daily_displacement_data()
-    
-    df = df_filters_displacement(df, regions, needs, causes, "260D", *args, **kwargs)
-    
-    df['Week_Number'] = df['Arrival'].dt.isocalendar().week
-        
-    df_grouped =  df.groupby(
+   """filter displacement data"""
+   df = get_daily_displacement_data()
+   df = df_filters_displacement(df, regions, needs, causes, "260D", *args, **kwargs)
+   df['Week_Number'] = df['Arrival'].dt.isocalendar().week
+   
+   df_grouped =  df.groupby(
         ['Week_Number'], 
         dropna=True)['AllPeople'].sum().to_frame().reset_index()
-    
-    return df_grouped.to_json(orient="records")
+   return df_grouped.to_json(orient="records") 
 
 def get_partner_displacement_data(regions, needs, causes, period, *args, **kwargs):
     """filter displacement data"""
@@ -567,6 +564,18 @@ def get_filtered_daily_protection_data(period, regions, violations, perpetrators
         
     return daily_protection_data
 
+def get_weekly_protection_cases(period, regions, violations, perpetrators):
+   """filter protection data"""
+   df = get_daily_protection_data()
+   df = displacement_filters_protection(df, "261D" ,regions, violations, perpetrators)
+   df['Week_Number'] = df['ReportDate'].dt.isocalendar().week
+   
+   df_grouped =  df.groupby(
+        ['Week_Number'], 
+        dropna=True)['Week_Number'].size().reset_index(name='TotalCases')
+   
+   
+   return df_grouped.to_json(orient="records") 
 
 def get_partner_protection_data(period, regions, violations, perpetrators):
     

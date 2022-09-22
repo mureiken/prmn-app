@@ -92,7 +92,6 @@ function Map(props) {
   };
 
   useEffect(() => {
-    /* global fetch */
     fetch(
       'https://raw.githubusercontent.com/unhcr/dataviz-somalia-prmn/master/data/Som_Admbnda_Adm1_UNDP.json'
     )

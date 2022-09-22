@@ -98,6 +98,7 @@ class ProtectionDataSchema(ma.Schema):
     top_responses = ma.Dict()
     top_violation_categories = ma.Dict()
     total_violation_cases = ma.String()
+    weekly_cases = ma.List(ma.Dict())
     z_daily_cases = ma.Dict()
     
 class PartnerDisplacementData(ma.Schema):

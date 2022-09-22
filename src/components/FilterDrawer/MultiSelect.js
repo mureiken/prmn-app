@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -35,13 +35,25 @@ export default function RegionFilter({names, handleFilter, target, selectedVals 
       typeof value === 'string' ? value.split(',') : value,
     );
   };
+  
+  const memoizedhandleFilter = useCallback(
+    () => {
+      handleFilter(target, values);
+    },
+    [target, values, handleFilter],
+  );
+  
+  useEffect(() => {
+    if (loading) {
+      memoizedhandleFilter();
+    }
+  }, [loading, memoizedhandleFilter]);
 
-
-  useEffect(() => { 
-      if (loading) {
-        handleFilter(target, values);
-      }
-  }, [target, values, loading]);
+  // useEffect(() => { 
+  //     if (loading) {
+  //       handleFilter(target, values);
+  //     }
+  // }, [target, values, loading, handleFilter]);
 
 
   useEffect(() => { 

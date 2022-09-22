@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -23,19 +23,27 @@ import { DEFAULT_VIEWPORT } from '../../../constants';
 import Map from './Map';
 import './index.css';
 import SubscriptionForm from '../../applications/EmailSubscription';
-
 import Footer from 'src/components/Footer';
 import FilterDrawer from '../../../components/FilterDrawer';
 
 
 function DashboardMain() {
-  const date = new Date();
-  const daysAgo = new Date(date.getTime());
-  const dateStr = (myDate = date, format='en-US') => myDate.toLocaleDateString(format).replace(/\//g, '-');
+  const date = useMemo(
+    () => { return new Date(); }, [],
+  );
+  const daysAgo = new Date(date.getTime());  
+  const dateStr = useCallback(
+    (myDate = date, format='en-US') => {
+      return myDate.toLocaleDateString(format).replace(/\//g, '-');
+    },
+    [date],
+  );
+  
   const startDate = (period) => new Date(daysAgo.setDate(date.getDate() - period)).toLocaleDateString()
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const [isLoading, setIsLoading] = useState(false);   
 
+  
 
   const [state, setState] = useState({
     viewport: DEFAULT_VIEWPORT,
@@ -130,7 +138,7 @@ function DashboardMain() {
     };
 
     getDisplacementData().catch(console.error);
-  }, [filters]);
+  }, [filters, dateStr]);
 
   const handleDrawerOpen = () => {
     setOpenFilterDrawer(true);
@@ -245,7 +253,7 @@ function DashboardMain() {
             <SkeletonWrapper />
             ) : (
             <Card>
-              <CardHeader title="Displacement Trends" />
+              <CardHeader title="Weekly Displacement Trend" />
               <Divider />
               <CardContent>
                 <DisplacementTrend data={state.data}/>

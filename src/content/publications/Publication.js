@@ -12,7 +12,6 @@ import {
   Select,
   MenuItem,
   Typography,
-  useTheme,
   CardHeader,
  
 } from '@mui/material';
@@ -96,8 +95,6 @@ const Publication = ({ publications }) => {
     page,
     limit
   );
-
-  const theme = useTheme();
 
   return (
     <Card>

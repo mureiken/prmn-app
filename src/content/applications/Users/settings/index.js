@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import PageHeader from './PageHeader';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Container, Tabs, Tab, Grid } from '@mui/material';
-import Footer from 'src/components/Footer';
+//import Footer from 'src/components/Footer';
 import { styled } from '@mui/material/styles';
 
 import ActivityTab from './ActivityTab';

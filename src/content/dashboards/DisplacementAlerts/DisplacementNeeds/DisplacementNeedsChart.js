@@ -57,8 +57,8 @@ const DisplacementNeedsChart = ({
             padding: 18,
             fontColor: theme.palette.text.secondary,
             callback: function (value) {
-              //return value + '%';
-              return numberWithCommas(value);
+              return value + '%';
+              //return numberWithCommas(value);
             },
           }
         }
@@ -104,8 +104,8 @@ const DisplacementNeedsChart = ({
           // const label = _data.labels[tooltipItem.index];
           const value = _data.datasets[0].data[tooltipItem.index];
 
-          //return `${numberWithCommas(value)}%`;
-          return `${numberWithCommas(value)}`;
+          return `${numberWithCommas(value)}%`;
+          //return `${numberWithCommas(value)}`;
         }
       }
     },

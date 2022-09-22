@@ -149,7 +149,7 @@ function DashboardMain() {
                         </IconButton>
                     }
                     title="Protection Snapshot"
-                    subheader={isLoading ? <Skeleton variant="text" width={300} /> : <>{Number(state.data.total_violation_cases).toLocaleString('en')} violation cases between dates  {state.startDate} - {state.endDate} <Link href="/yearly-displacement" target="_blank"><Typography variant="subtitle2">View PowerBI Protection dashboard</Typography></Link></>}
+                    subheader={isLoading ? <Skeleton variant="text" width={300} /> : <>{Number(state.data.total_violation_cases).toLocaleString('en')} violation cases between dates  {state.startDate} - {state.endDate} <Link href="/bi-protection-dashboard" target="_blank"><Typography variant="subtitle2">View PowerBI Protection dashboard</Typography></Link></>}
                 />
             </Card>
             <Grid container spacing={2}>
@@ -210,7 +210,7 @@ function DashboardMain() {
           <SkeletonWrapper />
           ) : (
             <Card>
-              <CardHeader title="Protection Cases Trends" />
+              <CardHeader title="Weekly Protection Cases Trend" />
               <Divider />
               <CardContent>
                 <ViolationTrend data={state.data} />

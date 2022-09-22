@@ -23,7 +23,9 @@
     "date-fns": "^2.28.0",
     "gl-matrix": "^3.4.3",
     "history": "5.0.1",
+    "http-proxy-middleware": "^2.0.6",
     "mapbox-gl": "^2.8.2",
+    "morgan": "^1.10.0",
     "nprogress": "0.2.0",
     "numeral": "2.0.6",
     "prop-types": "15.7.2",
@@ -45,7 +47,7 @@
     "web-vitals": "2.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "GENERATE_SOURCEMAP=false  react-scripts start",
     "start-api": "cd api && venv/bin/flask run --no-debugger",
     "build": "react-scripts build",
     "eject": "react-scripts eject"
@@ -81,6 +83,5 @@
     "eslint-plugin-react-hooks": "4.2.0",
     "node-sass": "^7.0.1",
     "prettier": "2.4.1"
-  },
-  "proxy": "http://localhost:5000"
+  }
 }
