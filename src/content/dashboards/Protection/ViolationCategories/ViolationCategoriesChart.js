@@ -55,7 +55,8 @@ const ViolationCategoriesChart = ({
             padding: 18,
             fontColor: theme.palette.text.secondary,
             callback: function (value) {
-              return value + '%';
+              //return value + '%';
+              return value;
             },
           }
         }
@@ -100,8 +101,8 @@ const ViolationCategoriesChart = ({
         label(tooltipItem, _data) {
           // const label = _data.labels[tooltipItem.index];
           const value = _data.datasets[0].data[tooltipItem.index];
-
-          return `${numberWithCommas(value)}%`;
+          //return `${numberWithCommas(value)}%`;
+          return `${numberWithCommas(value)} cases`;
         }
       }
     },

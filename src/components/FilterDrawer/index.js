@@ -12,7 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 import MultiSelect from './MultiSelect';
 import PeriodSelectBtn from './PeriodSelectBtn';
-import {CAUSES, NEEDS, REGION_NAMES, VIOLATION_CATEGORIES, PERPETRATOR_GROUPS} from '../../constants';
+import {CAUSES, NEEDS, REGION_NAMES, DISTRICT_NAMES, VIOLATION_CATEGORIES, PERPETRATOR_GROUPS} from '../../constants';
 import {periods} from './utils';
 import DatePicker from '../DatePicker';
 
@@ -143,6 +143,8 @@ export default function FilterDrawer({ open, handleClick, handleFilterChange, fi
           
           <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Regions</Typography>
           <MultiSelect names={REGION_NAMES} handleFilter={handleFilterChange} target="Regions" selectedVals={filters.regions} />
+          <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Districts</Typography>
+          <MultiSelect names={DISTRICT_NAMES} handleFilter={handleFilterChange} target="Districts" selectedVals={filters.districts} />
           { type === 'displacement' ?
               <>
                 <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Needs</Typography>

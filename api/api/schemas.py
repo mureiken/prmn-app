@@ -102,28 +102,43 @@ class ProtectionDataSchema(ma.Schema):
     z_daily_cases = ma.Dict()
     
 class PartnerDisplacementData(ma.Schema):
+    
     class Meta:
-        ordered = True
-        
+        dateformat = '%Y-%m-%d'
+    
     CurentRegion = ma.String()
     CurrentDistrict = ma.String()
     CurrentSettlement = ma.String()
+    PreviousRegion = ma.String()
+    PreviousDistrict = ma.String()
+    PreviousSettlement = ma.String()
     AllPeople = ma.Integer()
-    Arrival = ma.Integer()
+    Arrival = ma.DateTime()
     Reason = ma.String()
+    Category = ma.String()
     Need1 = ma.String()
     Need2 = ma.String()
-    CurrentSettLon = ma.Float()
-    CurrentSettLat = ma.Float()
+    Men = ma.Integer()
+    Women=ma.Integer()
+    ElderlyMen=ma.Integer()
+    ElderlyWomen=ma.Integer()
+    TotalM=ma.Integer()
+    TotalF=ma.Integer()
     Needs = ma.String()
-    Date = ma.String()
-    key= ma.String()
+    ArrivalDate=ma.String()
+    Week=ma.Integer()
+    key=ma.String()
+    IntraRegion=ma.Boolean()
+    Boys=ma.Integer()
+    Girls=ma.Integer()
+    
     
 class PartnerProtectionData(ma.Schema):
     class Meta:
         ordered = True
         
     IncidentDateStr = ma.String()
+    OrganisationAcronym = ma.String()
     Age = ma.Integer()
     Sex = ma.String()
     Violation = ma.String()

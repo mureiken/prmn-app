@@ -1,8 +1,11 @@
+import { useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
-// import { useRef, useState } from 'react';
+import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import { NavLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 
@@ -60,16 +63,16 @@ const ListWrapper = styled(Box)(
 
 function HeaderMenu() {
 
-  // const ref = useRef(null);
-  // const [isOpen, setOpen] = useState(false);
+  const ref = useRef(null);
+  const [isOpen, setOpen] = useState(false);
 
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
@@ -97,6 +100,24 @@ function HeaderMenu() {
               primary="Protection Report"
             />
           </ListItem>
+          <ListItem
+          classes={{ root: 'MuiListItem-indicators' }}
+          button
+          ref={ref}
+          onClick={handleOpen}
+        >
+        <ListItemText
+          primaryTypographyProps={{ noWrap: true }}
+          primary={
+            <Box display="flex" alignItems="center">
+              Other Reports
+              <Box display="flex" alignItems="center" pl={0.3}>
+                <ExpandMoreTwoToneIcon fontSize="small" />
+              </Box>
+            </Box>
+          }
+        />
+        </ListItem>
           <ListItem
             classes={{ root: 'MuiListItem-indicators' }}
             button
@@ -132,6 +153,14 @@ function HeaderMenu() {
           </ListItem>
         </List>
       </ListWrapper>
+      <Menu anchorEl={ref.current} onClose={handleClose} open={isOpen}>
+        <MenuItem sx={{ px: 3 }} component={NavLink} to="/yearly-displacement">
+          Yearly Displacemement
+        </MenuItem>
+        <MenuItem sx={{ px: 3 }} component={NavLink} to="/bi-protection-dashboard">
+          PowerBI Protection Dashboard
+        </MenuItem>
+      </Menu>
     </>
   );
 }

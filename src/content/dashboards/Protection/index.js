@@ -9,8 +9,8 @@ import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import Avatar from '@mui/material/Avatar';
-import HealthAndSafetyTwoToneIcon from '@mui/icons-material/HealthAndSafetyTwoTone';
+import Alert from '@mui/material/Alert';
+//import HealthAndSafetyTwoToneIcon from '@mui/icons-material/HealthAndSafetyTwoTone';
 import Skeleton from '@mui/material/Skeleton';
 import ViolationCategories from './ViolationCategories';
 import ViolationResponses from './ViolationResponses';
@@ -18,21 +18,22 @@ import ViolationPerpetrators from './ViolationPerpetrators';
 import ViolationTrend from './ViolationTrend';
 import IconButton from '@mui/material/IconButton';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
-import { red } from '@mui/material/colors';
+//import { red } from '@mui/material/colors';
 import { DEFAULT_VIEWPORT } from '../../../constants';
 import Map from './Map';
 import './index.css';
 import SubscriptionForm from '../../applications/EmailSubscription';
-
+import ProtectionIcon from 'src/assets/Abduction-kidnapping.png';
 import Footer from 'src/components/Footer';
 import FilterDrawer from '../../../components/FilterDrawer';
-
+import useFetch from '../../../useFetch';
 
 function DashboardMain() {
   const date = new Date();
   const daysAgo = new Date(date.getTime());
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);   
+  //const [isLoading, setIsLoading] = useState(false);  
+  const [query, setQuery] = useState('');  
   const [state, setState] = useState({
     viewport: DEFAULT_VIEWPORT,
     data: {},
@@ -77,27 +78,46 @@ function DashboardMain() {
   }
 
   useEffect(() => {
-    let getUrl = () => {
-      let regions = filters.regions.length ? filters.regions.join(',') : 'All';
-      let violations = filters.violations.length ? filters.violations.join(',') : 'All';
-      let perpetrators = filters.perpetrators.length ? filters.perpetrators.join(',') : 'All';
-      return `/api/protection-data/${filters.period}D/${regions}/${violations}/${perpetrators}`
-    }
+    let regions = filters.regions.length ? filters.regions.join(',') : 'All';
+    let violations = filters.violations.length ? filters.violations.join(',') : 'All';
+    let perpetrators = filters.perpetrators.length ? filters.perpetrators.join(',') : 'All';
 
-    const getProtectiontData = async () => {
-      setIsLoading(true);
-      const res = await fetch(getUrl());
-      const data = await res.json();
-      setState((prevState) => ({
-        ...prevState,
-        data: data,
-      }));
-      setIsLoading(false);
-    };
-
-    console.log("Data: ")
-    getProtectiontData().catch(console.error);
+    setQuery(`${filters.period}D/${regions}/${violations}/${perpetrators}`);
+    
+  
   }, [filters]);
+
+  const url = query && `${process.env.REACT_APP_API_URL}/api/protection-data/${query}`
+  
+  const {
+    loading,  
+    error,
+    data
+  } = useFetch(url)
+    
+
+  // useEffect(() => {
+  //   let getUrl = () => {
+  //     let regions = filters.regions.length ? filters.regions.join(',') : 'All';
+  //     let violations = filters.violations.length ? filters.violations.join(',') : 'All';
+  //     let perpetrators = filters.perpetrators.length ? filters.perpetrators.join(',') : 'All';
+  //     return `/api/protection-data/${filters.period}D/${regions}/${violations}/${perpetrators}`
+  //   }
+
+  //   const getProtectiontData = async () => {
+  //     setIsLoading(true);
+  //     const res = await fetch(getUrl());
+  //     const data = await res.json();
+  //     setState((prevState) => ({
+  //       ...prevState,
+  //       data: data,
+  //     }));
+  //     setIsLoading(false);
+  //   };
+
+  //   console.log("Data: ")
+  //   getProtectiontData().catch(console.error);
+  // }, [filters]);
 
   const handleDrawerOpen = () => {
     setOpenFilterDrawer(true);
@@ -137,11 +157,10 @@ function DashboardMain() {
         >
           <Grid item xs={12}>
             <Card sx={{ mb: 1 }}>
+                {error && <Alert severity={"error"} >{error}</Alert>}
                 <CardHeader
                 avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="total number of violation cases">
-                        <HealthAndSafetyTwoToneIcon />
-                    </Avatar>
+                    <img src={ProtectionIcon} alt="Protection Dashboard Icon" width={50}/>
                     }
                     action={
                         <IconButton aria-label="settings"  onClick={handleDrawerOpen}>
@@ -149,45 +168,45 @@ function DashboardMain() {
                         </IconButton>
                     }
                     title="Protection Snapshot"
-                    subheader={isLoading ? <Skeleton variant="text" width={300} /> : <>{Number(state.data.total_violation_cases).toLocaleString('en')} violation cases between dates  {state.startDate} - {state.endDate} <Link href="/bi-protection-dashboard" target="_blank"><Typography variant="subtitle2">View PowerBI Protection dashboard</Typography></Link></>}
+                    subheader={loading ? <Skeleton variant="text" width={300} /> : <><Typography variant="h4" component="subtitle" color="primary">{Number(data.total_violation_cases).toLocaleString('en')} </Typography>violation cases between dates  {state.startDate} - {state.endDate} <Link href="/bi-protection-dashboard" target="_blank"><Typography variant="subtitle2">View PowerBI Protection dashboard</Typography></Link></>}
                 />
             </Card>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
-                {isLoading ? (
+                {loading ? (
                   <SkeletonWrapper />
                   ) : (
                     <Card>
                         <CardHeader title="Top Violation Categories" />
                         <Divider />
                         <CardContent>
-                            <ViolationCategories data={state.data} />
+                            <ViolationCategories data={data} />
                         </CardContent>
                     </Card>
                   )}
                 </Grid>
                 <Grid item xs={12} md={4}>
-                {isLoading ? (
+                {loading ? (
                   <SkeletonWrapper />
                   ) : (
                     <Card>
                         <CardHeader title="Top Protection Responses" />
                         <Divider />
                         <CardContent>
-                            <ViolationResponses data={state.data} />
+                            <ViolationResponses data={data} />
                         </CardContent>
                     </Card>
                   )}
                 </Grid>
                 <Grid item xs={12} md={4}>
-                {isLoading ? (
+                {loading ? (
                   <SkeletonWrapper />
                   ) : (
                     <Card>
                         <CardHeader title="Top Violation Causes" />
                         <Divider />
                         <CardContent>
-                            <ViolationPerpetrators data={state.data} />
+                            <ViolationPerpetrators data={data} />
                         </CardContent>
                     </Card>
                   )}
@@ -198,7 +217,7 @@ function DashboardMain() {
           <Grid item xs={12} md={12} mb={1}>
             <Stack spacing={2}>
                 <Card>
-                    <Map data={state.data} viewport={state.viewport} setState={setState} />          
+                    <Map data={data} viewport={state.viewport} setState={setState} />          
                 </Card>
             </Stack>
         </Grid>
@@ -206,14 +225,14 @@ function DashboardMain() {
         </Grid>
         <Grid container spacing={2}>
          <Grid item xs={12} md={7}>
-         {isLoading ? (
+         {loading ? (
           <SkeletonWrapper />
           ) : (
             <Card>
               <CardHeader title="Weekly Protection Cases Trend" />
               <Divider />
               <CardContent>
-                <ViolationTrend data={state.data} />
+                <ViolationTrend data={data} />
               </CardContent>
             </Card>
           )}

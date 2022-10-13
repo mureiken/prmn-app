@@ -1,57 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import { makeStyles } from '@mui/styles';
 import { COLORS } from '../../../../../constants';
 
   
-  const displacementDetails = (data) => {
-    return (
-      <TableContainer component={Paper}>
-        <Table size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Arriving from</TableCell>
-              <TableCell align="right">No's</TableCell>
-              <TableCell align="right">Reason</TableCell>
-              <TableCell align="right">Needs</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map((row, key) => (
-              <TableRow
-                key={key}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {row.PreviousSettlement}, {row.PreviousDistrict}, {row.PreviousDistrict},
-                </TableCell>
-                <TableCell align="right">{row.AllPeople}</TableCell>
-                <TableCell align="right">{row.Reason}</TableCell>
-                <TableCell align="right">{row.Needs}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    );
-  }
 
   const useStyles = makeStyles((theme) => ({
     headerContainer: {
       textAlign: 'left',
       width: (props) => props.tooltipWidth,
-      minHeight: '85px',
+      minHeight: '55px',
       background: '#8EBEFF 0 0 no-repeat padding-box',
       opacity: '0.85',
       color: '#044F85',
@@ -101,22 +63,11 @@ import { COLORS } from '../../../../../constants';
 
 export default function Modal({ title, children, isOpen, handleClose, popupInfo }) {
 
-  const location = popupInfo.properties.CurrentSettlement;
-  const district = popupInfo.properties.CurrentDistrict;
-  const region = popupInfo.properties.CurentRegion;
-  const numIDPS = popupInfo.properties.AllPeople;
-  const dateOfArrival = popupInfo.properties.Date.replace('00:00:00 GMT','');
-
-  const [data, setData] = useState();
-
-  useEffect(() => {
-    fetch(
-      `/displacement_arrivals_details/${location}/${dateOfArrival}`
-    )
-      .then(resp => resp.json())
-      .then(json => setData(json))
-      .catch(err => console.error('Could not load data', err)); // eslint-disable-line
-  }, [location, dateOfArrival]);
+  const district = popupInfo.properties.ViolationDistrict;
+  const fromDate = popupInfo.properties.FromDate;
+  const toDate =  popupInfo.properties.ToDate;
+  const totalCases =  popupInfo.properties.TotalCases;
+  //const dateOfArrival = popupInfo.properties.Date.replace('00:00:00 GMT','');
 
 
   const classes = useStyles();
@@ -126,11 +77,10 @@ export default function Modal({ title, children, isOpen, handleClose, popupInfo 
              <DialogContent>
                 <Box>
                   <div className={classes.headerContainer}>
-                    <div className="tooltip_header_title">{location}, {district}, {region}</div>
-                    <div className="tooltip_header_subtitle">{`${numIDPS} IDPs arrived on ${dateOfArrival}`}</div>
+                    <div className="tooltip_header_title">{district}</div>
                   </div>
                   <div>
-                  <div className={classes.infoText}>{data && displacementDetails(data)}</div>
+                  <div>{`${totalCases} cases between ${fromDate} and ${toDate}`}</div>
                 </div>   
                 </Box>
              </DialogContent>

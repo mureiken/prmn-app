@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -14,7 +15,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { makeStyles } from '@mui/styles';
 import { COLORS } from '../../../../../constants';
-
+import useFetch from '../../../../../useFetch';
   
   const displacementDetails = (data) => {
     return (
@@ -108,28 +109,46 @@ export default function Modal({ isOpen, handleClose, popupInfo }) {
   const numIDPS = popupInfo.properties.AllPeople;
   const dateOfArrival = popupInfo.properties.Date.replace('00:00:00 GMT','');
 
-  const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(false);   
+  const [query, setQuery] = useState();
+
   useEffect(() => {
-    setIsLoading(true);
-    fetch(
-      `/api/displacement-data/details/${location}/${dateOfArrival}`
-    )
-      .then(resp => resp.json())
-      .then(json => {
-        setData(json)
-        setIsLoading(false);
-      })
-      .catch(err => console.error('Could not load data', err)); // eslint-disable-line
+    setQuery(`${location}/${dateOfArrival}`);
+    
   }, [location, dateOfArrival]);
+
+  
+  
+  const url = query && `${process.env.REACT_APP_API_URL}/api/displacement-data/details/${query}`
+  
+  const {
+    loading,  
+    error,
+    data
+  } = useFetch(url)
+    
+
+
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   fetch(
+  //     `/api/displacement-data/details/${location}/${dateOfArrival}`
+  //   )
+  //     .then(resp => resp.json())
+  //     .then(json => {
+  //       setData(json)
+  //       setIsLoading(false);
+  //     })
+  //     .catch(err => console.error('Could not load data', err)); // eslint-disable-line
+  // }, [location, dateOfArrival]);
 
 
 
   const SkeletonWrapper = () => {
     return(
       <Box>
+        {error && <Alert severity={"error"} >{error}</Alert>}
         <div className={classes.headerContainer}>
-          <div className="tooltip_header_title"><Skeleton variant="text" width={300} /></div>
+            <div className="tooltip_header_title"><Skeleton variant="text" width={300} /></div>
             <div className="tooltip_header_subtitle"><Skeleton variant="text" width={300} /></div>
           </div>
           <div>
@@ -144,12 +163,12 @@ export default function Modal({ isOpen, handleClose, popupInfo }) {
     return (
         <Dialog open={isOpen} onClose={handleClose}>
              <DialogContent>
-             {isLoading ? (
+             {loading ? (
               <SkeletonWrapper />
               ) : (
                 <Box>
                   <div className={classes.headerContainer}>
-                    <div className="tooltip_header_title">{popupInfo.properties.CurrentSettlement}, {district}, {region}</div>
+                    <div className="tooltip_header_title">{district}</div>
                     <div className="tooltip_header_subtitle">{`${numIDPS} IDPs arrived on ${dateOfArrival}`}</div>
                   </div>
                   <div>

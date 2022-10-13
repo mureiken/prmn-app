@@ -12,15 +12,15 @@ displacement_data = Blueprint('displacement_data', __name__)
 displacement_data_schema = DisplacementDataSchema()
 displacement_details_schema = DisplacementDetailsSchema(many=True)
 
-@displacement_data.route('/displacement-data/<regions>/<needs>/<causes>/<period>', defaults={'start': None, 'end': None}, methods=['GET'])
-@displacement_data.route('/displacement-data/<regions>/<needs>/<causes>/<period>/<start>/<end>', methods=['GET'])
+@displacement_data.route('/displacement-data/<regions>/<districts>/<needs>/<causes>/<period>', defaults={'start': None, 'end': None}, methods=['GET'])
+@displacement_data.route('/displacement-data/<regions>/<districts>/<needs>/<causes>/<period>/<start>/<end>', methods=['GET'])
 @body(displacement_data_schema)
 @response(displacement_data_schema, 201)
 @other_responses({404: 'Displacement data with provided parameters does not exist'})
-def all(self, regions, needs, causes, period, *args, **kwargs):
+def all(self, regions, districts, needs, causes, period, *args, **kwargs):
     """Retrieve displacement data""" 
     
-    args = (regions, needs, causes, period)
+    args = (regions, districts, needs, causes, period)
     total_arrivals = get_total_arrivals(*args, **kwargs)
     top_displacement_needs = json.loads(get_top_displacement_needs(*args, **kwargs))
     top_displacement_regions = json.loads(get_top_displacement_regions(*args, **kwargs))

@@ -4,14 +4,14 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
-import Avatar from '@mui/material/Avatar';
+// import Avatar from '@mui/material/Avatar';
 import Skeleton from '@mui/material/Skeleton';
 import IconButton from '@mui/material/IconButton';
-import HealthAndSafetyTwoToneIcon from '@mui/icons-material/HealthAndSafetyTwoTone';
+// import HealthAndSafetyTwoToneIcon from '@mui/icons-material/HealthAndSafetyTwoTone';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
-import { red } from '@mui/material/colors';
+// import { red } from '@mui/material/colors';
 import FilterDrawer from '../../../components/FilterDrawer';
-
+import ProtectionIcon from 'src/assets/Abduction-kidnapping.png';
 import DataTable from './DataTable';
 
 function PartnerDisplacementDashBoard() {
@@ -112,9 +112,7 @@ console.log('ddd ', tableData)
             <Card sx={{ mb: 1 }}>
                 <CardHeader
                   avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="protection incidences">
-                        <HealthAndSafetyTwoToneIcon />
-                    </Avatar>
+                      <img src={ProtectionIcon} alt="Protection Dashboard Icon" width={50}/>
                     }
                     action={
                         <IconButton aria-label="settings"  onClick={handleDrawerOpen}>

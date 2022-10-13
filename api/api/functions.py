@@ -15,7 +15,7 @@ def query_param_sanitizer(s):
     return q;
 
 # Function for filtering displacement data pandas dataframe by provided params
-def df_filters_displacement(df, regions, needs, causes, period, *args, **kwargs):
+def df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs):
     
     if period == 'd':
         #Filter by dates
@@ -32,6 +32,12 @@ def df_filters_displacement(df, regions, needs, causes, period, *args, **kwargs)
         regions = query_param_sanitizer(regions)
         regions_filter_list = regions.split(",")
         df = df[df['CurentRegion'].isin(regions_filter_list)]
+        
+    #Filter by districts
+    if districts != 'All':
+        districts = query_param_sanitizer(districts)
+        districts_filter_list = districts.split(",")
+        df = df[df['CurrentDistrict'].isin(districts_filter_list)]
         
     #needs filter
     if needs != 'All':
@@ -129,6 +135,7 @@ def get_daily_protection_data():
             usecols=[
                 'VictimId',
                 'ReportDate', 
+                'OrganisationAcronym',
                 'RefVictimToMedicalService',
                 'RefVictimToPsychosocialAid',
                 'RefVictimForLegalAssistance',
@@ -163,43 +170,43 @@ def get_daily_protection_data():
 # -----------------------------------------------------------
 
 
-def get_total_arrivals(regions, needs, causes, period, *args, **kwargs):
+def get_total_arrivals(regions, districts, needs, causes, period, *args, **kwargs):
     df = pd.read_csv(
         'data/displacement_data.csv',
-        usecols=['CurentRegion', 'Arrival', 'AllPeople', 'CurentRegion', 'Reason',  'Need1', 'Need2', 'AllPeople'],
+        usecols=['CurentRegion', 'Arrival', 'AllPeople', 'CurentRegion', 'CurrentDistrict', 'Reason',  'Need1', 'Need2', 'AllPeople'],
         parse_dates=['Arrival'], 
     )
     
-    df = df_filters_displacement(df, regions, needs, causes, period, *args, **kwargs)
+    df = df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs)
     
     total_arrivals = df['AllPeople'].sum()
     
     return str(total_arrivals)
     
     
-def get_top_displacement_regions(regions, needs, causes, period, *args, **kwargs):
+def get_top_displacement_regions(regions, districts, needs, causes, period, *args, **kwargs):
     
     df = pd.read_csv(
         'data/displacement_data.csv',
-        usecols=['CurentRegion', 'Arrival', 'CurentRegion', 'Reason',  'Need1', 'Need2', 'AllPeople'],
+        usecols=['CurentRegion', 'Arrival', 'CurentRegion', 'CurrentDistrict', 'Reason',  'Need1', 'Need2', 'AllPeople'],
         parse_dates=['Arrival'], 
     )
     
-    df = df_filters_displacement(df, regions, needs, causes, period, *args, **kwargs)
+    df = df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs)
     
     df1 = df.groupby('CurentRegion')['AllPeople'].sum().nlargest(5)
     # df1 = (100. * df1 / df1.sum()).round(0)
     
     return df1.to_json()
 
-def get_top_displacement_needs(regions, needs, causes, period, *args, **kwargs):
+def get_top_displacement_needs(regions, districts, needs, causes, period, *args, **kwargs):
     df = pd.read_csv(
         'data/displacement_data.csv',
-        usecols=['CurentRegion', 'Arrival', 'Reason',  'Need1', 'Need2',],
+        usecols=['CurentRegion', 'CurrentDistrict', 'Arrival', 'Reason',  'Need1', 'Need2',],
         parse_dates=['Arrival'],
         )
     
-    df = df_filters_displacement(df, regions, needs, causes, period, *args, **kwargs)
+    df = df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs)
     
     df1 = df[['Need1', 'Need2']].melt(var_name='Columns', value_name='Needs')
     df1 = df1[df1['Needs'] != '(null)']
@@ -210,14 +217,14 @@ def get_top_displacement_needs(regions, needs, causes, period, *args, **kwargs):
     return df2.to_json()
 
 
-def get_top_displacement_causes(regions, needs, causes, period, *args, **kwargs):
+def get_top_displacement_causes(regions, districts, needs, causes, period, *args, **kwargs):
     df = pd.read_csv(
         'data/displacement_data.csv',
-        usecols=['CurentRegion', 'Arrival', 'Reason',  'Category', 'Need1', 'Need2', 'AllPeople'],
+        usecols=['CurentRegion', 'CurrentDistrict', 'Arrival', 'Reason',  'Category', 'Need1', 'Need2', 'AllPeople'],
         parse_dates=['Arrival'],
         )
     
-    df = df_filters_displacement(df, regions, needs, causes, period, *args, **kwargs)
+    df = df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs)
     
     df1 = df.groupby('Category')['AllPeople'].sum().nlargest(5)
     # df1 =  (100. * df1 / df1.sum()).round(0)
@@ -256,7 +263,7 @@ def df_to_geojson(df, properties, lat='CurrentSettLon', lon='CurrentSettLat'):
 
 
 #This function geojson for filtered daily displacement data based on passed parameters
-def get_filtered_daily_displacement_data(regions, needs, causes, period, *args, **kwargs):
+def get_filtered_daily_displacement_data(regions, districts, needs, causes, period, *args, **kwargs):
     """filter displacement data"""
     df = get_daily_displacement_data()
     
@@ -267,7 +274,7 @@ def get_filtered_daily_displacement_data(regions, needs, causes, period, *args, 
     df['CurrentSettLat'] = df['CurrentSettLat'].astype(float)
     
     
-    df = df_filters_displacement(df, regions, needs, causes, period, *args, **kwargs)
+    df = df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs)
     
     df_grouped =  df.groupby(
         ['key', 'CurrentSettlement', 'CurrentDistrict', 'CurentRegion', 'Reason', 'CurrentSettLon', 'CurrentSettLat', 'Date'], 
@@ -279,10 +286,10 @@ def get_filtered_daily_displacement_data(regions, needs, causes, period, *args, 
     
     return daily_displacement_data
 
-def get_weekly_displacement(regions, needs, causes, period, *args, **kwargs):
+def get_weekly_displacement(regions, districts, needs, causes, period, *args, **kwargs):
    """filter displacement data"""
    df = get_daily_displacement_data()
-   df = df_filters_displacement(df, regions, needs, causes, "260D", *args, **kwargs)
+   df = df_filters_displacement(df, regions, districts, needs, causes, "260D", *args, **kwargs)
    df['Week_Number'] = df['Arrival'].dt.isocalendar().week
    
    df_grouped =  df.groupby(
@@ -290,7 +297,7 @@ def get_weekly_displacement(regions, needs, causes, period, *args, **kwargs):
         dropna=True)['AllPeople'].sum().to_frame().reset_index()
    return df_grouped.to_json(orient="records") 
 
-def get_partner_displacement_data(regions, needs, causes, period, *args, **kwargs):
+def get_partner_displacement_data(regions, districts, needs, causes, period, *args, **kwargs):              
     """filter displacement data"""
     df = get_daily_displacement_data()
     
@@ -305,7 +312,7 @@ def get_partner_displacement_data(regions, needs, causes, period, *args, **kwarg
     
     df.rename(columns = {'18_59M':'Men', '18_59F':'Women', '60+M':'ElderlyMen', '60+F':'ElderlyWomen'}, inplace = True)
     df = df.drop(['0-4M', '0-4F', '5-11M', '5-11F', '12-17M', '12-17F', 'CurrentSettLon', 'CurrentSettLat'], axis=1)
-    df = df_filters_displacement(df, regions, needs, causes, period, *args, **kwargs)
+    df = df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs)
     
     return df.to_json(orient='records')
 
@@ -486,7 +493,7 @@ def get_top_violation_categories(period, regions, violations, perpetrators):
     df = displacement_filters_protection(df, period, regions, violations, perpetrators)
         
     df1 = df.groupby('ViolationGroup')['ViolationGroup'].agg('count').nlargest(5)
-    df1 =  (100. * df1 / df1.sum()).round(0)
+    #df1 =  (100. * df1 / df1.sum()).round(0)
     
     return df1.to_json()
     
@@ -506,7 +513,7 @@ def get_top_perpetrator_groups(period, regions, violations, perpetrators):
     df = df[df['PerpetratorGroup'] != '(null)']
         
     df1 = df.groupby('PerpetratorGroup')['PerpetratorGroup'].agg('count').nlargest(5)
-    df1 =  (100. * df1 / df1.sum()).round(0)
+    #df1 =  (100. * df1 / df1.sum()).round(0)
     
     return df1.to_json()
 

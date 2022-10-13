@@ -4,7 +4,8 @@ import { styled } from '@mui/material/styles';
   
 import DisplacementRegionsChart from './DisplacementRegionsChart';
 
-  
+
+
   const DisplacementRegionsChartWrapper = styled(DisplacementRegionsChart)(
     () => `
         width: 100%;
@@ -14,11 +15,11 @@ import DisplacementRegionsChart from './DisplacementRegionsChart';
 
   
   function DisplacementRegions(props) {
-
     
     const [displacementRegions, setDisplacementRegions] = useState([]);
     const [displacedPopulation, setDisplacedPopulation] = useState([]);
 
+   
      useEffect(() => {
       const getDisplacementRegions = () => {
 

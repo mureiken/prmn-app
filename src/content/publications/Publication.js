@@ -54,12 +54,16 @@ const Publication = ({ publications }) => {
         name: 'All'
     },
     {
+      id: 'Reports',
+      name: 'Reports'
+    },
+    {
       id: 'MonthlyReport',
-      name: 'Monthly Report'
+      name: 'Monthly Reports'
     },
     {
       id: 'FlashReport',
-      name: 'Flash Report'
+      name: 'Flash Reports'
     },
     {
       id: 'RegionalDashboard',

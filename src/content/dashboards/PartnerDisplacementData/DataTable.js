@@ -26,13 +26,9 @@ const applyPagination = (displacementData, page, limit) => {
 };
 
 const DataTable = ({displacementData}) => {
-  console.log('sss', displacementData)
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(25);
 
-  
- 
- 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };

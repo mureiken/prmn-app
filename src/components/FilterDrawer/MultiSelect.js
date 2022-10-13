@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -18,11 +18,10 @@ const MenuProps = {
 };
 
 
-
 export default function RegionFilter({names, handleFilter, target, selectedVals }) {
+ 
   const [values, setValues] = useState([]);
   const [loading, setLoading] = useState(false);
-  
   
   const handleChange = (event) => {
     event.preventDefault();
@@ -35,19 +34,26 @@ export default function RegionFilter({names, handleFilter, target, selectedVals 
       typeof value === 'string' ? value.split(',') : value,
     );
   };
+
+
+  useEffect(() => { 
+      if (loading) {
+        handleFilter(target, values);
+      }
+  }, [target, values, loading]);
+
+   // const memoizedhandleFilter = useCallback(
+  //   () => {
+  //     handleFilter(target, values);
+  //   },
+  //   [target, values, handleFilter],
+  // );
   
-  const memoizedhandleFilter = useCallback(
-    () => {
-      handleFilter(target, values);
-    },
-    [target, values, handleFilter],
-  );
-  
-  useEffect(() => {
-    if (loading) {
-      memoizedhandleFilter();
-    }
-  }, [loading, memoizedhandleFilter]);
+  // useEffect(() => {
+  //   if (loading) {
+  //     memoizedhandleFilter();
+  //   }
+  // }, [loading, memoizedhandleFilter]);
 
   // useEffect(() => { 
   //     if (loading) {

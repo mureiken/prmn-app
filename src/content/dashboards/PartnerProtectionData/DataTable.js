@@ -63,6 +63,11 @@ const DataTable = ({protectionData}) => {
               </TableCell>
               <TableCell>
                 <Typography variant="subtitle2" gutterBottom>
+                  Organisation
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle2" gutterBottom>
                  Age
                 </Typography>
               </TableCell>
@@ -109,6 +114,17 @@ const DataTable = ({protectionData}) => {
                       noWrap
                     >
                       {data.IncidentDateStr}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {data.OrganisationAcronym}
                     </Typography>
                   </TableCell>
                   <TableCell>

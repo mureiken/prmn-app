@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
 import { Map as ReactMapGL, NavigationControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { CIRCLE_OPACITY, COLORS, MAX_RADIUS, MIN_RADIUS } from '../../../../constants';
+import { CIRCLE_OPACITY, LAYER_ID_2, COLORS, MAX_RADIUS, MIN_RADIUS } from '../../../../constants';
 import Circles from './Circles/index'
 import Polygons from './Polygons/index'
 import Modal from './Modal';
@@ -71,7 +71,7 @@ function Map(props) {
       features,
     } = event;
     //const hoveredFeature = features && features[0];
-    const hoveredFeature = features && features.find((f) => f.layer.id === 'ViolationDistrict');
+    const hoveredFeature = features && features.find((f) => f.layer.id === LAYER_ID_2);
     console.log("id: ", hoveredFeature.layer.id);
 
     // prettier-ignore
@@ -104,7 +104,7 @@ function Map(props) {
     const {
       features,
     } = event;
-    const hoveredFeature = features && features.find((f) => f.layer.id === 'ViolationDistrict');
+    const hoveredFeature = features && features.find((f) => f.layer.id === LAYER_ID_2);
     myMapRef.current.setFeatureState({ source: hoveredFeature.source, id: hoveredFeature.layer.id }, { hover: true });
   };
 
@@ -113,7 +113,7 @@ function Map(props) {
       features,
     } = event;
     //const hoveredFeature = features && features[0];
-    const hoveredFeature = features && features.find((f) => f.layer.id === 'ViolationDistrict');
+    const hoveredFeature = features && features.find((f) => f.layer.id === LAYER_ID_2);
     myMapRef.current.setFeatureState({ source: hoveredFeature.source, id: hoveredFeature.layer.id }, { hover: true });
   }, []);
 
@@ -121,7 +121,7 @@ function Map(props) {
     const {
       features,
     } = event;
-    const hoveredFeature = features && features.find((f) => f.layer.id === 'ViolationDistrict');
+    const hoveredFeature = features && features.find((f) => f.layer.id === LAYER_ID_2);
     myMapRef.current.setFeatureState({ source: hoveredFeature.source, id: hoveredFeature.layer.id }, { hover: false });
   }, []);
 
@@ -148,6 +148,7 @@ function Map(props) {
   });
   
 
+  console.log("state: ", state);
 
 return (
   <div ref={mapRef}>

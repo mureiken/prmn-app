@@ -4,15 +4,17 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
-import Avatar from '@mui/material/Avatar';
+// import Avatar from '@mui/material/Avatar';
 import Skeleton from '@mui/material/Skeleton';
 import IconButton from '@mui/material/IconButton';
-import TransferWithinAStationTwoToneIcon from '@mui/icons-material/TransferWithinAStationTwoTone';
+//import TransferWithinAStationTwoToneIcon from '@mui/icons-material/TransferWithinAStationTwoTone';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
-import { red } from '@mui/material/colors';
+import Alert from '@mui/material/Alert';
+// import { red } from '@mui/material/colors';
 import FilterDrawer from '../../../components/FilterDrawer';
-
+import useFetch from '../../../useFetch';
 import DataTable from './DataTable';
+import InternallyDisplacedIcon from 'src/assets/Internally-displaced.png';
 
 function PartnerDisplacementDashBoard() {
   const date = useMemo(
@@ -27,9 +29,8 @@ function PartnerDisplacementDashBoard() {
   );
   
   const startDate = (period) => new Date(daysAgo.setDate(date.getDate() - period)).toLocaleDateString()
-  const [tableData, setTableData] = useState([])
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [query, setQuery] = useState('');  
 
   const [state, setState] = useState({
     data: {},
@@ -44,6 +45,7 @@ function PartnerDisplacementDashBoard() {
     causes: [],
     needs: [],
     regions: [],
+    districts: [],
     start: date,
     end: date,
   })
@@ -83,6 +85,11 @@ function PartnerDisplacementDashBoard() {
         ...prevState,
         regions: value,
       }));
+    } else if (target === 'Districts') {
+      setFilters((prevState) => ({
+        ...prevState,
+        districts: value,
+      }));
     } else if (target === 'Causes') {
         setFilters((prevState) => ({
           ...prevState,
@@ -92,35 +99,26 @@ function PartnerDisplacementDashBoard() {
   }
 
   useEffect(() => {
-   
-    let getUrl = () => {
-      let regions = filters.regions.length ? filters.regions.join(',') : 'All';
-      let needs = filters.needs.length ? filters.needs.join(',') : 'All';
-      let causes = filters.causes.length ? filters.causes.join(',') : 'All';
-
-      let fetchUrl;
-      needs = needs.replace('/', '**');
-      causes = causes.replace('/', '**');
-
-      if (filters.filterByDates) {
-        fetchUrl = `/api/partner-displacement-data/${regions}/${needs}/${causes}/d/${dateStr(filters.start)}/${dateStr(filters.end)}`
-      } else {
-        fetchUrl =  `/api/partner-displacement-data/${regions}/${needs}/${causes}/${filters.period}D`
-      }
-      console.log("fetchUrl: ",fetchUrl);
-      return fetchUrl
+    let regions = filters.regions.length ? filters.regions.join(',') : 'All';
+    let districts = filters.districts.length ? filters.districts.join(',') : 'All';
+    let needs = filters.needs.length ? filters.needs.join(',') : 'All';
+    let causes = filters.causes.length ? filters.causes.join(',') : 'All';
+    
+    if (filters.filterByDates) {
+      setQuery(`${regions}/${districts}/${needs}/${causes}/d/${dateStr(filters.start)}/${dateStr(filters.end)}`);
+    } else {
+      setQuery(`${regions}/${districts}/${needs}/${causes}/${filters.period}D`)
     }
+  
+  }, [dateStr, filters]);
 
-    const getDisplacementData = async () => {
-      setIsLoading(true);
-      const res = await fetch(getUrl());
-      const data = await res.json();
-      setTableData(data);
-      setIsLoading(false);
-    };
+  const url = query && `${process.env.REACT_APP_API_URL}/api/partner-displacement-data/${query}`;
 
-    getDisplacementData().catch(console.error);
-  }, [filters, dateStr]);
+  const {
+    loading,  
+    error,
+    data
+  } = useFetch(url);
 
   const handleDrawerOpen = () => {
     setOpenFilterDrawer(true);
@@ -130,9 +128,6 @@ function PartnerDisplacementDashBoard() {
     setOpenFilterDrawer(false);
   };
 
-
-  
-console.log('ddd ', tableData)
   return (
     <>
       <Helmet>
@@ -148,11 +143,10 @@ console.log('ddd ', tableData)
         >
           <Grid item xs={12}>
             <Card sx={{ mb: 1 }}>
+            {error && <Alert severity={"error"} >{error}</Alert>}
                 <CardHeader
                   avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="total displacement">
-                        <TransferWithinAStationTwoToneIcon />
-                    </Avatar>
+                      <img src={InternallyDisplacedIcon} alt="" width={50} />
                     }
                     action={
                         <IconButton aria-label="settings"  onClick={handleDrawerOpen}>
@@ -160,12 +154,12 @@ console.log('ddd ', tableData)
                         </IconButton>
                     }
                     title="Displacement Data"
-                    subheader={isLoading ? <Skeleton variant="text" width={300} /> : `Displacement between dates  ${filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} to ${filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate }`}
+                    subheader={loading ? <Skeleton variant="text" width={300} /> : `Displacement between dates  ${filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} to ${filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate }`}
                 />
             </Card>
             <Grid container spacing={2}>
               <div style={{ height: 800, width: '98%', marginLeft: 20, marginTop: 30 }}>
-                <DataTable displacementData={tableData} />
+                <DataTable displacementData={data} />
           </div>
                 
           </Grid>

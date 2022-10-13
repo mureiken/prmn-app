@@ -9,8 +9,8 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack'
-import Avatar from '@mui/material/Avatar';
-import TransferWithinAStationTwoToneIcon from '@mui/icons-material/TransferWithinAStationTwoTone';
+import Alert from '@mui/material/Alert';
+//import TransferWithinAStationTwoToneIcon from '@mui/icons-material/TransferWithinAStationTwoTone';
 import Skeleton from '@mui/material/Skeleton';
 import DisplacementRegions from './DisplacementRegions';
 import DisplacementNeeds from './DisplacementNeeds';
@@ -18,14 +18,15 @@ import DisplacementTriggers from './DisplacementTriggers';
 import DisplacementTrend from './DisplacementTrend';
 import IconButton from '@mui/material/IconButton';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
-import { red } from '@mui/material/colors';
+//import { red } from '@mui/material/colors';
 import { DEFAULT_VIEWPORT } from '../../../constants';
 import Map from './Map';
 import './index.css';
 import SubscriptionForm from '../../applications/EmailSubscription';
 import Footer from 'src/components/Footer';
 import FilterDrawer from '../../../components/FilterDrawer';
-
+import useFetch from '../../../useFetch';
+import InternallyDisplacedIcon from 'src/assets/Internally-displaced.png';
 
 function DashboardMain() {
   const date = useMemo(
@@ -41,13 +42,12 @@ function DashboardMain() {
   
   const startDate = (period) => new Date(daysAgo.setDate(date.getDate() - period)).toLocaleDateString()
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);   
-
-  
+  // const [isLoading, setIsLoading] = useState(false); 
+  const [query, setQuery] = useState('');  
 
   const [state, setState] = useState({
     viewport: DEFAULT_VIEWPORT,
-    data: {},
+    // data: {},
     todaysDate: new Date(),
     startDate: startDate(7),
     endDate: new Date().toLocaleDateString(),
@@ -59,6 +59,7 @@ function DashboardMain() {
     causes: [],
     needs: [],
     regions: [],
+    districts: [],
     start: date,
     end: date,
   })
@@ -98,6 +99,11 @@ function DashboardMain() {
         ...prevState,
         regions: value,
       }));
+    } else if (target === 'Districts') {
+      setFilters((prevState) => ({
+        ...prevState,
+        districts: value,
+      }));
     } else if (target === 'Causes') {
         setFilters((prevState) => ({
           ...prevState,
@@ -107,38 +113,27 @@ function DashboardMain() {
   }
 
   useEffect(() => {
-   
-    let getUrl = () => {
-      let regions = filters.regions.length ? filters.regions.join(',') : 'All';
-      let needs = filters.needs.length ? filters.needs.join(',') : 'All';
-      let causes = filters.causes.length ? filters.causes.join(',') : 'All';
-
-      let fetchUrl;
-      needs = needs.replace('/', '**');
-      causes = causes.replace('/', '**');
-
-      if (filters.filterByDates) {
-        fetchUrl = `/api/displacement-data/${regions}/${needs}/${causes}/d/${dateStr(filters.start)}/${dateStr(filters.end)}`
-      } else {
-        fetchUrl =  `/api/displacement-data/${regions}/${needs}/${causes}/${filters.period}D`
-      }
-      console.log("fetchUrl: ",fetchUrl);
-      return fetchUrl
+    let regions = filters.regions.length ? filters.regions.join(',') : 'All';
+    let districts = filters.districts.length ? filters.districts.join(',') : 'All';
+    let needs = filters.needs.length ? filters.needs.join(',') : 'All';
+    let causes = filters.causes.length ? filters.causes.join(',') : 'All';
+    
+    if (filters.filterByDates) {
+      setQuery(`${regions}/${districts}/${needs}/${causes}/d/${dateStr(filters.start)}/${dateStr(filters.end)}`);
+    } else {
+      setQuery(`${regions}/${districts}/${needs}/${causes}/${filters.period}D`)
     }
+  
+  }, [dateStr, filters]);
 
-    const getDisplacementData = async () => {
-      setIsLoading(true);
-      const res = await fetch(getUrl());
-      const data = await res.json();
-      setState((prevState) => ({
-        ...prevState,
-        data: data,
-      }));
-      setIsLoading(false);
-    };
-
-    getDisplacementData().catch(console.error);
-  }, [filters, dateStr]);
+  const url = query && `${process.env.REACT_APP_API_URL}/api/displacement-data/${query}`;
+  
+  const {
+    loading,  
+    error,
+    data
+  } = useFetch(url);
+    
 
   const handleDrawerOpen = () => {
     setOpenFilterDrawer(true);
@@ -171,6 +166,7 @@ function DashboardMain() {
         <title>PRMN Dashboard</title>
       </Helmet>
       <Box sx={{mx: 5}}>
+      
         <Grid
           container
           justifyContent="center"
@@ -180,11 +176,10 @@ function DashboardMain() {
         >
           <Grid item xs={12}>
             <Card sx={{ mb: 1 }}>
+            {error && <Alert severity={"error"} >{error}</Alert>}
                 <CardHeader
                   avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="total displacement">
-                        <TransferWithinAStationTwoToneIcon />
-                    </Avatar>
+                    <img src={InternallyDisplacedIcon} alt="" width={50} />
                     }
                     action={
                         <IconButton aria-label="settings"  onClick={handleDrawerOpen}>
@@ -192,45 +187,45 @@ function DashboardMain() {
                         </IconButton>
                     }
                     title="Displacement Snapshot"
-                    subheader={isLoading ? <Skeleton variant="text" width={300} /> : <>{Number(state.data.total_arrivals).toLocaleString('en')} displaced between dates {filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} to {filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate } <Link href="/yearly-displacement" target="_blank"><Typography variant="subtitle2">View yearly displacement dashboard</Typography></Link></> }
+                    subheader={loading ? <Skeleton variant="text" width={300} /> : <><Typography variant="h4" component="subtitle" color="primary">{Number(data.total_arrivals).toLocaleString('en')} </Typography> displaced between dates {filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} to {filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate } <Link href="/yearly-displacement" target="_blank"><Typography variant="subtitle2">View yearly displacement dashboard</Typography></Link></> }
                 />
             </Card>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
-                  {isLoading ? (
+                  {loading ? (
                     <SkeletonWrapper />
                     ) : (
                     <Card>
                         <CardHeader title="Top Regions" />
                         <Divider />
                         <CardContent>
-                            <DisplacementRegions data={state.data} />
+                            <DisplacementRegions data={data} />
                         </CardContent>
                     </Card>
                   )}
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  {isLoading ? (
+                  {loading ? (
                     <SkeletonWrapper />
                     ) : (
                     <Card>
                         <CardHeader title="Top Needs" />
                         <Divider />
                         <CardContent>
-                            <DisplacementNeeds data={state.data} />
+                            <DisplacementNeeds data={data} />
                         </CardContent>
                     </Card>
                     )}
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  {isLoading ? (
+                  {loading ? (
                     <SkeletonWrapper />
                     ) : (
                     <Card>
                         <CardHeader title="Top Causes" />
                         <Divider />
                         <CardContent>
-                            <DisplacementTriggers data={state.data} />
+                            <DisplacementTriggers data={data} />
                         </CardContent>
                     </Card>
                   )}
@@ -241,7 +236,7 @@ function DashboardMain() {
           <Grid item xs={12} md={12} mb={1}>
             <Stack spacing={2}>
                 <Card>
-                    <Map data={state.data} viewport={state.viewport} setState={setState} />           
+                    <Map data={data} viewport={state.viewport} setState={setState} />           
                 </Card>
             </Stack>
         </Grid>
@@ -249,14 +244,14 @@ function DashboardMain() {
         </Grid>
         <Grid container spacing={2}>
          <Grid item xs={12} md={7}>
-          {isLoading ? (
+          {loading ? (
             <SkeletonWrapper />
             ) : (
             <Card>
               <CardHeader title="Weekly Displacement Trend" />
               <Divider />
               <CardContent>
-                <DisplacementTrend data={state.data}/>
+                <DisplacementTrend data={data}/>
               </CardContent>
             </Card>
           )}
