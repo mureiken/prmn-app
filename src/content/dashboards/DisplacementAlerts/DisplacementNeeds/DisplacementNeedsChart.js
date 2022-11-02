@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { HorizontalBar } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useTheme } from '@mui/material/styles';
 
 const DisplacementNeedsChart = ({
@@ -40,7 +41,7 @@ const DisplacementNeedsChart = ({
     },
     maintainAspectRatio: false,
     cornerRadius: 2,
-        legend: {
+    legend: {
       display: false
     },
     layout: {
@@ -49,6 +50,8 @@ const DisplacementNeedsChart = ({
     scales: {
       xAxes: [
         {
+          display: false,
+          offset: true,
           gridLines: {
             display: false,
             drawBorder: false
@@ -83,6 +86,7 @@ const DisplacementNeedsChart = ({
         }
       ],
     },
+    
     tooltips: {
       enabled: true,
       caretSize: 6,
@@ -109,6 +113,19 @@ const DisplacementNeedsChart = ({
         }
       }
     },
+    plugins: {
+      datalabels: {
+        display: true,
+        clamp: true,
+        anchor: 'end',
+        align: 'end',
+        offset: -1,
+        color: theme.palette.text.secondary,
+        formatter: function(value) {
+          return value + '%';
+        }
+      }
+    },
     onClick: function(evt, element) {
         if (element.length > 0) {
           console.log(myData.labels[element[0]._index]);
@@ -123,6 +140,7 @@ const DisplacementNeedsChart = ({
     <div {...rest}>
       <HorizontalBar 
         data={myData}
+        plugins={[ChartDataLabels]}
         options={options}
       />
     </div>

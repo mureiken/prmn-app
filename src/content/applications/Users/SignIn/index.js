@@ -31,7 +31,7 @@ function SignIn() {
         const data = new FormData(e.currentTarget);
         await login(data.get("username"), data.get("password"));
         setLoading(false);
-        navigate("/management/profile/settings")
+        navigate("/")
       } catch {
         setError("Failed to log in");
         setLoading(false);

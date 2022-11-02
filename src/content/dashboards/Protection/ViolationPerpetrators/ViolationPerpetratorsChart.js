@@ -26,7 +26,8 @@ const ViolationPerpetratorsChart = ({ data: dataProp, ...rest }) => {
     cutoutPercentage: 60,
     legend: {
       display: true,
-      position: 'bottom'
+      position: 'left',
+      align: 'start'
     },
     layout: {
       padding: 0

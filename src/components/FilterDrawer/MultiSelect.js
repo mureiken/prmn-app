@@ -12,11 +12,10 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
+      width: 298,
     },
   },
 };
-
 
 export default function RegionFilter({names, handleFilter, target, selectedVals }) {
  
@@ -70,7 +69,7 @@ export default function RegionFilter({names, handleFilter, target, selectedVals 
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
+      <FormControl sx={{ m: 1, width: 200 }}>
         <Select
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
@@ -82,7 +81,7 @@ export default function RegionFilter({names, handleFilter, target, selectedVals 
           MenuProps={MenuProps}
         >
           {names.map((name) => (
-            <MenuItem key={name} value={name}>
+            <MenuItem key={target+'_'+name} value={name}>
               <Checkbox checked={values.indexOf(name) > -1} />
               <ListItemText primary={name} />
             </MenuItem>

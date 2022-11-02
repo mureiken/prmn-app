@@ -31,7 +31,7 @@ function PartnerDisplacementDashBoard() {
   });
 
   const [filters, setFilters] = useState({
-    period: '7',
+    period: '30',
     violations: [],
     perpetrators: [],
     regions: [],

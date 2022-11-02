@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
-import { Map as ReactMapGL, NavigationControl } from 'react-map-gl';
+import { Map as ReactMapGL } from 'react-map-gl';
+import { NavigationControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { CIRCLE_OPACITY, LAYER_ID, COLORS, MAX_RADIUS, MIN_RADIUS } from '../../../../constants';
 import Circles from './Circles/index'
@@ -153,8 +154,12 @@ return (
   <div ref={mapRef}>
     <ReactMapGL
         ref={ref => myMapRef.current = ref && ref.getMap()}
-        {...props.viewport}
-        minZoom={1}
+        initialViewState={{
+          latitude: 5.1521,
+          longitude: 46.1996,
+          zoom: 5,
+        }}
+        minZoom={4}
         maxZoom={15}
         doubleClickZoom={true}
         scrollZoom={true}
@@ -196,9 +201,10 @@ return (
           }}
           data_id="currentSettlements"
       />
-    <Box style={navControlStyle}>
       <NavigationControl />
-    </Box>
+    {/*<Box style={navControlStyle}>
+      <NavigationControl />
+        </Box>*/}
   </ReactMapGL>
   {state.popupInfo && <Modal {...state} handleClose={handleClose} />}
   </div>

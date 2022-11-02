@@ -21,6 +21,7 @@ class DisplacementPropertiesSchema(PropertiesSchema):
     Type = ma.String()
     CurrentDistrict = ma.String()
     CurrentSettlement = ma.String()
+    CurentRegion = ma.String()
     Date = ma.String()
     Reason = ma.String()
     key = ma.String()

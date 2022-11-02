@@ -1,3 +1,4 @@
+from data_cache import pandas_cache
 from datetime import datetime
 from xml.dom import WRONG_DOCUMENT_ERR
 import pandas as pd
@@ -15,52 +16,68 @@ def query_param_sanitizer(s):
     return q;
 
 # Function for filtering displacement data pandas dataframe by provided params
-def df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs):
+def df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
     
     if period == 'd':
         #Filter by dates
         start = kwargs.get('start', '00-00-0000')
         end = kwargs.get('end', '00-00-0000');
-        df = df.loc[(df['Arrival'] >= start)
-                     & (df['Arrival'] < end)]
+        df = df.loc[(df.Arrival >= start)
+                     & (df.Arrival < end)]
     else:
         #Filter by period
-        df = df[df['Arrival'] > pd.Timestamp.today() - pd.Timedelta(period)]
+        df = df[df.Arrival > pd.Timestamp.today() - pd.Timedelta(period)]
     
-    #Filter by regions
-    if regions != 'All':
-        regions = query_param_sanitizer(regions)
-        regions_filter_list = regions.split(",")
-        df = df[df['CurentRegion'].isin(regions_filter_list)]
+    #Filter by current regions
+    if cregions != 'All':
+        cregions = query_param_sanitizer(cregions)
+        cregions_filter_list = cregions.split(",")
+        #df = df[df['CurentRegion'].isin(cregions_filter_list)]
+        df=df.loc[df.CurentRegion.isin(cregions_filter_list)]
         
-    #Filter by districts
-    if districts != 'All':
-        districts = query_param_sanitizer(districts)
-        districts_filter_list = districts.split(",")
-        df = df[df['CurrentDistrict'].isin(districts_filter_list)]
+    #Filter by current districts
+    if cdistricts != 'All':
+        cdistricts = query_param_sanitizer(cdistricts)
+        cdistricts_filter_list = cdistricts.split(",")
+        #df = df[df['CurrentDistrict'].isin(cdistricts_filter_list)]
+        df=df.loc[df.CurrentDistrict.isin(cdistricts_filter_list)]
+        
+    #Filter by previous regions
+    if pregions != 'All':
+        pregions = query_param_sanitizer(pregions)
+        pregions_filter_list = pregions.split(",")
+        #df = df[df['PreviousRegion'].isin(pregions_filter_list)]
+        df=df.loc[df.PreviousRegion.isin(pregions_filter_list)]
+        
+    #Filter by previous districts
+    if pdistricts != 'All':
+        pdistricts = query_param_sanitizer(pdistricts)
+        pdistricts_filter_list = pdistricts.split(",")
+        #df = df[df['PreviousDistrict'].isin(pdistricts_filter_list)]
+        df=df.loc[df.PreviousDistrict.isin(pdistricts_filter_list)]
         
     #needs filter
     if needs != 'All':
         needs = query_param_sanitizer(needs)
         needs_filter_list = needs.split(",")
-        df = df[df['Need1'].isin(needs_filter_list) | df['Need2'].isin(needs_filter_list)]
+        df = df.loc[df.Need1.isin(needs_filter_list) | df['Need2'].isin(needs_filter_list)]
         
     #Filter by causes
     if causes != 'All':
         causes = query_param_sanitizer(causes)
         causes_filter_list = causes.split(",")
-        df = df[df['Reason'].isin(causes_filter_list)]
+        df = df.loc[df.Reason.isin(causes_filter_list)]
         
     return df
 
 # Function for filtering protection data pandas dataframe by provided params
-def displacement_filters_protection(df, period,regions, violations, perpetrators):
+def displacement_filters_protection(df, period, regions, violations, perpetrators):
     n_days_ago = int(period.rstrip(period[-1]))
     to_date = date.today()
-    from_date = to_date - timedelta(days=n_days_ago) 
+    from_date = to_date - timedelta(days=n_days_ago)
     
     #Trim rows with (null)values for DistrictX OR District Y
-    df = df[(df['DistrictX'] != '(null)') | (df['DistrictY'] != '(null)')]
+    df = df.loc[(df['DistrictX'] != '(null)') | (df['DistrictY'] != '(null)')]
    
     df['Date'] = df['ReportDate'].astype(str)
     #df['key'] = df['ViolationSettlement'] + "-" + df['ReportDate'].astype(str)
@@ -70,31 +87,33 @@ def displacement_filters_protection(df, period,regions, violations, perpetrators
     df['DistrictY'] = df['DistrictY'].astype(float)
     
     #period filter
-    df = df[df['ReportDate'] > pd.Timestamp.today() - pd.Timedelta(period)]
+    df = df.loc[df['ReportDate'] > pd.Timestamp.today() - pd.Timedelta(period)]
      
     #region filter
     if regions != 'All':
         regions_filter_list = regions.split(",")
-        df = df[df['ViolationRegion'].isin(regions_filter_list)]
-        
+        df = df.loc[df['ViolationRegion'].isin(regions_filter_list)]
+     
     
     #Filter by violations
     if violations != 'All':
         violations_filter_list = violations.split(",")
-        df = df[df['ViolationGroup'].isin(violations_filter_list)]
+        df = df.loc[df['ViolationGroup'].isin(violations_filter_list)]
         
         
     #Filter by perpetrators
     if perpetrators != 'All':
         perpetrators_filter_list = perpetrators.split(",")
-        df = df[df['PerpetratorGroup'].isin(perpetrators_filter_list)]
+        df = df.loc[df['PerpetratorGroup'].isin(perpetrators_filter_list)]
         
     return df
 
 #This function geojson for daily displacement data
+@pandas_cache
 def get_daily_displacement_data():
     """Retrieve displacement data"""
-    df = pd.read_csv(
+
+    tp = pd.read_csv(
             'data/displacement_data.csv',
             usecols=[
                 'PreviousSettlement', 
@@ -125,41 +144,103 @@ def get_daily_displacement_data():
                 '60+F',
                 ],
             parse_dates=['Arrival'],
+            engine='c',
+            iterator=True, 
+            chunksize=50000,
+            dtype={
+                'PreviousSettlement': 'str', 
+                'PreviousDistrict': 'str',  
+                'PreviousRegion': 'str', 
+                'CurrentSettlement': 'str', 
+                'CurrentDistrict': 'str', 
+                'CurentRegion': 'str', 
+                'Reason': 'category', 
+                'Category': 'category', 
+                'Need1': 'str', 
+                'Need2': 'str', 
+                'CurrentSettLon': 'float32',  
+                'CurrentSettLat': 'float32',  
+                'AllPeople': 'int32',
+                'TotalM': 'int32',
+                'TotalF': 'int32',
+                '0-4M': 'int16',
+                '0-4F': 'int16',	
+                '5-11M': 'int16',
+                '5-11F': 'int16',	
+                '12-17M': 'int16',	
+                '12-17F': 'int16',	
+                '18_59M': 'int16',	
+                '18_59F':'int16',	
+                '60+M': 'int16',	
+                '60+F':'int16',
+            }
         )
     
+    
+    df = pd.concat(tp, ignore_index=True)
+    
     return df
-
+@pandas_cache
 def get_daily_protection_data():
-    df = pd.read_csv(
-            'data/protection_data.csv',
-            usecols=[
-                'VictimId',
-                'ReportDate', 
-                'OrganisationAcronym',
-                'RefVictimToMedicalService',
-                'RefVictimToPsychosocialAid',
-                'RefVictimForLegalAssistance',
-                'InformedPolice',
-                'InformedElders',
-                'PaidForMedicalCheckup',
-                'PaidForTransport',
-                'OtherResponse',
-                'ViolationGroup',
-                'ViolationRegion',
-                'ViolationDistrict',
-                'DistrictX', 
-                'DistrictY',
-                'PerpetratorGroup',
-                'IncidentDate',
-                'Age',
-                'Sex',
-                'Violation',
-                'ViolationRegion',
-                'ViolationDistrict',
-                'ViolationSettlement'
-                ],
-            parse_dates=['ReportDate'],
-        )
+    tp = pd.read_csv(
+        'data/protection_data.csv',
+        usecols=[
+            'VictimId',
+            'ReportDate', 
+            'OrganisationAcronym',
+            'RefVictimToMedicalService',
+            'RefVictimToPsychosocialAid',
+            'RefVictimForLegalAssistance',
+            'InformedPolice',
+            'InformedElders',
+            'PaidForMedicalCheckup',
+            'PaidForTransport',
+            'OtherResponse',
+            'ViolationGroup',
+            'ViolationRegion',
+            'ViolationDistrict',
+            'DistrictX', 
+            'DistrictY',
+            'PerpetratorGroup',
+            'IncidentDate',
+            'Age',
+            'Sex',
+            'Violation',
+            'ViolationRegion',
+            'ViolationDistrict',
+            'ViolationSettlement'
+            ],
+        parse_dates=['ReportDate'],
+        engine='c',
+        dtype={
+            'VictimId': 'int32',
+            'OrganisationAcronym': 'str',
+            'RefVictimToMedicalService': 'int8',
+            'RefVictimToPsychosocialAid': 'int8',
+            'RefVictimForLegalAssistance': 'int8',
+            'InformedPolice': 'int8',
+            'InformedElders': 'int8',
+            'PaidForMedicalCheckup': 'int8',
+            'PaidForTransport': 'int8',
+            'OtherResponse': 'int8',
+            'ViolationGroup': 'str',
+            'ViolationRegion': 'str',
+            'ViolationDistrict': 'str',
+            # 'DistrictX': 'float32', 
+            # 'DistrictY': 'float32',
+            'PerpetratorGroup': 'str',
+            'Age': 'int8',
+            'Sex': 'str',
+            'Violation': 'str',
+            'ViolationRegion': 'str',
+            'ViolationDistrict': 'str',
+            'ViolationSettlement': 'str'
+        },
+        iterator=True, 
+        chunksize=20000
+    )
+    
+    df = pd.concat(tp, ignore_index=True)
     
     return df
     
@@ -170,43 +251,55 @@ def get_daily_protection_data():
 # -----------------------------------------------------------
 
 
-def get_total_arrivals(regions, districts, needs, causes, period, *args, **kwargs):
-    df = pd.read_csv(
-        'data/displacement_data.csv',
-        usecols=['CurentRegion', 'Arrival', 'AllPeople', 'CurentRegion', 'CurrentDistrict', 'Reason',  'Need1', 'Need2', 'AllPeople'],
-        parse_dates=['Arrival'], 
-    )
+def get_total_arrivals(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
     
-    df = df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs)
+    df = get_daily_displacement_data()
+    
+    df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
     total_arrivals = df['AllPeople'].sum()
     
     return str(total_arrivals)
     
     
-def get_top_displacement_regions(regions, districts, needs, causes, period, *args, **kwargs):
+def get_top_displacement_regions(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
     
-    df = pd.read_csv(
-        'data/displacement_data.csv',
-        usecols=['CurentRegion', 'Arrival', 'CurentRegion', 'CurrentDistrict', 'Reason',  'Need1', 'Need2', 'AllPeople'],
-        parse_dates=['Arrival'], 
-    )
+    df = get_daily_displacement_data()
     
-    df = df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs)
+    df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
     df1 = df.groupby('CurentRegion')['AllPeople'].sum().nlargest(5)
     # df1 = (100. * df1 / df1.sum()).round(0)
     
     return df1.to_json()
 
-def get_top_displacement_needs(regions, districts, needs, causes, period, *args, **kwargs):
-    df = pd.read_csv(
-        'data/displacement_data.csv',
-        usecols=['CurentRegion', 'CurrentDistrict', 'Arrival', 'Reason',  'Need1', 'Need2',],
-        parse_dates=['Arrival'],
-        )
+def get_top_displacement_districts(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
     
-    df = df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs)
+    df = get_daily_displacement_data()
+    
+    df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
+    
+    df1 = df.groupby('CurrentDistrict')['AllPeople'].sum().nlargest(5)
+    # df1 = (100. * df1 / df1.sum()).round(0)
+    
+    return df1.to_json()
+
+def get_top_displacement_settlements(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
+    
+    df = get_daily_displacement_data()
+    
+    df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
+    
+    df1 = df.groupby('CurrentDistrict')['AllPeople'].sum().nlargest(5)
+    # df1 = (100. * df1 / df1.sum()).round(0)
+    
+    return df1.to_json()
+
+def get_top_displacement_needs(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
+    
+    df = get_daily_displacement_data()
+    
+    df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
     df1 = df[['Need1', 'Need2']].melt(var_name='Columns', value_name='Needs')
     df1 = df1[df1['Needs'] != '(null)']
@@ -217,14 +310,11 @@ def get_top_displacement_needs(regions, districts, needs, causes, period, *args,
     return df2.to_json()
 
 
-def get_top_displacement_causes(regions, districts, needs, causes, period, *args, **kwargs):
-    df = pd.read_csv(
-        'data/displacement_data.csv',
-        usecols=['CurentRegion', 'CurrentDistrict', 'Arrival', 'Reason',  'Category', 'Need1', 'Need2', 'AllPeople'],
-        parse_dates=['Arrival'],
-        )
+def get_top_displacement_causes(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
     
-    df = df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs)
+    df = get_daily_displacement_data()
+    
+    df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
     df1 = df.groupby('Category')['AllPeople'].sum().nlargest(5)
     # df1 =  (100. * df1 / df1.sum()).round(0)
@@ -263,7 +353,7 @@ def df_to_geojson(df, properties, lat='CurrentSettLon', lon='CurrentSettLat'):
 
 
 #This function geojson for filtered daily displacement data based on passed parameters
-def get_filtered_daily_displacement_data(regions, districts, needs, causes, period, *args, **kwargs):
+def get_filtered_daily_displacement_data(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
     """filter displacement data"""
     df = get_daily_displacement_data()
     
@@ -274,10 +364,10 @@ def get_filtered_daily_displacement_data(regions, districts, needs, causes, peri
     df['CurrentSettLat'] = df['CurrentSettLat'].astype(float)
     
     
-    df = df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs)
+    df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
     df_grouped =  df.groupby(
-        ['key', 'CurrentSettlement', 'CurrentDistrict', 'CurentRegion', 'Reason', 'CurrentSettLon', 'CurrentSettLat', 'Date'], 
+        ['key', 'CurrentSettlement', 'CurrentDistrict', 'CurentRegion', 'PreviousRegion', 'PreviousDistrict', 'Reason', 'CurrentSettLon', 'CurrentSettLat', 'Date'], 
         dropna=True)['AllPeople'].sum().to_frame().reset_index()
     
     cols = ['key', 'CurrentSettlement', 'CurrentDistrict', 'CurentRegion', 'Reason', 'Date', 'AllPeople']
@@ -286,10 +376,10 @@ def get_filtered_daily_displacement_data(regions, districts, needs, causes, peri
     
     return daily_displacement_data
 
-def get_weekly_displacement(regions, districts, needs, causes, period, *args, **kwargs):
+def get_weekly_displacement(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
    """filter displacement data"""
    df = get_daily_displacement_data()
-   df = df_filters_displacement(df, regions, districts, needs, causes, "260D", *args, **kwargs)
+   df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, "260D", *args, **kwargs)
    df['Week_Number'] = df['Arrival'].dt.isocalendar().week
    
    df_grouped =  df.groupby(
@@ -297,7 +387,7 @@ def get_weekly_displacement(regions, districts, needs, causes, period, *args, **
         dropna=True)['AllPeople'].sum().to_frame().reset_index()
    return df_grouped.to_json(orient="records") 
 
-def get_partner_displacement_data(regions, districts, needs, causes, period, *args, **kwargs):              
+def get_partner_displacement_data(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):              
     """filter displacement data"""
     df = get_daily_displacement_data()
     
@@ -312,7 +402,7 @@ def get_partner_displacement_data(regions, districts, needs, causes, period, *ar
     
     df.rename(columns = {'18_59M':'Men', '18_59F':'Women', '60+M':'ElderlyMen', '60+F':'ElderlyWomen'}, inplace = True)
     df = df.drop(['0-4M', '0-4F', '5-11M', '5-11F', '12-17M', '12-17F', 'CurrentSettLon', 'CurrentSettLat'], axis=1)
-    df = df_filters_displacement(df, regions, districts, needs, causes, period, *args, **kwargs)
+    df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
     return df.to_json(orient='records')
 

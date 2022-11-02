@@ -36,7 +36,7 @@ import useFetch from '../../../../../useFetch';
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {row.PreviousSettlement}, {row.PreviousDistrict}, {row.PreviousDistrict},
+                  {row.PreviousSettlement}, {row.PreviousDistrict}, {row.PreviousRegion}
                 </TableCell>
                 <TableCell align="right">{row.AllPeople}</TableCell>
                 <TableCell align="right">{row.Reason}</TableCell>
@@ -168,7 +168,7 @@ export default function Modal({ isOpen, handleClose, popupInfo }) {
               ) : (
                 <Box>
                   <div className={classes.headerContainer}>
-                    <div className="tooltip_header_title">{district}</div>
+                    <div className="tooltip_header_title">{location}, {district}, {region}</div>
                     <div className="tooltip_header_subtitle">{`${numIDPS} IDPs arrived on ${dateOfArrival}`}</div>
                   </div>
                   <div>

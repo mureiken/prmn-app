@@ -148,13 +148,15 @@ function Map(props) {
   });
   
 
-  console.log("state: ", state);
-
 return (
   <div ref={mapRef}>
     <ReactMapGL
         ref={ref => myMapRef.current = ref && ref.getMap()}
-        {...props.viewport}
+        initialViewState={{
+          latitude: 5.1521,
+          longitude: 46.1996,
+          zoom: 5,
+        }}
         minZoom={1}
         maxZoom={15}
         doubleClickZoom={true}
@@ -197,9 +199,9 @@ return (
           }}
           data_id="ViolationDistrict"
       />
-    <Box style={navControlStyle}>
+    {/*<Box style={navControlStyle}>
       <NavigationControl />
-    </Box>
+        </Box>*/}
   </ReactMapGL>
   {state.popupInfo && <Modal {...state} handleClose={handleClose} />}
   </div>

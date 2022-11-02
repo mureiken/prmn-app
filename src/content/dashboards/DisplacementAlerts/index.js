@@ -6,7 +6,6 @@ import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack'
 import Alert from '@mui/material/Alert';
@@ -17,9 +16,7 @@ import DisplacementNeeds from './DisplacementNeeds';
 import DisplacementTriggers from './DisplacementTriggers';
 import DisplacementTrend from './DisplacementTrend';
 import IconButton from '@mui/material/IconButton';
-import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
-//import { red } from '@mui/material/colors';
-import { DEFAULT_VIEWPORT } from '../../../constants';
+import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
 import Map from './Map';
 import './index.css';
 import SubscriptionForm from '../../applications/EmailSubscription';
@@ -46,8 +43,6 @@ function DashboardMain() {
   const [query, setQuery] = useState('');  
 
   const [state, setState] = useState({
-    viewport: DEFAULT_VIEWPORT,
-    // data: {},
     todaysDate: new Date(),
     startDate: startDate(7),
     endDate: new Date().toLocaleDateString(),
@@ -58,12 +53,15 @@ function DashboardMain() {
     period: '30',
     causes: [],
     needs: [],
-    regions: [],
-    districts: [],
+    currentRegions: [],
+    currentDistricts: [],
+    previousRegions: [],
+    previousDistricts: [],
     start: date,
     end: date,
   })
 
+  
   const handleFilterChange = (target ,value) => {
     if (target === 'Period') {
       setFilters((prevState) => ({
@@ -89,20 +87,30 @@ function DashboardMain() {
         filterByDates: value,
         end: value,
       }));
+    } else if (target === 'CurrentRegions') {
+      setFilters((prevState) => ({
+        ...prevState,
+        currentRegions: value,
+      }));
+    } else if (target === 'CurrentDistricts') {
+      setFilters((prevState) => ({
+        ...prevState,
+        currentDistricts: value,
+      }));
+    } else if (target === 'PreviousRegions') {
+      setFilters((prevState) => ({
+        ...prevState,
+        previousRegions: value,
+      }));
+    } else if (target === 'PreviousDistricts') {
+      setFilters((prevState) => ({
+        ...prevState,
+        previousDistricts: value,
+      }));
     } else if (target === 'Needs') {
       setFilters((prevState) => ({
         ...prevState,
         needs: value,
-      }));
-    } else if (target === 'Regions') {
-      setFilters((prevState) => ({
-        ...prevState,
-        regions: value,
-      }));
-    } else if (target === 'Districts') {
-      setFilters((prevState) => ({
-        ...prevState,
-        districts: value,
       }));
     } else if (target === 'Causes') {
         setFilters((prevState) => ({
@@ -113,15 +121,17 @@ function DashboardMain() {
   }
 
   useEffect(() => {
-    let regions = filters.regions.length ? filters.regions.join(',') : 'All';
-    let districts = filters.districts.length ? filters.districts.join(',') : 'All';
+    let cregions = filters.currentRegions.length ? filters.currentRegions.join(',') : 'All';
+    let cdistricts = filters.currentDistricts.length ? filters.currentDistricts.join(',') : 'All';
+    let pregions = filters.previousRegions.length ? filters.previousRegions.join(',') : 'All';
+    let pdistricts = filters.previousDistricts.length ? filters.previousDistricts.join(',') : 'All'
     let needs = filters.needs.length ? filters.needs.join(',') : 'All';
     let causes = filters.causes.length ? filters.causes.join(',') : 'All';
     
     if (filters.filterByDates) {
-      setQuery(`${regions}/${districts}/${needs}/${causes}/d/${dateStr(filters.start)}/${dateStr(filters.end)}`);
+      setQuery(`${cregions}/${cdistricts}/${pregions}/${pdistricts}/${needs}/${causes}/d/${dateStr(filters.start)}/${dateStr(filters.end)}`);
     } else {
-      setQuery(`${regions}/${districts}/${needs}/${causes}/${filters.period}D`)
+      setQuery(`${cregions}/${cdistricts}/${pregions}/${pdistricts}/${needs}/${causes}/${filters.period}D`)
     }
   
   }, [dateStr, filters]);
@@ -151,7 +161,7 @@ function DashboardMain() {
         </CardHeader>
         <Divider />
         <CardContent>
-          <Skeleton variant="rectangular" height={218} />
+          <Skeleton variant="rectangular" height={218} width='100%' sx={{ color: 'secondary.light', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>loading...</Skeleton>
         </CardContent>
       </Card>
     )
@@ -183,11 +193,11 @@ function DashboardMain() {
                     }
                     action={
                         <IconButton aria-label="settings"  onClick={handleDrawerOpen}>
-                            <SettingsTwoToneIcon />
+                            <FilterAltTwoToneIcon />
                         </IconButton>
                     }
-                    title="Displacement Snapshot"
-                    subheader={loading ? <Skeleton variant="text" width={300} /> : <><Typography variant="h4" component="subtitle" color="primary">{Number(data.total_arrivals).toLocaleString('en')} </Typography> displaced between dates {filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} to {filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate } <Link href="/yearly-displacement" target="_blank"><Typography variant="subtitle2">View yearly displacement dashboard</Typography></Link></> }
+                    title={loading ? <Skeleton variant="text" width={150} /> : <> <Typography variant="h1" color="secondary">{Number(data.total_arrivals).toLocaleString('en')} </Typography> </> }
+                    subheader={loading ? <Skeleton variant="text" width={300} /> : <> displaced between dates {filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} to {filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate }</> }
                 />
             </Card>
             <Grid container spacing={2}>

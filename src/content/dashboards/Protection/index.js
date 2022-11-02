@@ -17,9 +17,7 @@ import ViolationResponses from './ViolationResponses';
 import ViolationPerpetrators from './ViolationPerpetrators';
 import ViolationTrend from './ViolationTrend';
 import IconButton from '@mui/material/IconButton';
-import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
-//import { red } from '@mui/material/colors';
-import { DEFAULT_VIEWPORT } from '../../../constants';
+import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
 import Map from './Map';
 import './index.css';
 import SubscriptionForm from '../../applications/EmailSubscription';
@@ -35,7 +33,6 @@ function DashboardMain() {
   //const [isLoading, setIsLoading] = useState(false);  
   const [query, setQuery] = useState('');  
   const [state, setState] = useState({
-    viewport: DEFAULT_VIEWPORT,
     data: {},
     todaysDate: new Date(),
     startDate: new Date(daysAgo.setDate(date.getDate() - 7)).toLocaleDateString(),
@@ -135,7 +132,7 @@ function DashboardMain() {
         </CardHeader>
         <Divider />
         <CardContent>
-          <Skeleton variant="rectangular" height={218} />
+          <Skeleton variant="rectangular" height={218} width='100%' sx={{ color: 'secondary.light', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>loading...</Skeleton>
         </CardContent>
       </Card>
     )
@@ -164,11 +161,11 @@ function DashboardMain() {
                     }
                     action={
                         <IconButton aria-label="settings"  onClick={handleDrawerOpen}>
-                            <SettingsTwoToneIcon />
+                            <FilterAltTwoToneIcon />
                         </IconButton>
                     }
-                    title="Protection Snapshot"
-                    subheader={loading ? <Skeleton variant="text" width={300} /> : <><Typography variant="h4" component="subtitle" color="primary">{Number(data.total_violation_cases).toLocaleString('en')} </Typography>violation cases between dates  {state.startDate} - {state.endDate} <Link href="/bi-protection-dashboard" target="_blank"><Typography variant="subtitle2">View PowerBI Protection dashboard</Typography></Link></>}
+                    title={loading ? <Skeleton variant="text" width={100} /> : <><Typography variant="h1"  color="secondary">{Number(data.total_violation_cases).toLocaleString('en')} </Typography></>}
+                    subheader={loading ? <Skeleton variant="text" width={300} /> : <> violation cases between dates  {state.startDate} - {state.endDate}</>}
                 />
             </Card>
             <Grid container spacing={2}>
@@ -203,7 +200,7 @@ function DashboardMain() {
                   <SkeletonWrapper />
                   ) : (
                     <Card>
-                        <CardHeader title="Top Violation Causes" />
+                        <CardHeader title="Top Violation Perpetrators" />
                         <Divider />
                         <CardContent>
                             <ViolationPerpetrators data={data} />

@@ -1,5 +1,5 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const morgan = require("morgan");
+// const morgan = require("morgan");
 
 const proxy = {
     target: 'http://localhost:5000',
@@ -12,5 +12,6 @@ module.exports = function(app) {
     createProxyMiddleware(proxy)
   );
 
-  app.use(morgan('combined'));
-};
+//   app.use(morgan('combined'));
+
+}

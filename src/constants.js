@@ -19,12 +19,6 @@ export const SPEED = 1.4;
 
 export const SIDEBAR_WIDTH = 510;
 
-export const DEFAULT_VIEWPORT = {
-  latitude: 5.1521,
-  longitude: 46.1996,
-  zoom: 5,
-};
-
 export const LAYER_ID = 'currentSettlements';
 export const LAYER_ID_2 = 'ViolationDistrict';
 export const MIN_YEAR = 2010;

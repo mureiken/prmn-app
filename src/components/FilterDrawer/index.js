@@ -91,20 +91,21 @@ export default function FilterDrawer({ open, handleClick, handleFilterChange, fi
         open={open}
         PaperProps={{
             sx: {
+              backgroundColor: 'rgba(255,255,255, 0.7)',
               width: {
-                xs: 150,
-                sm: 350
+                xs: 450,
+                sm: 460
               }
             }
           }}
     >
-        <DrawerHeader>
-            <IconButton onClick={handleClick} sx={{ mt: 1 }}>
+        <DrawerHeader sx={{ mb: 1, backgroundColor:'#fff', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Typography variant="h3" color="secondary">Filters</Typography>
+            <IconButton onClick={handleClick}>
                 <CloseTwoToneIcon />
             </IconButton>
         </DrawerHeader>
-        <Typography variant="h3" color="secondary" sx={{ px:2 }}>Filters</Typography>
-        <Divider sx={{ mt: 1 }} />
+       
         <Box sx={{ p: 1 }}>
           <Tabs
             value={value}
@@ -140,24 +141,54 @@ export default function FilterDrawer({ open, handleClick, handleFilterChange, fi
               </Grid>
             </Grid>
           </TabPanel>
-          
-          <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Regions</Typography>
-          <MultiSelect names={REGION_NAMES} handleFilter={handleFilterChange} target="Regions" selectedVals={filters.regions} />
-          <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Districts</Typography>
-          <MultiSelect names={DISTRICT_NAMES} handleFilter={handleFilterChange} target="Districts" selectedVals={filters.districts} />
+          <Divider sx={{ mt: 1 }} />
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Box>
+              <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Current Regions</Typography>
+              <MultiSelect names={REGION_NAMES} handleFilter={handleFilterChange} target="CurrentRegions" selectedVals={filters.currentRegions} />
+            </Box>
+            <Box>
+              <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Current Districts</Typography>
+              <MultiSelect names={DISTRICT_NAMES} handleFilter={handleFilterChange} target="CurrentDistricts" selectedVals={filters.currentDistricts} />
+            </Box>
+          </Box>
+          <Divider sx={{ mt: 1 }} />
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Box>
+              <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Previous Regions</Typography>
+              <MultiSelect names={REGION_NAMES} handleFilter={handleFilterChange} target="PreviousRegions" selectedVals={filters.previousRegions} />
+            </Box>
+            <Box>
+              <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Previous Districts</Typography>
+              <MultiSelect names={DISTRICT_NAMES} handleFilter={handleFilterChange} target="PreviousDistricts" selectedVals={filters.previousDistricts} />
+            </Box>
+          </Box>
+          <Divider sx={{ mt: 1 }} />
           { type === 'displacement' ?
               <>
-                <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Needs</Typography>
-                <MultiSelect names={NEEDS} handleFilter={handleFilterChange} target="Needs" selectedVals={filters.needs} />
-                <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Causes</Typography>
-                <MultiSelect names={CAUSES} handleFilter={handleFilterChange} target="Causes" selectedVals={filters.causes} />
+                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <Box>
+                    <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Needs</Typography>
+                    <MultiSelect names={NEEDS} handleFilter={handleFilterChange} target="Needs" selectedVals={filters.needs} />
+                  </Box>
+                  <Box>
+                    <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Causes</Typography>
+                    <MultiSelect names={CAUSES} handleFilter={handleFilterChange} target="Causes" selectedVals={filters.causes} />
+                  </Box>
+                </Box>
               </>
             :
             <>
-            <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Violation Categories</Typography>
-            <MultiSelect names={VIOLATION_CATEGORIES} handleFilter={handleFilterChange} target="Violations" selectedVals={filters.violations} />
-            <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>perpetrator Groups</Typography>
-            <MultiSelect names={PERPETRATOR_GROUPS} handleFilter={handleFilterChange} target="Perpetrators" selectedVals={filters.perpetrators} />
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Box>
+                <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Violation Categories</Typography>
+                <MultiSelect names={VIOLATION_CATEGORIES} handleFilter={handleFilterChange} target="Violations" selectedVals={filters.violations} />
+              </Box>
+              <Box>
+                <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>perpetrator Groups</Typography>
+                <MultiSelect names={PERPETRATOR_GROUPS} handleFilter={handleFilterChange} target="Perpetrators" selectedVals={filters.perpetrators} />
+              </Box>
+            </Box>
             </>
         }     
         </Box>

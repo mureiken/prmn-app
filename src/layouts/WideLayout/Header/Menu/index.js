@@ -86,7 +86,7 @@ function HeaderMenu() {
           >
             <ListItemText
               primaryTypographyProps={{ noWrap: true }}
-              primary="Displacement Report"
+              primary="Displacement"
             />
           </ListItem>
           <ListItem
@@ -97,27 +97,27 @@ function HeaderMenu() {
           >
             <ListItemText
               primaryTypographyProps={{ noWrap: true }}
-              primary="Protection Report"
+              primary="Protection"
             />
           </ListItem>
           <ListItem
-          classes={{ root: 'MuiListItem-indicators' }}
-          button
-          ref={ref}
-          onClick={handleOpen}
-        >
-        <ListItemText
-          primaryTypographyProps={{ noWrap: true }}
-          primary={
-            <Box display="flex" alignItems="center">
-              Other Reports
-              <Box display="flex" alignItems="center" pl={0.3}>
-                <ExpandMoreTwoToneIcon fontSize="small" />
-              </Box>
-            </Box>
-          }
-        />
-        </ListItem>
+            classes={{ root: 'MuiListItem-indicators' }}
+            button
+            ref={ref}
+            onClick={handleOpen}
+          >
+            <ListItemText
+              primaryTypographyProps={{ noWrap: true }}
+              primary={
+                <Box display="flex" alignItems="center">
+                  Dashboards
+                  <Box display="flex" alignItems="center" pl={0.3}>
+                    <ExpandMoreTwoToneIcon fontSize="small" />
+                  </Box>
+                </Box>
+              }
+            />
+          </ListItem>
           <ListItem
             classes={{ root: 'MuiListItem-indicators' }}
             button

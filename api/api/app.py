@@ -8,6 +8,9 @@ from apifairy import APIFairy
 from celery import Celery
 from config import Config
 
+
+
+
 db = Alchemical()
 migrate = Migrate()
 ma = Marshmallow()
@@ -31,6 +34,7 @@ def create_app(config_class=Config):
     mail.init_app(app)
     apifairy.init_app(app)
     celery.conf.update(app.config)
+   
 
     # blueprints
     from api.errors import errors
@@ -55,6 +59,12 @@ def create_app(config_class=Config):
     app.register_blueprint(feedback, url_prefix='/api')
     from api.fake import fake
     app.register_blueprint(fake)
+    
+    # Debugging.
+    if app.debug:
+        from werkzeug.middleware.profiler import ProfilerMiddleware
+        app.config["PROFILE"] = True
+        app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[30],  profile_dir='./profile')
 
     # define the shell context
     @app.shell_context_processor

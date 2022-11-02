@@ -44,8 +44,10 @@ function PartnerDisplacementDashBoard() {
     period: '30',
     causes: [],
     needs: [],
-    regions: [],
-    districts: [],
+    currentRegions: [],
+    currentDistricts: [],
+    previousRegions: [],
+    previousDistricts: [],
     start: date,
     end: date,
   })
@@ -75,20 +77,30 @@ function PartnerDisplacementDashBoard() {
         filterByDates: value,
         end: value,
       }));
+    } else if (target === 'CurrentRegions') {
+      setFilters((prevState) => ({
+        ...prevState,
+        currentRegions: value,
+      }));
+    } else if (target === 'CurrentDistricts') {
+      setFilters((prevState) => ({
+        ...prevState,
+        currentDistricts: value,
+      }));
+    } else if (target === 'PreviousRegions') {
+      setFilters((prevState) => ({
+        ...prevState,
+        previousRegions: value,
+      }));
+    } else if (target === 'PreviousDistricts') {
+      setFilters((prevState) => ({
+        ...prevState,
+        previousDistricts: value,
+      }));
     } else if (target === 'Needs') {
       setFilters((prevState) => ({
         ...prevState,
         needs: value,
-      }));
-    } else if (target === 'Regions') {
-      setFilters((prevState) => ({
-        ...prevState,
-        regions: value,
-      }));
-    } else if (target === 'Districts') {
-      setFilters((prevState) => ({
-        ...prevState,
-        districts: value,
       }));
     } else if (target === 'Causes') {
         setFilters((prevState) => ({
@@ -99,17 +111,18 @@ function PartnerDisplacementDashBoard() {
   }
 
   useEffect(() => {
-    let regions = filters.regions.length ? filters.regions.join(',') : 'All';
-    let districts = filters.districts.length ? filters.districts.join(',') : 'All';
+    let cregions = filters.currentRegions.length ? filters.currentRegions.join(',') : 'All';
+    let cdistricts = filters.currentDistricts.length ? filters.currentDistricts.join(',') : 'All';
+    let pregions = filters.previousRegions.length ? filters.previousRegions.join(',') : 'All';
+    let pdistricts = filters.previousDistricts.length ? filters.previousDistricts.join(',') : 'All'
     let needs = filters.needs.length ? filters.needs.join(',') : 'All';
     let causes = filters.causes.length ? filters.causes.join(',') : 'All';
     
     if (filters.filterByDates) {
-      setQuery(`${regions}/${districts}/${needs}/${causes}/d/${dateStr(filters.start)}/${dateStr(filters.end)}`);
+      setQuery(`${cregions}/${cdistricts}/${pregions}/${pdistricts}/${needs}/${causes}/d/${dateStr(filters.start)}/${dateStr(filters.end)}`);
     } else {
-      setQuery(`${regions}/${districts}/${needs}/${causes}/${filters.period}D`)
+      setQuery(`${cregions}/${cdistricts}/${pregions}/${pdistricts}/${needs}/${causes}/${filters.period}D`)
     }
-  
   }, [dateStr, filters]);
 
   const url = query && `${process.env.REACT_APP_API_URL}/api/partner-displacement-data/${query}`;

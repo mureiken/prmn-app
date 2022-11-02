@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { HorizontalBar } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useTheme } from '@mui/material/styles';
 
 const DisplacementRegionsChart = ({
@@ -47,6 +48,8 @@ const DisplacementRegionsChart = ({
     scales: {
       xAxes: [
         {
+          display: false,
+          offset: true,
           gridLines: {
             display: false,
             drawBorder: false
@@ -107,6 +110,19 @@ const DisplacementRegionsChart = ({
         }
       }
     },
+    plugins: {
+      datalabels: {
+        display: true,
+        clamp: true,
+        anchor: 'end',
+        align: 'end',
+        offset: 4,
+        color: theme.palette.text.secondary,
+        formatter: function(value) {
+          return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+      }
+    },
     onClick: function(evt, element) {
       if (element.length > 0) {
         console.log(myData.labels[element[0]._index]);
@@ -119,7 +135,8 @@ const DisplacementRegionsChart = ({
   return (
     <div {...rest}>
       <HorizontalBar 
-        data={myData} 
+        data={myData}
+        plugins={[ChartDataLabels]}
         options={options}
       />
     </div>
