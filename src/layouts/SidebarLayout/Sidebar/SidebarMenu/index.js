@@ -11,7 +11,7 @@ import {
   ListItem
 } from '@mui/material';
 import { NavLink as RouterLink } from 'react-router-dom';
-import { SidebarContext } from 'src/contexts/SidebarContext';
+import { SidebarContext } from '../../../../contexts/SidebarContext';
 import TransferWithinAStationTwoToneIcon from '@mui/icons-material/TransferWithinAStationTwoTone';
 import HealthAndSafetyTwoToneIcon from '@mui/icons-material/HealthAndSafetyTwoTone';
 import TableChartTwoToneIcon from '@mui/icons-material/TableChartTwoTone';

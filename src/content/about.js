@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 
-import Footer from 'src/components/Footer';
+import Footer from '../components/Footer';
 
 export default function About() {
   return (

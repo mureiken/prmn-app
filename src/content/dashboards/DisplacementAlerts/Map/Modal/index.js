@@ -118,7 +118,7 @@ export default function Modal({ isOpen, handleClose, popupInfo }) {
 
   
   
-  const url = query && `${process.env.REACT_APP_API_URL}/api/displacement-data/details/${query}`
+  const url = query && `/api/displacement-data/details/${query}`
   
   const {
     loading,  

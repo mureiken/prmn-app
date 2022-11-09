@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import Scrollbar from 'src/components/Scrollbar';
-import { SidebarContext } from 'src/contexts/SidebarContext';
+import Scrollbar from '../../../components/Scrollbar';
+import { SidebarContext } from '../../../contexts/SidebarContext';
 import { useAuth } from '../../../contexts/authContext.js'
 
 import {
@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 
 import SidebarMenu from './SidebarMenu';
-import Logo from 'src/assets/LogoVariant.png';
+import Logo from '../../../assets/LogoVariant.png';
 
 const SidebarWrapper = styled(Box)(
   ({ theme }) => `

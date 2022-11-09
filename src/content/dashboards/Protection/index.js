@@ -8,9 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
-//import HealthAndSafetyTwoToneIcon from '@mui/icons-material/HealthAndSafetyTwoTone';
 import Skeleton from '@mui/material/Skeleton';
 import ViolationCategories from './ViolationCategories';
 import ViolationResponses from './ViolationResponses';
@@ -21,8 +19,8 @@ import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
 import Map from './Map';
 import './index.css';
 import SubscriptionForm from '../../applications/EmailSubscription';
-import ProtectionIcon from 'src/assets/Abduction-kidnapping.png';
-import Footer from 'src/components/Footer';
+import ProtectionIcon from '../../../assets/Abduction-kidnapping.png';
+import Footer from '../../../components/Footer';
 import FilterDrawer from '../../../components/FilterDrawer';
 import useFetch from '../../../useFetch';
 
@@ -84,7 +82,7 @@ function DashboardMain() {
   
   }, [filters]);
 
-  const url = query && `${process.env.REACT_APP_API_URL}/api/protection-data/${query}`
+  const url = query && `/api/protection-data/${query}`
   
   const {
     loading,  

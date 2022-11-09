@@ -61,7 +61,7 @@ import { COLORS } from '../../../../../constants';
     },
   }));
 
-export default function Modal({ title, children, isOpen, handleClose, popupInfo }) {
+export default function Modal({ isOpen, handleClose, popupInfo }) {
 
   const district = popupInfo.properties.ViolationDistrict;
   const fromDate = popupInfo.properties.FromDate;

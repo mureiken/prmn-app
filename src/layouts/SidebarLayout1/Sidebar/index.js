@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import { SidebarContext } from 'src/contexts/SidebarContext';
-import Logo from 'src/components/Logo';
+import { SidebarContext } from '../../../contexts/SidebarContext';
+import Logo from '../../../components/Logo';
 
 import { Box, Drawer, Hidden } from '@mui/material';
 

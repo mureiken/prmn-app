@@ -34,7 +34,6 @@ click-repl==0.2.0
 cloudpickle==2.2.0
 colorful==0.5.4
 cramjam==2.5.0
-dask==2022.10.0
 debugpy==1.6.0
 decorator==5.1.1
 defusedxml==0.7.1
@@ -56,7 +55,6 @@ Flask-RESTful==0.3.9
 Flask-SQLAlchemy==2.5.1
 frozenlist==1.3.1
 fsspec==2022.8.2
-GDAL==3.3.2
 google-api-core==2.10.2
 google-auth==2.13.0
 googleapis-common-protos==1.56.4
@@ -92,7 +90,6 @@ marshmallow-geojson==0.3.0
 marshmallow-sqlalchemy==0.28.0
 matplotlib-inline==0.1.3
 mistune==0.8.4
-modin-spreadsheet==0.1.2
 msgpack==1.0.4
 multidict==6.0.2
 Naked==0.1.31
@@ -122,7 +119,6 @@ psutil==5.9.0
 ptyprocess==0.7.0
 pure-eval==0.2.2
 py-spy==0.3.14
-pyarrow==9.0.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.21
@@ -136,12 +132,10 @@ pyrsistent==0.18.1
 python-dateutil==2.8.2
 python-dotenv==0.20.0
 pytz==2022.1
-pywatchman==1.4.1
 PyYAML==6.0
 pyzmq==22.3.0
 qtconsole==5.3.0
 QtPy==2.1.0
-ray==2.0.0
 redis==3.5.3
 requests==2.27.1
 rpyc==4.1.5

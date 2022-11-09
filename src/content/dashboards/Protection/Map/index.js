@@ -1,18 +1,12 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import Box from '@mui/material/Box';
-import { Map as ReactMapGL, NavigationControl } from 'react-map-gl';
+import { Map as ReactMapGL } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { CIRCLE_OPACITY, LAYER_ID_2, COLORS, MAX_RADIUS, MIN_RADIUS } from '../../../../constants';
 import Circles from './Circles/index'
 import Polygons from './Polygons/index'
 import Modal from './Modal';
 
-const navControlStyle = {
-  position: "absolute",
-  bottom: 70,
-  right: 0,
-  padding: "10px",
-};
+
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN; // Set your mapbox token here
 

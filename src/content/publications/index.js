@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Publication from './Publication';
 
-import Footer from 'src/components/Footer';
+import Footer from '../../components/Footer';
 function Publications() {
 
   const documents = [

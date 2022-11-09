@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
-import Footer from 'src/components/Footer';
+import Footer from '../components/Footer';
 
 export default function About() {
   const [feedback, setFeedback] = useState("");

@@ -11,7 +11,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
-import { REGION_NAMES } from 'src/constants';
+import { REGION_NAMES } from '../../../constants';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;

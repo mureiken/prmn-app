@@ -1,10 +1,10 @@
 import { Suspense, lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import SidebarLayout from 'src/layouts/SidebarLayout';
-import WideLayout from 'src/layouts/WideLayout';
+import SidebarLayout from './layouts/SidebarLayout';
+import WideLayout from './layouts/WideLayout';
 
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import SuspenseLoader from './components/SuspenseLoader';
 import { useAuth } from './contexts/authContext'
 
 const Loader = (Component) => (props) =>
@@ -25,22 +25,22 @@ const ProtectedRoute = ({ children }) => {
 };
 
 // Dashboards
-const Displacement = Loader(lazy(() => import('src/content/dashboards/DisplacementAlerts')));
-const PartnerDisplacementData = Loader(lazy(() => import('src/content/dashboards/PartnerDisplacementData/index')));
-const Protection = Loader(lazy(() => import('src/content/dashboards/Protection')));
-const PartnerProtectionData = Loader(lazy(() => import('src/content/dashboards/PartnerProtectionData/index')))
+const Displacement = Loader(lazy(() => import('./content/dashboards/DisplacementAlerts')));
+const PartnerDisplacementData = Loader(lazy(() => import('./content/dashboards/PartnerDisplacementData/index')));
+const Protection = Loader(lazy(() => import('./content/dashboards/Protection')));
+const PartnerProtectionData = Loader(lazy(() => import('./content/dashboards/PartnerProtectionData/index')))
 
 // Pages
-const About = Loader(lazy(() => import('src/content/about.js')));
-const Contact = Loader(lazy(() => import('src/content/contact.js')));
-const SignIn = Loader(lazy(() => import('src/content/applications/Users/SignIn')));
+const About = Loader(lazy(() => import('./content/about.js')));
+const Contact = Loader(lazy(() => import('./content/contact.js')));
+const SignIn = Loader(lazy(() => import('./content/applications/Users/SignIn')));
 
 //Publications
-const Publications = Loader(lazy(() => import('src/content/publications')));
+const Publications = Loader(lazy(() => import('./content/publications')));
 
 // Pages with Iframes
-const YearlyDisplacement = Loader(lazy(() => import('src/content/dashboards/Externals/YearlyDisplacemement.js')));
-const PowerBIProtectionDashboard = Loader(lazy(() => import('src/content/dashboards/Externals/PowerBIProtectionDashboard.js')));
+const YearlyDisplacement = Loader(lazy(() => import('./content/dashboards/Externals/YearlyDisplacemement.js')));
+const PowerBIProtectionDashboard = Loader(lazy(() => import('./content/dashboards/Externals/PowerBIProtectionDashboard.js')));
 
 
 // Applications
@@ -50,26 +50,26 @@ const PowerBIProtectionDashboard = Loader(lazy(() => import('src/content/dashboa
 // );
 
 const UserProfile = Loader(
-  lazy(() => import('src/content/applications/Users/profile'))
+  lazy(() => import('./content/applications/Users/profile'))
 );
 const UserSettings = Loader(
-  lazy(() => import('src/content/applications/Users/settings'))
+  lazy(() => import('./content/applications/Users/settings'))
 );
 
 
 // Status
 
 const Status404 = Loader(
-  lazy(() => import('src/content/pages/Status/Status404'))
+  lazy(() => import('./content/pages/Status/Status404'))
 );
 const Status500 = Loader(
-  lazy(() => import('src/content/pages/Status/Status500'))
+  lazy(() => import('./content/pages/Status/Status500'))
 );
 const StatusComingSoon = Loader(
-  lazy(() => import('src/content/pages/Status/ComingSoon'))
+  lazy(() => import('./content/pages/Status/ComingSoon'))
 );
 const StatusMaintenance = Loader(
-  lazy(() => import('src/content/pages/Status/Maintenance'))
+  lazy(() => import('./content/pages/Status/Maintenance'))
 );
 
 const routes = [

@@ -1,0 +1,21 @@
+version: '3'
+services:
+  frontend:
+    build: .
+    image: prmn-app-client:latest
+    ports:
+      - "3000:80"
+    restart: always
+  api:
+    build: /api
+    image: prmn-app-api:latest
+    volumes:
+      - type: volume
+        source: data
+        target: /data
+    env_file: .env
+    # environment:
+    #   DATABASE_URL: sqlite:////api/db.sqlite
+    restart: always
+volumes:
+  data:

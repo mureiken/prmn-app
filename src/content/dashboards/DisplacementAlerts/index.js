@@ -20,10 +20,10 @@ import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
 import Map from './Map';
 import './index.css';
 import SubscriptionForm from '../../applications/EmailSubscription';
-import Footer from 'src/components/Footer';
+import Footer from '../../../components/Footer';
 import FilterDrawer from '../../../components/FilterDrawer';
 import useFetch from '../../../useFetch';
-import InternallyDisplacedIcon from 'src/assets/Internally-displaced.png';
+import InternallyDisplacedIcon from '../../../assets/Internally-displaced.png';
 
 function DashboardMain() {
   const date = useMemo(
@@ -136,7 +136,7 @@ function DashboardMain() {
   
   }, [dateStr, filters]);
 
-  const url = query && `${process.env.REACT_APP_API_URL}/api/displacement-data/${query}`;
+  const url = query && `/api/displacement-data/${query}`;
   
   const {
     loading,  

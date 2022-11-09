@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
 // import { red } from '@mui/material/colors';
 import FilterDrawer from '../../../components/FilterDrawer';
-import ProtectionIcon from 'src/assets/Abduction-kidnapping.png';
+import ProtectionIcon from '../../../assets/Abduction-kidnapping.png';
 import DataTable from './DataTable';
 
 function PartnerDisplacementDashBoard() {

@@ -14,7 +14,7 @@ import Alert from '@mui/material/Alert';
 import FilterDrawer from '../../../components/FilterDrawer';
 import useFetch from '../../../useFetch';
 import DataTable from './DataTable';
-import InternallyDisplacedIcon from 'src/assets/Internally-displaced.png';
+import InternallyDisplacedIcon from '../../../assets/Internally-displaced.png';
 
 function PartnerDisplacementDashBoard() {
   const date = useMemo(
@@ -125,7 +125,7 @@ function PartnerDisplacementDashBoard() {
     }
   }, [dateStr, filters]);
 
-  const url = query && `${process.env.REACT_APP_API_URL}/api/partner-displacement-data/${query}`;
+  const url = query && `/api/partner-displacement-data/${query}`;
 
   const {
     loading,  
