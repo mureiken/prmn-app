@@ -513,6 +513,7 @@ def current_settlement_arrival_details(currentsettlement, arrival_date):
                 'Arrival',
                 'AllPeople'
                 ],
+            sep=',',
             index_col='CurrentSettlement'
     )
     df['Needs'] = df['Need1'] + ',' + df['Need2'] 
