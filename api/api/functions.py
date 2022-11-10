@@ -500,22 +500,9 @@ def get_filtered_monthly_displacement_alerts(regions='Middle Juba'):
 # Functions returns data on details of arrivals in a settlement in a particular date 
 def current_settlement_arrival_details(currentsettlement, arrival_date):
     """Retrieve displacement details by current settlement and arrival date"""
-    df = pd.read_csv(
-            'data/displacement_data.csv',
-            usecols=[
-                'CurrentSettlement',
-                'PreviousSettlement', 
-                'PreviousDistrict', 
-                'PreviousRegion', 
-                'Reason',
-                'Need1',
-                'Need2', 
-                'Arrival',
-                'AllPeople'
-                ],
-            index_col='CurrentSettlement',
-            sep=',',
-    )
+    df = get_daily_displacement_data()
+    df =  df.set_index('CurrentSettlement')
+
     df['Needs'] = df['Need1'] + ',' + df['Need2'] 
 
         
