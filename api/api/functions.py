@@ -143,6 +143,7 @@ def get_daily_displacement_data():
                 '60+M',	
                 '60+F',
                 ],
+            sep=',',
             parse_dates=['Arrival'],
             engine='c',
             iterator=True, 
@@ -210,6 +211,7 @@ def get_daily_protection_data():
             'ViolationDistrict',
             'ViolationSettlement'
             ],
+        sep=',',
         parse_dates=['ReportDate'],
         engine='c',
         dtype={
