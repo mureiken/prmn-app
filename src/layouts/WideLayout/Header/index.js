@@ -8,6 +8,8 @@ import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import { SidebarContext } from '../../../contexts/SidebarContext';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 import Button from '@mui/material/Button';
+import '../../../assets/fonts/arialmt.ttf';
+import './index.css';
 
 
 import HeaderMenu from './Menu';
@@ -47,6 +49,7 @@ function Header() {
 
   const PRMNLogoText = styled(Box)(
     ({ theme }) => `
+          font-family: 'ArialMTMedium';
           font-size: ${theme.typography.pxToRem(18)};
           font-weight: ${theme.typography.fontWeightBold};
   `

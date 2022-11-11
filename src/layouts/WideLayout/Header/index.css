@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'ArialMTMedium';
+    src: local("ARIALMTMEDIUM"),
+     url("../../../assets/fonts/ARIALMTMEDIUM.TTF") format("truetype");
+    }
+
+    .font-face-arialmt {
+        font-family: "ArialMTMedium";
+       }
