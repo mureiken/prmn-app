@@ -9,6 +9,8 @@
   },
   "private": false,
   "dependencies": {
+    "@azure/msal-browser": "^2.31.0",
+    "@azure/msal-react": "^1.4.10",
     "@emotion/react": "11.4.1",
     "@emotion/styled": "11.3.0",
     "@mui/icons-material": "^5.8.4",
