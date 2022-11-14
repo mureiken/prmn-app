@@ -50,7 +50,8 @@ class DisplacementDataSchema(ma.Schema):
     geojson = ma.Nested(DisplacementGeoJSONSchema)
     top_causes = ma.Dict()
     top_needs = ma.Dict()
-    top_regions = ma.Dict()
+    top_locations_category = ma.String()
+    top_locations = ma.Dict()
     weekly_displacement = ma.List(ma.Dict())
     total_arrivals = ma.String()
     

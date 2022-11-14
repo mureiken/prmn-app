@@ -292,7 +292,7 @@ def get_top_displacement_settlements(cregions, cdistricts, pregions, pdistricts,
     
     df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
-    df1 = df.groupby('CurrentDistrict')['AllPeople'].sum().nlargest(5)
+    df1 = df.groupby('CurrentSettlement')['AllPeople'].sum().nlargest(5)
     # df1 = (100. * df1 / df1.sum()).round(0)
     
     return df1.to_json()

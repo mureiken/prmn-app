@@ -3,7 +3,7 @@ import { HorizontalBar } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useTheme } from '@mui/material/styles';
 
-const DisplacementRegionsChart = ({
+const DisplacementLocationsChart = ({
   data: dataProp,
   labels,
   ...rest
@@ -143,9 +143,9 @@ const DisplacementRegionsChart = ({
   );
 };
 
-DisplacementRegionsChart.propTypes = {
+DisplacementLocationsChart.propTypes = {
   data: PropTypes.object.isRequired,
   labels: PropTypes.array.isRequired
 };
 
-export default DisplacementRegionsChart;
+export default DisplacementLocationsChart;

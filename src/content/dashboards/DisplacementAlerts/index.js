@@ -11,7 +11,7 @@ import Stack from '@mui/material/Stack'
 import Alert from '@mui/material/Alert';
 //import TransferWithinAStationTwoToneIcon from '@mui/icons-material/TransferWithinAStationTwoTone';
 import Skeleton from '@mui/material/Skeleton';
-import DisplacementRegions from './DisplacementRegions';
+import DisplacementLocations from './DisplacementLocations';
 import DisplacementNeeds from './DisplacementNeeds';
 import DisplacementTriggers from './DisplacementTriggers';
 import DisplacementTrend from './DisplacementTrend';
@@ -189,7 +189,7 @@ function DashboardMain() {
             {error && <Alert severity={"error"} >{error}</Alert>}
                 <CardHeader
                   avatar={
-                    <img src={InternallyDisplacedIcon} alt="" width={50} />
+                    <img src={InternallyDisplacedIcon} alt="" width={75} />
                     }
                     action={
                         <IconButton aria-label="settings"  onClick={handleDrawerOpen}>
@@ -197,7 +197,21 @@ function DashboardMain() {
                         </IconButton>
                     }
                     title={loading ? <Skeleton variant="text" width={150} /> : <> <Typography variant="h1" color="secondary">{Number(data.total_arrivals).toLocaleString('en')} </Typography> </> }
-                    subheader={loading ? <Skeleton variant="text" width={300} /> : <> displaced between dates {filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} to {filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate }</> }
+                    subheader={ 
+                      loading ? 
+                        <Skeleton variant="text" width={300} /> 
+                      : 
+                        <> 
+                          Displaced between dates {filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} to {filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate }
+                          {(filters.currentRegions.length || filters.currentDistricts.length || filters.previousRegions.length || filters.previousDistricts.length) &&  <><br /> <strong>Locations:</strong></>}
+                          {filters.currentRegions.length ? <> Current regions:  [{filters.currentRegions.join(',')}] </>: ''}
+                          {filters.currentDistricts.length ? <> Current districts:  [{filters.currentDistricts.join(', ')}] </> : ''}
+                          {filters.previousRegions.length ?  <> Previous regions: [{filters.previousRegions.join(',')}]  </>: ''}
+                          {filters.previousDistricts.length ? <> Previous districts: [{filters.previousDistricts.join(',')}] </>: ''}
+                          {filters.needs.length ? <><br /> <strong>Needs</strong>: [{filters.needs.join(',')}] </>: ''}
+                          {filters.causes.length ? <> <strong>Causes:</strong> [{filters.causes.join(',')}] </>: ''}
+                        </> 
+                      }
                 />
             </Card>
             <Grid container spacing={2}>
@@ -206,10 +220,10 @@ function DashboardMain() {
                     <SkeletonWrapper />
                     ) : (
                     <Card>
-                        <CardHeader title="Top Regions" />
+                        <CardHeader title={`Top ${data.top_locations_category}`} />
                         <Divider />
                         <CardContent>
-                            <DisplacementRegions data={data} />
+                            <DisplacementLocations data={data} />
                         </CardContent>
                     </Card>
                   )}

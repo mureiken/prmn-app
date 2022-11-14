@@ -6,7 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
 import TransferWithinAStationTwoToneIcon from '@mui/icons-material/TransferWithinAStationTwoTone';
-import DisplacementRegions from './DisplacementRegions';
+import DisplacementRegions from './DisplacementLocations';
 import DisplacementNeeds from './DisplacementNeeds';
 import DisplacementTriggers from './DisplacementTriggers';
 import IconButton from '@mui/material/IconButton';
