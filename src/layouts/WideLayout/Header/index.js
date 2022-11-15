@@ -7,7 +7,8 @@ import { styled } from '@mui/material/styles';
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import { SidebarContext } from '../../../contexts/SidebarContext';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
-import Button from '@mui/material/Button';
+//import Button from '@mui/material/Button';
+import { SignInButton }  from '../../../components/SignInButton';
 import '../../../assets/fonts/arialmt.ttf';
 import './index.css';
 
@@ -16,8 +17,9 @@ import HeaderMenu from './Menu';
 //import HeaderButtons from './Buttons';
 import HeaderUserbox from './Userbox';
 import Logo from '../../../components/Logo';
-import { NavLink } from 'react-router-dom';
+//import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../../contexts/authContext'
+import { useIsAuthenticated } from "@azure/msal-react";
 
 const HeaderWrapper = styled(Box)(
   ({ theme }) => `
@@ -45,6 +47,7 @@ const MenuWrapper = styled(Box)(
 function Header() {
   const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
   const { token, user, logout } = useAuth();
+  const isAuthenticated = useIsAuthenticated();
   console.log("Token is: ", token);
 
   const PRMNLogoText = styled(Box)(
@@ -74,19 +77,21 @@ function Header() {
           </Hidden>
         </Box>
         <Box>
-        { token ? 
+        {  isAuthenticated ? 
           <Box>
             <HeaderUserbox user={user} logout={logout} />
           </Box>
           :
-          <Button 
+          <SignInButton />
+          
+            /*<Button 
             variant="outlined" 
             sx={{ my: 1, mx: 1.5 }}
             component={NavLink}
             to='/login'
           >
               Login
-          </Button>
+        </Button>*/
         }
           <Hidden lgUp>
             <Tooltip arrow title="Toggle Menu">

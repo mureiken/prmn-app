@@ -16,11 +16,11 @@ import Typography from '@mui/material/Typography'
 import { styled, lighten } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
-import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
+//import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
 import TransferWithinAStationTwoToneIcon from '@mui/icons-material/TransferWithinAStationTwoTone';
 import HealthAndSafetyTwoToneIcon from '@mui/icons-material/HealthAndSafetyTwoTone';
-
+import { SignOutButton }  from '../../../../components/SignOutButton';
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
         padding-left: ${theme.spacing(1)};
@@ -139,10 +139,7 @@ function HeaderUserbox({ logout }) {
         </List>
         <Divider />
         <Box component="form" onSubmit={()=>logout()} sx={{ m: 1 }}>
-          <Button color="primary" fullWidth>
-            <LockOpenTwoToneIcon sx={{ mr: 1 }} />
-            Sign out
-          </Button>
+          <SignOutButton />
         </Box>
       </Popover>
     </>
