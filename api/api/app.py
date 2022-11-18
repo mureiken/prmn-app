@@ -61,10 +61,10 @@ def create_app(config_class=Config):
     app.register_blueprint(fake)
     
     # Debugging.
-    # if app.debug:
-    #     from werkzeug.middleware.profiler import ProfilerMiddleware
-    #     app.config["PROFILE"] = True
-    #     app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[30],  profile_dir='./profile')
+    if app.debug:
+        from werkzeug.middleware.profiler import ProfilerMiddleware
+        app.config["PROFILE"] = True
+        app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[30],  profile_dir='./profile')
 
     # define the shell context
     @app.shell_context_processor

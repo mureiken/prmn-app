@@ -28,6 +28,7 @@ chrome-user-data
 .env.production
 src/setupProxy.js
 api/.flaskenv
+api/profile
 
 packages/react-devtools-core/dist
 packages/react-devtools-extensions/chrome/build
