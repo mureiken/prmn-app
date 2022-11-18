@@ -116,7 +116,7 @@ const DisplacementLocationsChart = ({
         clamp: true,
         anchor: 'end',
         align: 'end',
-        offset: 4,
+        offset: 2,
         color: theme.palette.text.secondary,
         formatter: function(value) {
           return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import Scrollbar from '../../../components/Scrollbar';
 import { SidebarContext } from '../../../contexts/SidebarContext';
-import { useAuth } from '../../../contexts/authContext.js'
+import { useAuth } from '../../../contexts/authContext1.js'
 
 import {
   Box,

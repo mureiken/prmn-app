@@ -16,9 +16,9 @@ const Loader = (Component) => (props) =>
 
 const ProtectedRoute = ({ children }) => {
 
-  const { token } = useAuth();
+  const { state } = useAuth();
 
-  if (!token) {
+  if (!state.accessToken) {
     return <Navigate to="/" replace />;
   }
   return children;
