@@ -111,8 +111,8 @@ def displacement_filters_protection(df, period, regions, violations, perpetrator
     return df
 
 #This function geojson for daily displacement data
-@pandas_cache("t")
-def get_daily_displacement_data(t):
+@pandas_cache
+def get_daily_displacement_data():
     """Retrieve displacement data"""
 
     tp = pd.read_csv(
