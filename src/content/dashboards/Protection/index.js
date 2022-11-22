@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -15,7 +15,7 @@ import ViolationResponses from './ViolationResponses';
 import ViolationPerpetrators from './ViolationPerpetrators';
 import ViolationTrend from './ViolationTrend';
 import IconButton from '@mui/material/IconButton';
-import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
+import TuneTwoToneIcon from '@mui/icons-material/TuneTwoTone';
 import Map from './Map';
 import './index.css';
 import SubscriptionForm from '../../applications/EmailSubscription';
@@ -25,8 +25,18 @@ import FilterDrawer from '../../../components/FilterDrawer';
 import useFetch from '../../../useFetch';
 
 function DashboardMain() {
-  const date = new Date();
-  const daysAgo = new Date(date.getTime());
+  const date = useMemo(
+    () => { return new Date(); }, [],
+  );
+  const daysAgo = new Date(date.getTime());  
+  const dateStr = useCallback(
+    (myDate = date, format='en-US') => {
+      return myDate.toLocaleDateString(format).replace(/\//g, '-');
+    },
+    [date],
+  );
+  
+  const startDate = (period) => new Date(daysAgo.setDate(date.getDate() - period)).toLocaleDateString()
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   //const [isLoading, setIsLoading] = useState(false);  
   const [query, setQuery] = useState('');  
@@ -38,6 +48,7 @@ function DashboardMain() {
   });
 
   const [filters, setFilters] = useState({
+    filterByDates: false,
     period: '30',
     violations: [],
     perpetrators: [],
@@ -48,11 +59,25 @@ function DashboardMain() {
     if (target === 'Period') {
       setFilters((prevState) => ({
         ...prevState,
-        period: value,
+        filterByDates: false,
+        period: value,       
       }));
       setState((prevState) => ({
         ...prevState,
-        startDate:  new Date(daysAgo.setDate(date.getDate() - value)).toLocaleDateString(),
+        startDate:  startDate(value),
+      }));
+    } else if (target==='start') {
+      setFilters((prevState) => ({
+        ...prevState,
+        filterByDates: value,
+        start: value,
+        
+      }));
+    } else if (target==='end') {
+      setFilters((prevState) => ({
+        ...prevState,
+        filterByDates: value,
+        end: value,
       }));
     } else if (target === 'Violations') {
       setFilters((prevState) => ({
@@ -76,11 +101,15 @@ function DashboardMain() {
     let regions = filters.regions.length ? filters.regions.join(',') : 'All';
     let violations = filters.violations.length ? filters.violations.join(',') : 'All';
     let perpetrators = filters.perpetrators.length ? filters.perpetrators.join(',') : 'All';
-
-    setQuery(`${filters.period}D/${regions}/${violations}/${perpetrators}`);
     
   
-  }, [filters]);
+    if (filters.filterByDates) {
+      setQuery(`${regions}/${violations}/${perpetrators}/d/${dateStr(filters.start)}/${dateStr(filters.end)}`);
+    } else { 
+      setQuery(`${regions}/${violations}/${perpetrators}/${filters.period}D`)
+    }
+  
+  }, [dateStr, filters]);
 
   const url = query && `/api/protection-data/${query}`
   
@@ -159,7 +188,7 @@ function DashboardMain() {
                     }
                     action={
                         <IconButton aria-label="settings"  onClick={handleDrawerOpen}>
-                            <FilterAltTwoToneIcon />
+                            <TuneTwoToneIcon />
                         </IconButton>
                     }
                     title={loading ? <Skeleton variant="text" width={100} /> : <><Typography variant="h1"  color="secondary">{Number(data.total_violation_cases).toLocaleString('en')} </Typography></>}

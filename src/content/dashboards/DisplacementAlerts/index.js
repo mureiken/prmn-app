@@ -16,7 +16,7 @@ import DisplacementNeeds from './DisplacementNeeds';
 import DisplacementTriggers from './DisplacementTriggers';
 import DisplacementTrend from './DisplacementTrend';
 import IconButton from '@mui/material/IconButton';
-import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
+import TuneTwoToneIcon from '@mui/icons-material/TuneTwoTone';
 import Map from './Map';
 import './index.css';
 import SubscriptionForm from '../../applications/EmailSubscription';
@@ -193,7 +193,7 @@ function DashboardMain() {
                     }
                     action={
                         <IconButton aria-label="settings"  onClick={handleDrawerOpen}>
-                            <FilterAltTwoToneIcon />
+                            <TuneTwoToneIcon />
                         </IconButton>
                     }
                     title={loading ? <Skeleton variant="text" width={150} /> : <> <Typography variant="h1" color="secondary">{Number(data.total_arrivals).toLocaleString('en')} </Typography> </> }

@@ -72,24 +72,42 @@ def df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, need
         
     return df
 
-# Function for filtering protection data pandas dataframe by provided params
-def displacement_filters_protection(df, period, regions, violations, perpetrators):
+# help func to get from_date for function displacement_filters_protection(df,...)
+def _from_date(period):
     n_days_ago = int(period.rstrip(period[-1]))
     to_date = date.today()
     from_date = to_date - timedelta(days=n_days_ago)
-    
+    return from_date.strftime('%d-%m-%Y')
+
+#help func to get from_date for the function displacement_filters_protection(df,...)
+def _to_date(period):
+    to_date = date.today()
+    return to_date.strftime('%d-%m-%Y')
+
+# Function for filtering protection data pandas dataframe by provided params
+def displacement_filters_protection(df, regions, violations, perpetrators, period, *args, **kwargs):
+    #period filter
+    if period == 'd':
+        #Filter by dates
+        start = kwargs.get('start', '00-00-0000')
+        end = kwargs.get('end', '00-00-0000');
+        df = df.loc[(df.ReportDate >= start)
+                     & (df.ReportDate < end)]
+        df["FromDate"] = start
+        df["ToDate"] = end
+    else:
+        #Filter by period 
+        df = df[df.ReportDate > pd.Timestamp.today() - pd.Timedelta(period)]
+        df["FromDate"] = _from_date(period)
+        df["ToDate"] = _to_date(period)
+        
     #Trim rows with (null)values for DistrictX OR District Y
     df = df.loc[(df['DistrictX'] != '(null)') | (df['DistrictY'] != '(null)')]
    
     df['Date'] = df['ReportDate'].astype(str)
     #df['key'] = df['ViolationSettlement'] + "-" + df['ReportDate'].astype(str)
-    df["FromDate"] = from_date.strftime('%d-%m-%Y')
-    df["ToDate"] = to_date.strftime('%d-%m-%Y')
     df['DistrictX'] = df['DistrictX'].astype(float)
     df['DistrictY'] = df['DistrictY'].astype(float)
-    
-    #period filter
-    df = df.loc[df['ReportDate'] > pd.Timestamp.today() - pd.Timedelta(period)]
      
     #region filter
     if regions != 'All':
@@ -532,7 +550,7 @@ def current_settlement_arrival_details(currentsettlement, arrival_date):
 # -----------------------------------------------------------
 
 #This function returns the total number of violation categories
-def get_total_violation_cases(period, regions, violations, perpetrators):
+def get_total_violation_cases(regions, violations, perpetrators, period, *args, **kwargs):
    
     """Get the total number of violation cases"""
     
@@ -540,7 +558,7 @@ def get_total_violation_cases(period, regions, violations, perpetrators):
     df = get_daily_protection_data()
     
     #Filter dataframe
-    df = displacement_filters_protection(df, period, regions, violations, perpetrators)
+    df = displacement_filters_protection(df, regions, violations, perpetrators, period, *args, **kwargs)
         
     df1= df.groupby('VictimId')['VictimId'].count()
         
@@ -548,13 +566,13 @@ def get_total_violation_cases(period, regions, violations, perpetrators):
     return str(len(df1))
 
 
-def get_daily_protection_cases_series(period, regions, violations, perpetrators):
+def get_daily_protection_cases_series(regions, violations, perpetrators, period, *args, **kwargs):
     
     # Get protection datafrane
     df = get_daily_protection_data()
     
     #Filter dataframe
-    df = displacement_filters_protection(df, period,regions, violations, perpetrators)
+    df = displacement_filters_protection(df, regions, violations, perpetrators, period, *args, **kwargs)
     
     df = df[['ReportDate', 'VictimId']]
     df = df.set_index('ReportDate')
@@ -565,7 +583,7 @@ def get_daily_protection_cases_series(period, regions, violations, perpetrators)
 
 
 # This functions returns the top viloation categories
-def get_top_violation_categories(period, regions, violations, perpetrators):
+def get_top_violation_categories(regions, violations, perpetrators, period, *args, **kwargs):
    
     """Get top 5 violation group categories""" 
     
@@ -573,7 +591,7 @@ def get_top_violation_categories(period, regions, violations, perpetrators):
     df = get_daily_protection_data()
     
     #Filter dataframe
-    df = displacement_filters_protection(df, period, regions, violations, perpetrators)
+    df = displacement_filters_protection(df, regions, violations, perpetrators, period, *args, **kwargs)
         
     df1 = df.groupby('ViolationGroup')['ViolationGroup'].agg('count').nlargest(5)
     #df1 =  (100. * df1 / df1.sum()).round(0)
@@ -582,7 +600,7 @@ def get_top_violation_categories(period, regions, violations, perpetrators):
     
 
 # This functions returns the top perpetrators 
-def get_top_perpetrator_groups(period, regions, violations, perpetrators):
+def get_top_perpetrator_groups(regions, violations, perpetrators, period, *args, **kwargs):
    
     """Get top 5 perpetrator groups""" 
     
@@ -590,7 +608,7 @@ def get_top_perpetrator_groups(period, regions, violations, perpetrators):
     df = get_daily_protection_data()
     
     #Filter dataframe
-    df = displacement_filters_protection(df, period, regions, violations, perpetrators)
+    df = displacement_filters_protection(df, regions, violations, perpetrators, period, *args, **kwargs)
     
     #Remove null values    
     df = df[df['PerpetratorGroup'] != '(null)']
@@ -602,7 +620,7 @@ def get_top_perpetrator_groups(period, regions, violations, perpetrators):
 
 
 #This function returns the top 5 responses by agencies regarding violation cases    
-def get_top_responses(period, regions, violations, perpetrators):
+def get_top_responses(regions, violations, perpetrators, period, *args, **kwargs):
     
     """Get top 5 response categories by agencies""" 
     
@@ -610,7 +628,7 @@ def get_top_responses(period, regions, violations, perpetrators):
     df = get_daily_protection_data()
     
     #Filter dataframe
-    df = displacement_filters_protection(df, period,regions, violations, perpetrators)
+    df = displacement_filters_protection(df, regions, violations, perpetrators, period, *args, **kwargs)
         
     df1 = df[[
             'RefVictimToMedicalService',
@@ -631,13 +649,13 @@ def get_top_responses(period, regions, violations, perpetrators):
     
     return df2.to_json()
 
-def get_filtered_daily_protection_data(period, regions, violations, perpetrators):
+def get_filtered_daily_protection_data(regions, violations, perpetrators, period, *args, **kwargs):
     
     # Get protection datafrane
     df = get_daily_protection_data()
     
     #Filter dataframe
-    df = displacement_filters_protection(df, period,regions, violations, perpetrators)
+    df = displacement_filters_protection(df, regions, violations, perpetrators, period, *args, **kwargs)
     
     # Rename columns, to enable to use df_to_geojson() function using common param names   
     df.rename(columns = {'DistrictX':'CurrentSettLon', 'DistrictY':'CurrentSettLat'}, inplace = True)
@@ -654,10 +672,10 @@ def get_filtered_daily_protection_data(period, regions, violations, perpetrators
         
     return daily_protection_data
 
-def get_weekly_protection_cases(period, regions, violations, perpetrators):
+def get_weekly_protection_cases(regions, violations, perpetrators, period, *args, **kwargs):
    """filter protection data"""
    df = get_daily_protection_data()
-   df = displacement_filters_protection(df, "261D" ,regions, violations, perpetrators)
+   df = displacement_filters_protection(df,regions, violations, perpetrators, period, *args, **kwargs)
    df['Week_Number'] = df['ReportDate'].dt.isocalendar().week
    
    df_grouped =  df.groupby(
@@ -667,13 +685,13 @@ def get_weekly_protection_cases(period, regions, violations, perpetrators):
    
    return df_grouped.to_json(orient="records") 
 
-def get_partner_protection_data(period, regions, violations, perpetrators):
+def get_partner_protection_data(regions, violations, perpetrators, period, *args, **kwargs):
     
     # Get protection datafrane
     df = get_daily_protection_data()
     
     df['IncidentDateStr'] = df['IncidentDate'].astype(str)
     
-    df = displacement_filters_protection(df, period,regions, violations, perpetrators)
+    df = displacement_filters_protection(df,regions, violations, perpetrators, period, *args, **kwargs)
     
     return df.to_json(orient='records')

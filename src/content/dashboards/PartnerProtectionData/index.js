@@ -7,8 +7,7 @@ import CardHeader from '@mui/material/CardHeader';
 // import Avatar from '@mui/material/Avatar';
 import Skeleton from '@mui/material/Skeleton';
 import IconButton from '@mui/material/IconButton';
-// import HealthAndSafetyTwoToneIcon from '@mui/icons-material/HealthAndSafetyTwoTone';
-import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
+import TuneTwoToneIcon from '@mui/icons-material/TuneTwoTone';
 // import { red } from '@mui/material/colors';
 import FilterDrawer from '../../../components/FilterDrawer';
 import ProtectionIcon from '../../../assets/Abduction-kidnapping.png';
@@ -116,7 +115,7 @@ console.log('ddd ', tableData)
                     }
                     action={
                         <IconButton aria-label="settings"  onClick={handleDrawerOpen}>
-                            <SettingsTwoToneIcon />
+                            <TuneTwoToneIcon />
                         </IconButton>
                     }
                     title="Protection Data"

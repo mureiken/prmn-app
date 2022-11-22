@@ -142,27 +142,39 @@ export default function FilterDrawer({ open, handleClick, handleFilterChange, fi
             </Grid>
           </TabPanel>
           <Divider sx={{ mt: 1 }} />
-          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Box>
-              <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Current Regions</Typography>
-              <MultiSelect names={REGION_NAMES} handleFilter={handleFilterChange} target="CurrentRegions" selectedVals={filters.currentRegions} />
+          { type === 'displacement' ?
+          <>
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Box>
+                <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Current Regions</Typography>
+                <MultiSelect names={REGION_NAMES} handleFilter={handleFilterChange} target="CurrentRegions" selectedVals={filters.currentRegions} />
+              </Box>
+              <Box>
+                <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Current Districts</Typography>
+                <MultiSelect names={DISTRICT_NAMES} handleFilter={handleFilterChange} target="CurrentDistricts" selectedVals={filters.currentDistricts} />
+              </Box>
             </Box>
-            <Box>
-              <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Current Districts</Typography>
-              <MultiSelect names={DISTRICT_NAMES} handleFilter={handleFilterChange} target="CurrentDistricts" selectedVals={filters.currentDistricts} />
+            <Divider sx={{ mt: 1 }} />
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Box>
+                <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Previous Regions</Typography>
+                <MultiSelect names={REGION_NAMES} handleFilter={handleFilterChange} target="PreviousRegions" selectedVals={filters.previousRegions} />
+              </Box>
+              <Box>
+                <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Previous Districts</Typography>
+                <MultiSelect names={DISTRICT_NAMES} handleFilter={handleFilterChange} target="PreviousDistricts" selectedVals={filters.previousDistricts} />
+              </Box>
             </Box>
-          </Box>
-          <Divider sx={{ mt: 1 }} />
-          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Box>
-              <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Previous Regions</Typography>
-              <MultiSelect names={REGION_NAMES} handleFilter={handleFilterChange} target="PreviousRegions" selectedVals={filters.previousRegions} />
+          </>
+          :
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Box>
+                <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Current Regions</Typography>
+                <MultiSelect names={REGION_NAMES} handleFilter={handleFilterChange} target="Regions" selectedVals={filters.regions} />
+              </Box>
             </Box>
-            <Box>
-              <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Previous Districts</Typography>
-              <MultiSelect names={DISTRICT_NAMES} handleFilter={handleFilterChange} target="PreviousDistricts" selectedVals={filters.previousDistricts} />
-            </Box>
-          </Box>
+            
+          }   
           <Divider sx={{ mt: 1 }} />
           { type === 'displacement' ?
               <>

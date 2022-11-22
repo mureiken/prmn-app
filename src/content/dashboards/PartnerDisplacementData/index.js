@@ -8,7 +8,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Skeleton from '@mui/material/Skeleton';
 import IconButton from '@mui/material/IconButton';
 //import TransferWithinAStationTwoToneIcon from '@mui/icons-material/TransferWithinAStationTwoTone';
-import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
+import TuneTwoToneIcon from '@mui/icons-material/TuneTwoTone';
 import Alert from '@mui/material/Alert';
 // import { red } from '@mui/material/colors';
 import FilterDrawer from '../../../components/FilterDrawer';
@@ -163,7 +163,7 @@ function PartnerDisplacementDashBoard() {
                     }
                     action={
                         <IconButton aria-label="settings"  onClick={handleDrawerOpen}>
-                            <SettingsTwoToneIcon />
+                            <TuneTwoToneIcon />
                         </IconButton>
                     }
                     title="Displacement Data"

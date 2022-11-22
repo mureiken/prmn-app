@@ -69,7 +69,7 @@ export default function RegionFilter({names, handleFilter, target, selectedVals 
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 200 }}>
+      <FormControl sx={{ m: 1, width: target === 'Regions' ? 424 : 200 }}>
         <Select
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
