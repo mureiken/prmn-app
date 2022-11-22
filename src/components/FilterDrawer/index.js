@@ -169,7 +169,7 @@ export default function FilterDrawer({ open, handleClick, handleFilterChange, fi
           :
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
               <Box>
-                <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Current Regions</Typography>
+                <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Violation Regions </Typography>
                 <MultiSelect names={REGION_NAMES} handleFilter={handleFilterChange} target="Regions" selectedVals={filters.regions} />
               </Box>
             </Box>
