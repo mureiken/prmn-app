@@ -7,14 +7,14 @@ function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-const ViolationTrendChart = (props) => {
+const ViolationTrendChart = ({arrayOfWeeklyData, min, max}) => {
   const labels  = [...Array(53).keys()]
   const theme = useTheme();
   const data = {
     labels,
     datasets: [
       {
-        data: props.data,
+        data: arrayOfWeeklyData,
         borderColor: theme.colors.secondary.main,
         //backgroundColor: theme.colors.secondary.main,
         // barThickness: 12,
@@ -51,6 +51,8 @@ const ViolationTrendChart = (props) => {
             padding: 18,
             fontColor: theme.palette.text.secondary
           },
+          min: min,
+          max: max,
           // type: 'time',
           // distribution: 'linear',
           // time: {
@@ -60,6 +62,7 @@ const ViolationTrendChart = (props) => {
       ],
       yAxes: [
         {
+          beginAtZero: false,
           gridLines: {
             display: false,
             drawBorder: false

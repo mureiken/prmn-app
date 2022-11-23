@@ -7,14 +7,15 @@ function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-const DisplacementTrendChart = (props) => {
+const DisplacementTrendChart = ({ arrayOfWeeklyData, min, max }) => {
+  
   const labels  = [...Array(53).keys()]
   const theme = useTheme();
   const data = {
     labels,
     datasets: [
       {
-        data: props.data,
+        data:arrayOfWeeklyData,
         borderColor: theme.colors.secondary.main,
         //backgroundColor: theme.colors.secondary.main,
         // barThickness: 12,
@@ -41,8 +42,9 @@ const DisplacementTrendChart = (props) => {
       padding: 0
     },
     scales: {
-      xAxes: [
+      xAxes: [ 
          {
+          beginAtZero: false,
           gridLines: {
             display: false,
             drawBorder: false
@@ -51,8 +53,9 @@ const DisplacementTrendChart = (props) => {
             padding: 18,
             fontColor: theme.palette.text.secondary
           },
-          // type: 'time',
-          // distribution: 'linear',
+          //type: 'linear',
+          min: min,
+          max: max,
           // time: {
           //   unit: 'month'
           // },
@@ -60,6 +63,7 @@ const DisplacementTrendChart = (props) => {
       ],
       yAxes: [
         {
+          beginAtZero: true,
           gridLines: {
             display: false,
             drawBorder: false

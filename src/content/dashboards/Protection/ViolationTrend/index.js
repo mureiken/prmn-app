@@ -11,23 +11,42 @@ const ViolationTrendChartWrapper = styled(ViolationTrendChart)(
   
 function ViolationTrend(props) { 
    
-    const violationCases = [];
-    const weekNums = [];
+    // const violationCases = [];
+    // const weekNums = [];
     
+    // if (props.data.weekly_cases) {
+    //     props.data.weekly_cases.map(o=> {
+    //       violationCases.push(o.TotalCases); 
+    //       weekNums.push(o.Week_Number)  
+    //       return (violationCases, weekNums);
+    //     });
+    // }
+    
+    let arrayOfWeeklyData = [];
+    let min = 0
+    let max = 0;
+   
     if (props.data.weekly_cases) {
-        props.data.weekly_cases.map(o=> {
-          violationCases.push(o.TotalCases); 
-          weekNums.push(o.Week_Number)  
-          return (violationCases, weekNums);
-        });
-    }
+      
+      arrayOfWeeklyData = props.data.weekly_cases.map(item => {
+        return {
+          x: item.Week_Number,
+          y: item.TotalCases
+        };
+      });
     
+    const start = arrayOfWeeklyData[0];
+    const end = arrayOfWeeklyData[arrayOfWeeklyData.length - 1];
+    min = start["x"];
+    max = end["x"];
+  }
       
     return (
         <Box height={250}>
             <ViolationTrendChartWrapper
-            data={violationCases} 
-            labels={weekNums}
+            arrayOfWeeklyData={arrayOfWeeklyData} 
+            min={min}
+            max={max}
             />
         </Box>
     );

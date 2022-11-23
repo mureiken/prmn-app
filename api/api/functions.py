@@ -402,7 +402,7 @@ def get_filtered_daily_displacement_data(cregions, cdistricts, pregions, pdistri
 def get_weekly_displacement(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
    """filter displacement data"""
    df = get_daily_displacement_data(t)
-   df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, "260D", *args, **kwargs)
+   df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
    df['Week_Number'] = df['Arrival'].dt.isocalendar().week
    
    df_grouped =  df.groupby(
