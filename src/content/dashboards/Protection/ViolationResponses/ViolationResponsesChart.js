@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { HorizontalBar } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useTheme } from '@mui/material/styles';
 
 const ViolationResponsesChart = ({
@@ -35,7 +36,7 @@ const ViolationResponsesChart = ({
     indexAxis: 'y',
     elements: {
       bar: {
-        borderWidth: 2,
+        borderWidth: 0,
       }
     },
     maintainAspectRatio: false,
@@ -49,6 +50,7 @@ const ViolationResponsesChart = ({
     scales: {
       xAxes: [
         {
+          display: false,
           gridLines: {
             display: false,
             drawBorder: false
@@ -107,6 +109,19 @@ const ViolationResponsesChart = ({
         }
       }
     },
+    plugins: {
+      datalabels: {
+        display: true,
+        clamp: false,
+        anchor: 'end',
+        align: 'end',
+        offset: -3,
+        color: theme.palette.text.primary,
+        formatter: function(value) {
+          return `${numberWithCommas(value)}%`;
+        }
+      }
+    },
     onClick: function(evt, element) {
         if (element.length > 0) {
           console.log(myData.labels[element[0]._index]);
@@ -121,6 +136,7 @@ const ViolationResponsesChart = ({
     <div {...rest}>
       <HorizontalBar 
         data={myData}
+        plugins={[ChartDataLabels]}
         options={options}
       />
     </div>

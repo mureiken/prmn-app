@@ -38,7 +38,9 @@ def all(self, current_regions, current_districts, previous_regions, previous_dis
     weekly_displacement = json.loads(get_weekly_displacement(*args, **kwargs))
     geojson = get_filtered_daily_displacement_data(*args, **kwargs)
     
+   
     allPart = "{\"total_arrivals\":  " + total_arrivals + ",\"top_needs\":  " + json.dumps(top_displacement_needs) + ",\"top_locations_category\":  " + json.dumps(top_locations_category) + ",\"top_locations\": " + json.dumps(top_displacement_locations) + ",\"top_causes\": " + json.dumps(top_displacement_causes) + ",\"weekly_displacement\": " + json.dumps(weekly_displacement) + ",\"geojson\":"  + json.dumps(geojson) + "}"
+    
     return json.loads(allPart)
 
 

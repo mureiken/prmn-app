@@ -39,7 +39,7 @@ import useFetch from '../../../../../useFetch';
                   {row.PreviousSettlement}, {row.PreviousDistrict}, {row.PreviousRegion}
                 </TableCell>
                 <TableCell align="right">{row.AllPeople}</TableCell>
-                <TableCell align="right">{row.Reason}</TableCell>
+                <TableCell align="right">{row.Category}</TableCell>
                 <TableCell align="right">{row.Needs}</TableCell>
               </TableRow>
             ))}

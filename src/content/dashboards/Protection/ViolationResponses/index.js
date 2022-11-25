@@ -7,7 +7,7 @@ import ViolationResponsesChart from './ViolationResponsesChart';
   
   const ViolationResponsesChartWrapper = styled(ViolationResponsesChart)(
     () => `
-        width: 100%;
+        width: 90%;
         height: 100%;
   `
   );
@@ -50,7 +50,7 @@ import ViolationResponsesChart from './ViolationResponsesChart';
       };
   
     return (
-        <Box sx={{ py: 1, pb: 2, height: '100%' }}>
+        <Box sx={{ py: 1, pb: 2, height: '100%'}}>
             <Box height={200}>
             <ViolationResponsesChartWrapper 
                 data={violation_cases} 

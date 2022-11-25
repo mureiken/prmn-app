@@ -51,7 +51,7 @@ import ViolationCategoriesChart from './ViolationCategoriesChart';
       };
   
     return (
-        <Box sx={{ py: 1, pb: 2, height: '100%' }}>
+        <Box sx={{ py: 1, pb: 2}}>
             <Box height={200}>
             <ViolationCategoriesChartWrapper 
                 data={violationCases} 

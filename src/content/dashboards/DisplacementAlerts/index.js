@@ -203,7 +203,7 @@ function DashboardMain() {
                       : 
                         <> 
                           Displaced between dates {filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} to {filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate }
-                          {(filters.currentRegions.length || filters.currentDistricts.length || filters.previousRegions.length || filters.previousDistricts.length) &&  <><br /> <strong>Locations:</strong></>}
+                          {(filters.currentRegions.length || filters.currentDistricts.length || filters.previousRegions.length || filters.previousDistricts.length) ?  <><br /> <strong>Locations:</strong></> : ''}
                           {filters.currentRegions.length ? <> Current regions:  [{filters.currentRegions.join(',')}] </>: ''}
                           {filters.currentDistricts.length ? <> Current districts:  [{filters.currentDistricts.join(', ')}] </> : ''}
                           {filters.previousRegions.length ?  <> Previous regions: [{filters.previousRegions.join(',')}]  </>: ''}

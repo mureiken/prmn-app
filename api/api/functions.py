@@ -390,10 +390,10 @@ def get_filtered_daily_displacement_data(cregions, cdistricts, pregions, pdistri
     df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
     df_grouped =  df.groupby(
-        ['key', 'CurrentSettlement', 'CurrentDistrict', 'CurentRegion', 'PreviousRegion', 'PreviousDistrict', 'Reason', 'CurrentSettLon', 'CurrentSettLat', 'Date'], 
+        ['key', 'CurrentSettlement', 'CurrentDistrict', 'CurentRegion', 'PreviousRegion', 'PreviousDistrict', 'Category', 'CurrentSettLon', 'CurrentSettLat', 'Date'], 
         dropna=True)['AllPeople'].sum().to_frame().reset_index()
     
-    cols = ['key', 'CurrentSettlement', 'CurrentDistrict', 'CurentRegion', 'Reason', 'Date', 'AllPeople']
+    cols = ['key', 'CurrentSettlement', 'CurrentDistrict', 'CurentRegion', 'Category', 'Date', 'AllPeople']
     
     daily_displacement_data = df_to_geojson(df_grouped, cols)
     

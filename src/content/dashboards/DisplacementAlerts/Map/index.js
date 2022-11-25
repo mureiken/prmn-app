@@ -6,6 +6,57 @@ import { CIRCLE_OPACITY, LAYER_ID, COLORS, MAX_RADIUS, MIN_RADIUS } from '../../
 import Circles from './Circles/index'
 import Polygons from './Polygons/index'
 import Modal from './Modal';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
+
+const MapLegendWrapper = styled(Box)({
+  color: 'darkslategray',
+  backgroundColor: 'transparent',
+  padding: 8,
+  borderRadius: 4,
+  width: '25%',
+  //zIndex: '999 !important',
+  position: 'absolute', 
+  left: 0
+});
+
+const DroughtLegend = styled(Box)({
+  color: 'darkslategray',
+  backgroundColor: '#f7941d',
+  padding: 4,
+  borderRadius: 3,
+  width: '25%',
+
+});
+
+const ConflictLegend = styled(Box)({
+  color: 'darkslategray',
+  backgroundColor: '#e7646a',
+  padding: 4,
+  borderRadius: 3,
+  width: '35%',
+
+});
+
+const FloodLegend = styled(Box)({
+  color: 'darkslategray',
+  backgroundColor: '#c974a2',
+  padding: 4,
+  borderRadius: 3,
+  width: '25%',
+
+});
+
+const OtherLegend = styled(Box)({
+  color: 'darkslategray',
+  backgroundColor: '#a07b5e',
+  padding: 4,
+  borderRadius: 3,
+  width: '25%',
+
+});
+
+
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN; // Set your mapbox token here
 
@@ -185,18 +236,39 @@ return (
               ],
             },
             'circle-opacity': CIRCLE_OPACITY,
-            'circle-color': ['case',
-              ['boolean', ['feature-state', 'hover'], false],
-                COLORS.lightRed,
-                COLORS.blue
-            ],
+            'circle-color': [
+              'match',
+              ['get', 'Category'],
+              'Conflict/Insecurity',
+              '#e7646a',
+              'Drought',
+              '#f7941d',
+              'Flood',
+              '#a07b5e',
+              'Other',
+              '#c974a2',
+              /* other */ "#ccc"
+              ]
           }}
           data_id="currentSettlements"
       />
       <NavigationControl />
-    {/*<Box style={navControlStyle}>
-      <NavigationControl />
-        </Box>*/}
+    <MapLegendWrapper>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          p: 1,
+          m: 1,
+        }}
+      >
+        <ConflictLegend>Conflict/Insecurity</ConflictLegend>
+        <DroughtLegend>Drought</DroughtLegend>
+        <FloodLegend>Flood</FloodLegend>
+        <OtherLegend>Other</OtherLegend>
+      </Box>
+    </MapLegendWrapper>
   </ReactMapGL>
   {state.popupInfo && <Modal {...state} handleClose={handleClose} />}
   </div>

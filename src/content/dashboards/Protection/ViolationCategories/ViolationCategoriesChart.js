@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { HorizontalBar } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useTheme } from '@mui/material/styles';
 
 const ViolationCategoriesChart = ({
@@ -16,13 +17,13 @@ const ViolationCategoriesChart = ({
   const myData = {
     datasets: [
       {
-        label: 'Violation Categories',
+        label: 'Violation Cases',
         backgroundColor: theme.colors.secondary.main,
         data: dataProp.numbers,
         barThickness: 15,
         maxBarThickness: 20,
-        barPercentage: 0.5,
-        categoryPercentage: 0.5
+        barPercentage:1,
+        categoryPercentage: 1
       }
     ],
     labels
@@ -33,13 +34,13 @@ const ViolationCategoriesChart = ({
     indexAxis: 'y',
     elements: {
       bar: {
-        borderWidth: 2,
+        borderWidth: 0,
       }
     },
     maintainAspectRatio: false,
     cornerRadius: 1,
-        legend: {
-      display: false
+    legend: {
+      display: false,
     },
     layout: {
       padding: 0
@@ -47,6 +48,7 @@ const ViolationCategoriesChart = ({
     scales: {
       xAxes: [
         {
+          display: false,
           gridLines: {
             display: false,
             drawBorder: false
@@ -106,6 +108,19 @@ const ViolationCategoriesChart = ({
         }
       }
     },
+    plugins: {
+      datalabels: {
+        display: true,
+        clamp: false,
+        anchor: 'end',
+        align: 'end',
+        offset: -1,
+        color: theme.palette.text.secondary,
+        formatter: function(value) {
+          return `${numberWithCommas(value)} cases`;
+        }
+      }
+    },
     onClick: function(evt, element) {
       if (element.length > 0) {
         console.log(myData.labels[element[0]._index]);
@@ -119,6 +134,7 @@ const ViolationCategoriesChart = ({
     <div {...rest}>
       <HorizontalBar 
         data={myData} 
+        plugins={[ChartDataLabels]}
         options={options}
       />
     </div>

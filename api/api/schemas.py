@@ -23,7 +23,7 @@ class DisplacementPropertiesSchema(PropertiesSchema):
     CurrentSettlement = ma.String()
     CurentRegion = ma.String()
     Date = ma.String()
-    Reason = ma.String()
+    Category = ma.String()
     key = ma.String()
  
 
@@ -62,7 +62,7 @@ class DisplacementDetailsSchema(ma.Schema):
     PreviousSettlement = ma.String()
     PreviousDistrict   = ma.String()
     PreviousRegion = ma.String()
-    Reason = ma.String()
+    Category = ma.String()
     Needs = ma.String()
     AllPeople = ma.Integer()
     

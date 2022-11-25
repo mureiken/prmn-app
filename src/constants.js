@@ -27,7 +27,7 @@ export const MAX_YEAR = 2020;
 
 export const MIN_RADIUS = 7;
 export const MAX_RADIUS = 27;
-export const CIRCLE_OPACITY = 0.7;
+export const CIRCLE_OPACITY = 0.5;
 
 export const REGION_NAMES = [
   'Awdal',

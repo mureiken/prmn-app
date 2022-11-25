@@ -37,9 +37,14 @@ const useFetch = (url) => {
                     const response = await fetch(url);
                     const data = await response.json();
                     console.log("GETTING AFRESH")
-                    cache.current[url] = data;
-                    if (cancelRequest) return;
-                    dispatch({ type: 'FETCHED', payload: data });
+                    if (data.geojson.features.length === 0) {
+                        dispatch({ type: 'FETCH_ERROR', payload: "Data fetch returned empty results." });
+                    } else {
+                        cache.current[url] = data;
+                        if (cancelRequest) return;
+                        dispatch({ type: 'FETCHED', payload: data });
+                    }
+                    
                 } catch (error) {
                     if (cancelRequest) return;
                     dispatch({ type: 'FETCH_ERROR', payload: error.message });
