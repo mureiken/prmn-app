@@ -137,12 +137,13 @@ function DashboardMain() {
   }, [dateStr, filters]);
 
   const url = query && `/api/displacement-data/${query}`;
+  const geoData = true;
   
   const {
     loading,  
     error,
     data
-  } = useFetch(url);
+  } = useFetch(url, geoData);
     
 
   const handleDrawerOpen = () => {

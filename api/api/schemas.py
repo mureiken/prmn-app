@@ -62,7 +62,7 @@ class DisplacementDetailsSchema(ma.Schema):
     PreviousSettlement = ma.String()
     PreviousDistrict   = ma.String()
     PreviousRegion = ma.String()
-    Category = ma.String()
+    Reason = ma.String()
     Needs = ma.String()
     AllPeople = ma.Integer()
     

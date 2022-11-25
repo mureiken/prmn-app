@@ -111,13 +111,14 @@ function DashboardMain() {
   
   }, [dateStr, filters]);
 
-  const url = query && `/api/protection-data/${query}`
+  const url = query && `/api/protection-data/${query}`;
+  const geoData = true;
   
   const {
     loading,  
     error,
     data
-  } = useFetch(url)
+  } = useFetch(url, geoData)
     
 
   // useEffect(() => {

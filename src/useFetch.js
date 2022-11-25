@@ -1,6 +1,6 @@
 import { useEffect, useRef, useReducer } from 'react';
 
-const useFetch = (url) => {
+const useFetch = (url, geoData=false) => {
     const cache = useRef({});
 
     const initialState = {
@@ -37,9 +37,12 @@ const useFetch = (url) => {
                     const response = await fetch(url);
                     const data = await response.json();
                     console.log("GETTING AFRESH")
-                    if (data.geojson.features.length === 0) {
+                   
+                    if (geoData && data.geojson.features.length === 0) {
                         dispatch({ type: 'FETCH_ERROR', payload: "Data fetch returned empty results." });
-                    } else {
+                    }
+        
+                     else {
                         cache.current[url] = data;
                         if (cancelRequest) return;
                         dispatch({ type: 'FETCHED', payload: data });

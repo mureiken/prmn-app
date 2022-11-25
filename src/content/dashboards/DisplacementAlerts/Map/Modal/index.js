@@ -18,6 +18,7 @@ import { COLORS } from '../../../../../constants';
 import useFetch from '../../../../../useFetch';
   
   const displacementDetails = (data) => {
+    console.log("data: ", data)
     return (
       <TableContainer component={Paper}>
         <Table size="small" aria-label="a dense table">
@@ -39,7 +40,7 @@ import useFetch from '../../../../../useFetch';
                   {row.PreviousSettlement}, {row.PreviousDistrict}, {row.PreviousRegion}
                 </TableCell>
                 <TableCell align="right">{row.AllPeople}</TableCell>
-                <TableCell align="right">{row.Category}</TableCell>
+                <TableCell align="right">{row.Reason}</TableCell>
                 <TableCell align="right">{row.Needs}</TableCell>
               </TableRow>
             ))}
@@ -118,13 +119,14 @@ export default function Modal({ isOpen, handleClose, popupInfo }) {
 
   
   
-  const url = query && `/api/displacement-data/details/${query}`
+  const url = query && `/api/displacement-data/details/${query}`;
+  const geoData = false;
   
   const {
     loading,  
     error,
     data
-  } = useFetch(url)
+  } = useFetch(url, geoData);
     
 
 

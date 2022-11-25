@@ -126,12 +126,13 @@ function PartnerDisplacementDashBoard() {
   }, [dateStr, filters]);
 
   const url = query && `/api/partner-displacement-data/${query}`;
+  const geoData = false;
 
   const {
     loading,  
     error,
     data
-  } = useFetch(url);
+  } = useFetch(url, geoData);
 
   const handleDrawerOpen = () => {
     setOpenFilterDrawer(true);
