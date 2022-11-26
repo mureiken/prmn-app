@@ -93,7 +93,6 @@ function PartnerDisplacementDashBoard() {
   };
 
   
-console.log('ddd ', tableData)
   return (
     <>
       <Helmet>

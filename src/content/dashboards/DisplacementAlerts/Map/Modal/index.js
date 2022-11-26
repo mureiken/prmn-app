@@ -104,7 +104,7 @@ import useFetch from '../../../../../useFetch';
 
 export default function Modal({ isOpen, handleClose, popupInfo }) {
 
-  const location = popupInfo.properties.CurrentSettlement.replace('/', '**');
+  const location = popupInfo.properties.CurrentSettlement;
   const district = popupInfo.properties.CurrentDistrict;
   const region = popupInfo.properties.CurentRegion;
   const numIDPS = popupInfo.properties.AllPeople;
@@ -113,7 +113,7 @@ export default function Modal({ isOpen, handleClose, popupInfo }) {
   const [query, setQuery] = useState();
 
   useEffect(() => {
-    setQuery(`${location}/${dateOfArrival}`);
+    setQuery(`${encodeURIComponent(encodeURIComponent(location))}/${dateOfArrival}`);
     
   }, [location, dateOfArrival]);
 

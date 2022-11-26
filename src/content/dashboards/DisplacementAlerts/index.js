@@ -40,14 +40,14 @@ function DashboardMain() {
   const startDate = (period) => new Date(daysAgo.setDate(date.getDate() - period)).toLocaleDateString()
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   // const [isLoading, setIsLoading] = useState(false); 
-  const [query, setQuery] = useState('');  
-
+  const [query, setQuery] = useState('');    
   const [state, setState] = useState({
     todaysDate: new Date(),
     startDate: startDate(7),
     endDate: new Date().toLocaleDateString(),
   });
 
+ 
   const [filters, setFilters] = useState({
     filterByDates: false,
     period: '30',
@@ -129,9 +129,9 @@ function DashboardMain() {
     let causes = filters.causes.length ? filters.causes.join(',') : 'All';
     
     if (filters.filterByDates) {
-      setQuery(`${cregions}/${cdistricts}/${pregions}/${pdistricts}/${needs}/${causes}/d/${dateStr(filters.start)}/${dateStr(filters.end)}`);
+      setQuery(`${cregions}/${cdistricts}/${pregions}/${pdistricts}/${encodeURIComponent(encodeURIComponent(needs))}/${encodeURIComponent(encodeURIComponent(causes))}/d/${dateStr(filters.start)}/${dateStr(filters.end)}`);
     } else {
-      setQuery(`${cregions}/${cdistricts}/${pregions}/${pdistricts}/${needs}/${causes}/${filters.period}D`)
+      setQuery(`${cregions}/${cdistricts}/${pregions}/${pdistricts}/${encodeURIComponent(encodeURIComponent(needs))}/${encodeURIComponent(encodeURIComponent(causes))}/${filters.period}D`)
     }
   
   }, [dateStr, filters]);
@@ -154,6 +154,8 @@ function DashboardMain() {
     setOpenFilterDrawer(false);
   };
 
+  
+
   const SkeletonWrapper = () => {
     return(
       <Card>
@@ -168,11 +170,10 @@ function DashboardMain() {
     )
   }
  
-  console.log("start date", filters.start);
-  console.log("end date", filters.end);
 
   return (
-    <>
+    
+    <React.Fragment>
       <Helmet>
         <title>PRMN Dashboard</title>
       </Helmet>
@@ -185,8 +186,8 @@ function DashboardMain() {
           spacing={1}
           sx={{ marginTop: 5}}
         >
-          <Grid item xs={12}>
-            <Card sx={{ mb: 1 }}>
+        <Grid item xs={12} sx={{ mb: 1, position: 'sticky', top: 0, zIndex: 1, opacity: 0.9 }}>
+          <Card>
             {error && <Alert severity={"error"} >{error}</Alert>}
                 <CardHeader
                   avatar={
@@ -197,24 +198,26 @@ function DashboardMain() {
                             <TuneTwoToneIcon />
                         </IconButton>
                     }
-                    title={loading ? <Skeleton variant="text" width={150} /> : <> <Typography variant="h1" color="secondary">{Number(data.total_arrivals).toLocaleString('en')} </Typography> </> }
+                    title={loading ? <Skeleton variant="text" width={150} /> : <React.Fragment> <Typography variant="h1" color="secondary">{Number(data.total_arrivals).toLocaleString('en')} </Typography> </React.Fragment> }
                     subheader={ 
                       loading ? 
                         <Skeleton variant="text" width={300} /> 
                       : 
-                        <> 
+                        <React.Fragment> 
                           Displaced between dates {filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} to {filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate }
-                          {(filters.currentRegions.length || filters.currentDistricts.length || filters.previousRegions.length || filters.previousDistricts.length) ?  <><br /> <strong>Locations:</strong></> : ''}
-                          {filters.currentRegions.length ? <> Current regions:  [{filters.currentRegions.join(',')}] </>: ''}
-                          {filters.currentDistricts.length ? <> Current districts:  [{filters.currentDistricts.join(', ')}] </> : ''}
-                          {filters.previousRegions.length ?  <> Previous regions: [{filters.previousRegions.join(',')}]  </>: ''}
-                          {filters.previousDistricts.length ? <> Previous districts: [{filters.previousDistricts.join(',')}] </>: ''}
-                          {filters.needs.length ? <><br /> <strong>Needs</strong>: [{filters.needs.join(',')}] </>: ''}
-                          {filters.causes.length ? <> <strong>Causes:</strong> [{filters.causes.join(',')}] </>: ''}
-                        </> 
+                          {(filters.currentRegions.length || filters.currentDistricts.length || filters.previousRegions.length || filters.previousDistricts.length) ?  <React.Fragment><br /> <strong>Locations:</strong></React.Fragment> : ''}
+                          {filters.currentRegions.length ? <React.Fragment> Current regions:  [{filters.currentRegions.join(',')}] </React.Fragment>: ''}
+                          {filters.currentDistricts.length ? <React.Fragment> Current districts:  [{filters.currentDistricts.join(', ')}] </React.Fragment> : ''}
+                          {filters.previousRegions.length ?  <React.Fragment> Previous regions: [{filters.previousRegions.join(',')}]  </React.Fragment>: ''}
+                          {filters.previousDistricts.length ? <React.Fragment> Previous districts: [{filters.previousDistricts.join(',')}] </React.Fragment>: ''}
+                          {filters.needs.length ? <React.Fragment><br /> <strong>Needs</strong>: [{filters.needs.join(',')}] </React.Fragment>: ''}
+                          {filters.causes.length ? <React.Fragment> <strong>Causes:</strong> [{filters.causes.join(',')}] </React.Fragment>: ''}
+                        </React.Fragment> 
                       }
                 />
             </Card>
+          </Grid>
+          <Grid item xs={12}>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
                   {loading ? (
@@ -302,7 +305,7 @@ function DashboardMain() {
        filters={filters}
       >
     </FilterDrawer>
-    </>
+    </React.Fragment>
   );
 }
 

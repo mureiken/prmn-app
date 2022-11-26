@@ -3,6 +3,8 @@ from datetime import datetime
 from xml.dom import WRONG_DOCUMENT_ERR
 import pandas as pd
 from datetime import date, timedelta
+from urllib.parse import quote
+
 custom_date_parser = lambda x: datetime.strptime(x, "%d-%-%Y %H:%M:%S")
 
 today = date.today()
@@ -13,9 +15,6 @@ t = today.strftime("%d/%m/%Y")
 
 #Params with character "/" (e.g. regions=Berbera/Wada Jir), cannot by handled by flask,
 # we sanitise it with this function by replacing it with ** 
-def query_param_sanitizer(s):
-    q = s.replace("**", "/")
-    return q;
 
 # Function for filtering displacement data pandas dataframe by provided params
 def df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
@@ -32,43 +31,43 @@ def df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, need
     
     #Filter by current regions
     if cregions != 'All':
-        cregions = query_param_sanitizer(cregions)
+        cregions = cregions
         cregions_filter_list = cregions.split(",")
         #df = df[df['CurentRegion'].isin(cregions_filter_list)]
         df=df.loc[df.CurentRegion.isin(cregions_filter_list)]
         
     #Filter by current districts
     if cdistricts != 'All':
-        cdistricts = query_param_sanitizer(cdistricts)
+        cdistricts = cdistricts
         cdistricts_filter_list = cdistricts.split(",")
         #df = df[df['CurrentDistrict'].isin(cdistricts_filter_list)]
         df=df.loc[df.CurrentDistrict.isin(cdistricts_filter_list)]
         
     #Filter by previous regions
     if pregions != 'All':
-        pregions = query_param_sanitizer(pregions)
+        pregions = pregions
         pregions_filter_list = pregions.split(",")
         #df = df[df['PreviousRegion'].isin(pregions_filter_list)]
         df=df.loc[df.PreviousRegion.isin(pregions_filter_list)]
         
     #Filter by previous districts
     if pdistricts != 'All':
-        pdistricts = query_param_sanitizer(pdistricts)
+        pdistricts = pdistricts
         pdistricts_filter_list = pdistricts.split(",")
         #df = df[df['PreviousDistrict'].isin(pdistricts_filter_list)]
         df=df.loc[df.PreviousDistrict.isin(pdistricts_filter_list)]
         
     #needs filter
     if needs != 'All':
-        needs = query_param_sanitizer(needs)
+        needs = needs
         needs_filter_list = needs.split(",")
         df = df.loc[df.Need1.isin(needs_filter_list) | df['Need2'].isin(needs_filter_list)]
         
     #Filter by causes
     if causes != 'All':
-        causes = query_param_sanitizer(causes)
+        causes = causes
         causes_filter_list = causes.split(",")
-        df = df.loc[df.Reason.isin(causes_filter_list)]
+        df = df.loc[df.Category.isin(causes_filter_list)]
         
     return df
 
@@ -532,7 +531,7 @@ def current_settlement_arrival_details(currentsettlement, arrival_date):
     
     
     #Filter By Current settlement
-    currentsettlement = query_param_sanitizer(currentsettlement)
+    currentsettlement = currentsettlement
     df1 = df[df.index == currentsettlement]
     df_grouped =  df1.groupby(
         ['CurrentSettlement', 'Arrival', 'PreviousSettlement', 'PreviousDistrict', 'PreviousRegion', 'Reason', 'Needs'], 

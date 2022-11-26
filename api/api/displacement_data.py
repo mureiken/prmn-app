@@ -1,4 +1,5 @@
 import json
+from urllib.parse  import unquote_plus,unquote
 import pandas as pd
 from flask import Blueprint
 from apifairy import  body, response, other_responses
@@ -19,7 +20,8 @@ displacement_details_schema = DisplacementDetailsSchema(many=True)
 @other_responses({404: 'Displacement data with provided parameters does not exist'})
 def all(self, current_regions, current_districts, previous_regions, previous_districts, needs, causes, period, *args, **kwargs):
     """Retrieve displacement data""" 
-    
+    needs = unquote(unquote_plus(needs))
+    causes = unquote(unquote_plus(causes))
     args = (current_regions, current_districts, previous_regions, previous_districts, needs, causes, period)
     total_arrivals = get_total_arrivals(*args, **kwargs)
     top_displacement_needs = json.loads(get_top_displacement_needs(*args, **kwargs))
@@ -51,6 +53,7 @@ def all(self, current_regions, current_districts, previous_regions, previous_dis
 # @other_responses({404: 'Displacement data with provided parameters does not exist'})
 def details(currentsettlement, arrival_date):
     """Retrieve displacement details by current settlement and arrival date"""
+    currentsettlement = unquote(unquote_plus(currentsettlement))
     displacement_details = current_settlement_arrival_details(currentsettlement, arrival_date)
     
     return displacement_details

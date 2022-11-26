@@ -149,9 +149,7 @@ export const NEEDS = [
 export const CAUSES = [
   'Conflict/Insecurity',
   'Drought',
-  'Eviction',
   'Flood',
-  'IDP  Return',
   'Other'
 ]
 
