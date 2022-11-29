@@ -18,12 +18,12 @@ class Updateable:
             setattr(self, attr, value)
 
 
-followers = sqla.Table(
-    'followers',
-    db.Model.metadata,
-    sqla.Column('follower_id', sqla.Integer, sqla.ForeignKey('users.id')),
-    sqla.Column('followed_id', sqla.Integer, sqla.ForeignKey('users.id'))
-)
+# followers = sqla.Table(
+#     'followers',
+#     db.Model.metadata,
+#     sqla.Column('follower_id', sqla.Integer, sqla.ForeignKey('users.id')),
+#     sqla.Column('followed_id', sqla.Integer, sqla.ForeignKey('users.id'))
+# )
 
 
 class Token(db.Model):
@@ -75,34 +75,34 @@ class User(Updateable, db.Model):
 
     tokens = sqla_orm.relationship('Token', back_populates='user',
                                    lazy='noload')
-    posts = sqla_orm.relationship('Post', back_populates='author',
-                                  lazy='noload')
-    following = sqla_orm.relationship(
-        'User', secondary=followers,
-        primaryjoin=(followers.c.follower_id == id),
-        secondaryjoin=(followers.c.followed_id == id),
-        back_populates='followers', lazy='noload')
-    followers = sqla_orm.relationship(
-        'User', secondary=followers,
-        primaryjoin=(followers.c.followed_id == id),
-        secondaryjoin=(followers.c.follower_id == id),
-        back_populates='following', lazy='noload')
+    # posts = sqla_orm.relationship('Post', back_populates='author',
+    #                               lazy='noload')
+    # following = sqla_orm.relationship(
+    #     'User', secondary=followers,
+    #     primaryjoin=(followers.c.follower_id == id),
+    #     secondaryjoin=(followers.c.followed_id == id),
+    #     back_populates='followers', lazy='noload')
+    # followers = sqla_orm.relationship(
+    #     'User', secondary=followers,
+    #     primaryjoin=(followers.c.followed_id == id),
+    #     secondaryjoin=(followers.c.follower_id == id),
+    #     back_populates='following', lazy='noload')
 
-    def posts_select(self):
-        return Post.select().where(sqla_orm.with_parent(self, User.posts))
+    # def posts_select(self):
+    #     return Post.select().where(sqla_orm.with_parent(self, User.posts))
 
-    def following_select(self):
-        return User.select().where(sqla_orm.with_parent(self, User.following))
+    # def following_select(self):
+    #     return User.select().where(sqla_orm.with_parent(self, User.following))
 
-    def followers_select(self):
-        return User.select().where(sqla_orm.with_parent(self, User.followers))
+    # def followers_select(self):
+    #     return User.select().where(sqla_orm.with_parent(self, User.followers))
 
-    def followed_posts_select(self):
-        return Post.select().join(
-            followers, (followers.c.followed_id == Post.user_id),
-            isouter=True).group_by(Post.id).filter(
-                sqla.or_(Post.author == self,
-                         followers.c.follower_id == self.id))
+    # def followed_posts_select(self):
+    #     return Post.select().join(
+    #         followers, (followers.c.followed_id == Post.user_id),
+    #         isouter=True).group_by(Post.id).filter(
+    #             sqla.or_(Post.author == self,
+    #                      followers.c.follower_id == self.id))
 
     def __repr__(self):  # pragma: no cover
         return '<User {}>'.format(self.username)
@@ -181,40 +181,42 @@ class User(Updateable, db.Model):
         return db.session.scalar(User.select().filter_by(
             email=data['reset_email']))
 
-    def follow(self, user):
-        if not self.is_following(user):
-            db.session.execute(followers.insert().values(
-                follower_id=self.id, followed_id=user.id))
+    # def follow(self, user):
+    #     if not self.is_following(user):
+    #         db.session.execute(followers.insert().values(
+    #             follower_id=self.id, followed_id=user.id))
 
-    def unfollow(self, user):
-        if self.is_following(user):
-            db.session.execute(followers.delete().where(
-                followers.c.follower_id == self.id,
-                followers.c.followed_id == user.id))
+    # def unfollow(self, user):
+    #     if self.is_following(user):
+    #         db.session.execute(followers.delete().where(
+    #             followers.c.follower_id == self.id,
+    #             followers.c.followed_id == user.id))
 
-    def is_following(self, user):
-        return db.session.scalars(User.select().where(
-            User.id == self.id, User.following.contains(
-                user))).one_or_none() is not None
+    # def is_following(self, user):
+    #     return db.session.scalars(User.select().where(
+    #         User.id == self.id, User.following.contains(
+    #             user))).one_or_none() is not None
 
 
-class Post(Updateable, db.Model):
-    __tablename__ = 'posts'
+# class Post(Updateable, db.Model):
+#     __tablename__ = 'posts'
 
-    id = sqla.Column(sqla.Integer, primary_key=True)
-    text = sqla.Column(sqla.String(280), nullable=False)
-    timestamp = sqla.Column(sqla.DateTime, index=True, default=datetime.utcnow,
-                            nullable=False)
-    user_id = sqla.Column(sqla.Integer, sqla.ForeignKey(User.id), index=True)
+#     id = sqla.Column(sqla.Integer, primary_key=True)
+#     text = sqla.Column(sqla.String(280), nullable=False)
+#     timestamp = sqla.Column(sqla.DateTime, index=True, default=datetime.utcnow,
+#                             nullable=False)
+#     user_id = sqla.Column(sqla.Integer, sqla.ForeignKey(User.id), index=True)
 
-    author = sqla_orm.relationship('User', back_populates='posts')
+#     author = sqla_orm.relationship('User', back_populates='posts')
 
-    def __repr__(self):  # pragma: no cover
-        return '<Post {}>'.format(self.text)
+#     def __repr__(self):  # pragma: no cover
+#         return '<Post {}>'.format(self.text)
 
-    @property
-    def url(self):
-        return url_for('posts.get', id=self.id)
+#     @property
+#     def url(self):
+#         return url_for('posts.get', id=self.id)
+    
+    
 
 class Subscriber(db.Model):
     __tablename__ = 'subscribers'
@@ -244,6 +246,28 @@ class Subscriber(db.Model):
     
     def __repr__(self): 
         return '<Subscriber {}>'.format(self.email)
+    
+    
+class Donor(db.Model):
+        __tablename__ = 'donors'
+        id = sqla.Column(sqla.Integer, primary_key=True)
+        donor_name = sqla.Column(sqla.String(120), index=True,
+                        nullable=False)
+        logo_image = sqla.Column(sqla.String(), index=True,
+                        nullable=False)    
+        
+        def __repr__(self):  # pragma: no cover
+            return '<Donor {}>'.format(self.donor_name)
+        
+        
+class Publication(db.Model):
+        __tablename__ = 'publications'
+        id = sqla.Column(sqla.Integer, primary_key=True)
+        publication_id = sqla.Column(sqla.Integer, index=True,
+                        nullable=False)    
+    
+    
+    
 
      
     

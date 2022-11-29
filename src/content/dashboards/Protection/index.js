@@ -180,7 +180,7 @@ function DashboardMain() {
           spacing={1}
           sx={{ marginTop: 5}}
         >
-          <Grid item xs={12}>
+           <Grid item xs={12} sx={{ mb: 1, position: 'sticky', top: 0, zIndex: 1, opacity: 0.9 }}>
             <Card sx={{ mb: 1 }}>
                 {error && <Alert severity={"error"} >{error}</Alert>}
                 <CardHeader
@@ -196,6 +196,8 @@ function DashboardMain() {
                     subheader={loading ? <Skeleton variant="text" width={300} /> : <> violation cases between dates  {state.startDate} - {state.endDate}</>}
                 />
             </Card>
+            </Grid>
+            <Grid item xs={12}>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
                 {loading ? (

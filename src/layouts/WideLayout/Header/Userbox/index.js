@@ -124,17 +124,17 @@ function HeaderUserbox({ logout }) {
             <HealthAndSafetyTwoToneIcon fontSize="small" />
             <ListItemText primary="Partner Protection Data" />
           </ListItem>
-          <ListItem button to="/" component={NavLink}>
+          <ListItem button to="//private/donors" component={NavLink}>
             <AccountBoxTwoToneIcon fontSize="small" />
-            <ListItemText primary="My Profile" />
+            <ListItemText primary="Donors" />
           </ListItem>
           <ListItem
             button
-            to="/management/profile/settings"
+            to="/private/publications"
             component={NavLink}
           >
             <AccountTreeTwoToneIcon fontSize="small" />
-            <ListItemText primary="Account Settings" />
+            <ListItemText primary="Publications" />
           </ListItem>
         </List>
         <Divider />

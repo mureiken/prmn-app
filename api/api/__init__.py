@@ -1,5 +1,5 @@
 """
-Welcome to the documentation for the Microblog API!
+Welcome to the documentation for the PRMN API!
 
 This project is written in Python, with the
 [Flask](https://flask.palletsprojects.com/) web framework. This documentation

@@ -21,6 +21,9 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+import TransferWithinAStationTwoToneIcon from '@mui/icons-material/TransferWithinAStationTwoTone';
+import HealthAndSafetyTwoToneIcon from '@mui/icons-material/HealthAndSafetyTwoTone';
+import { SignOutButton }  from '../../../../components/SignOutButton';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -57,7 +60,7 @@ const UserBoxDescription = styled(Typography)(
 `
 );
 
-function HeaderUserbox() {
+function HeaderUserbox({ logout }) {
   const user =
   {
     name: 'Kamau',
@@ -117,25 +120,30 @@ function HeaderUserbox() {
         </MenuUserBox>
         <Divider sx={{ mb: 0 }} />
         <List sx={{ p: 1 }} component="nav">
-          <ListItem button to="/management/profile/details" component={NavLink}>
-            <AccountBoxTwoToneIcon fontSize="small" />
-            <ListItemText primary="My Profile" />
-          </ListItem>
-          <ListItem
-            button
-            to="/management/profile/settings"
-            component={NavLink}
-          >
-            <AccountTreeTwoToneIcon fontSize="small" />
-            <ListItemText primary="Account Settings" />
-          </ListItem>
-        </List>
+        <ListItem button to="/private/partner-displacement-data" component={NavLink}>
+          <TransferWithinAStationTwoToneIcon fontSize="small" />
+          <ListItemText primary="Partner Displacement Data" />
+        </ListItem>
+        <ListItem button to="/private/partner-protection-data" component={NavLink}>
+          <HealthAndSafetyTwoToneIcon fontSize="small" />
+          <ListItemText primary="Partner Protection Data" />
+        </ListItem>
+        <ListItem button to="//private/donors" component={NavLink}>
+          <AccountBoxTwoToneIcon fontSize="small" />
+          <ListItemText primary="Donors" />
+        </ListItem>
+        <ListItem
+          button
+          to="/private/publications"
+          component={NavLink}
+        >
+          <AccountTreeTwoToneIcon fontSize="small" />
+          <ListItemText primary="Publications" />
+        </ListItem>
+      </List>
         <Divider />
-        <Box sx={{ m: 1 }}>
-          <Button color="primary" fullWidth>
-            <LockOpenTwoToneIcon sx={{ mr: 1 }} />
-            Sign out
-          </Button>
+        <Box component="form" onSubmit={()=>logout()} sx={{ m: 1 }}>
+          <SignOutButton />
         </Box>
       </Popover>
     </>

@@ -36,11 +36,11 @@ def new(args):
     return subscriber
 
 @subscribers.route('/subscribers', methods=['GET'])
-@paginated_response(subscribers_schema,
-                    pagination_schema=DateTimePaginationSchema)
+@response(subscribers_schema)
 def all():
     """Retrieve all subscribers"""
-    return Subscriber.select()
+    all_subscribers = db.session.query(Subscriber).all()
+    return  all_subscribers
 
 
 

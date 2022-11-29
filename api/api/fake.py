@@ -3,7 +3,7 @@ import click
 from flask import Blueprint
 from faker import Faker
 from api.app import db
-from api.models import User, Post
+from api.models import User
 
 fake = Blueprint('fake', __name__)
 faker = Faker()
@@ -32,15 +32,15 @@ def users(num):  # pragma: no cover
     print(num, 'users added.')
 
 
-@fake.cli.command()
-@click.argument('num', type=int)
-def posts(num):  # pragma: no cover
-    """Create the given number of fake posts, assigned to random users."""
-    users = db.session.scalars(User.select()).all()
-    for i in range(num):
-        user = random.choice(users)
-        post = Post(text=faker.paragraph(), author=user,
-                    timestamp=faker.date_time_this_year())
-        db.session.add(post)
-    db.session.commit()
-    print(num, 'posts added.')
+# @fake.cli.command()
+# @click.argument('num', type=int)
+# def posts(num):  # pragma: no cover
+#     """Create the given number of fake posts, assigned to random users."""
+#     users = db.session.scalars(User.select()).all()
+#     for i in range(num):
+#         user = random.choice(users)
+#         post = Post(text=faker.paragraph(), author=user,
+#                     timestamp=faker.date_time_this_year())
+#         db.session.add(post)
+#     db.session.commit()
+#     print(num, 'posts added.')

@@ -26,7 +26,7 @@ def new(args):
 
 
 @users.route('/users', methods=['GET'])
-@authenticate(token_auth)
+# @authenticate(token_auth)
 @paginated_response(users_schema)
 def all():
     """Retrieve all users"""

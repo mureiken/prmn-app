@@ -30,6 +30,10 @@ const PartnerDisplacementData = Loader(lazy(() => import('./content/dashboards/P
 const Protection = Loader(lazy(() => import('./content/dashboards/Protection')));
 const PartnerProtectionData = Loader(lazy(() => import('./content/dashboards/PartnerProtectionData/index')))
 
+// Content Management
+const PostPublications = Loader(lazy(() => import('./content/applications/PostPublications/index')))
+const PostDonors = Loader(lazy(() => import('./content/applications/PostDonors/index')))
+
 // Pages
 const About = Loader(lazy(() => import('./content/about.js')));
 const Contact = Loader(lazy(() => import('./content/contact.js')));
@@ -160,7 +164,15 @@ const routes = [
       {
         path: 'partner-protection-data',
         element:  <PartnerProtectionData />
-      },      
+      },  
+      {
+        path: 'donors',
+        element:  <PostDonors />
+      },    
+      {
+        path: 'publications',
+        element:  <PostPublications />
+      },        
     ]
   },
   {

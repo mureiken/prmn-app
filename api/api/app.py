@@ -43,8 +43,12 @@ def create_app(config_class=Config):
     app.register_blueprint(tokens, url_prefix='/api')
     from api.users import users
     app.register_blueprint(users, url_prefix='/api')
-    from api.posts import posts
-    app.register_blueprint(posts, url_prefix='/api')
+    # from api.posts import posts
+    # app.register_blueprint(posts, url_prefix='/api')
+    from api.donors import donors
+    app.register_blueprint(donors, url_prefix='/api')
+    from api.publications import publications
+    app.register_blueprint(publications, url_prefix='/api')
     from api.displacement_data import displacement_data
     app.register_blueprint(displacement_data, url_prefix='/api')
     from api.partner_displacement_data import partner_displacement_data

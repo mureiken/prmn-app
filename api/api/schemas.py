@@ -4,7 +4,7 @@ from marshmallow import validate, validates, validates_schema, \
 from marshmallow_geojson import GeoJSONSchema, PropertiesSchema, FeatureSchema
 from api import ma, db
 from api.auth import token_auth
-from api.models import User, Post, Subscriber
+from api.models import User, Subscriber, Donor, Publication
 
 
 paginated_schema_cache = {}
@@ -194,7 +194,7 @@ def PaginatedCollection(schema, pagination_schema=StringPaginationSchema):
 
     PaginatedSchema.__name__ = 'Paginated{}'.format(schema.__class__.__name__)
     paginated_schema_cache[schema] = PaginatedSchema
-    return PaginatedSchema
+#     return PaginatedSchema
 
 
 class UserSchema(ma.SQLAlchemySchema):
@@ -214,8 +214,8 @@ class UserSchema(ma.SQLAlchemySchema):
     about_me = ma.auto_field()
     first_seen = ma.auto_field(dump_only=True)
     last_seen = ma.auto_field(dump_only=True)
-    posts_url = ma.URLFor('posts.user_all', values={'id': '<id>'},
-                          dump_only=True)
+    # posts_url = ma.URLFor('posts.user_all', values={'id': '<id>'},
+    #                       dump_only=True)
 
     @validates('username')
     def validate_username(self, value):
@@ -243,23 +243,23 @@ class UpdateUserSchema(UserSchema):
             raise ValidationError('Password is incorrect')
 
 
-class PostSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = Post
-        include_fk = True
-        ordered = True
+# class PostSchema(ma.SQLAlchemySchema):
+#     class Meta:
+#         model = Post
+#         include_fk = True
+#         ordered = True
 
-    id = ma.auto_field(dump_only=True)
-    url = ma.String(dump_only=True)
-    text = ma.auto_field(required=True, validate=validate.Length(
-        min=1, max=280))
-    timestamp = ma.auto_field(dump_only=True)
-    author = ma.Nested(UserSchema, dump_only=True)
+#     id = ma.auto_field(dump_only=True)
+#     url = ma.String(dump_only=True)
+#     text = ma.auto_field(required=True, validate=validate.Length(
+#         min=1, max=280))
+#     timestamp = ma.auto_field(dump_only=True)
+#     author = ma.Nested(UserSchema, dump_only=True)
 
-    @post_dump
-    def fix_datetimes(self, data, **kwargs):
-        data['timestamp'] += 'Z'
-        return data
+#     @post_dump
+#     def fix_datetimes(self, data, **kwargs):
+#         data['timestamp'] += 'Z'
+        # return data
 
 
 class TokenSchema(ma.Schema):
@@ -309,6 +309,19 @@ class SubscriberSchema(ma.SQLAlchemySchema):
         return data
     
 class FeedbackSchema(ma.Schema):
-    email = ma.String(required=True, validate=[validate.Length(max=120),                                         validate.Email()])
+    email = ma.String(required=True, validate=[validate.Length(max=120), validate.Email()])
     subject = ma.String(required=False)
     body = ma.String(required=True)
+    
+class DonorSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Donor
+    id = ma.auto_field(dump_only=True)
+    donor_name = ma.String(required=True)
+    logo_image = ma.String(required=True)
+
+class PublicationSchema(ma.Schema):
+    class Meta:
+        model = Publication
+    publication_id = ma.Integer(required=True)
+   

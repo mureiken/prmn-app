@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -8,19 +8,28 @@ import CardHeader from '@mui/material/CardHeader';
 import Skeleton from '@mui/material/Skeleton';
 import IconButton from '@mui/material/IconButton';
 import TuneTwoToneIcon from '@mui/icons-material/TuneTwoTone';
-// import { red } from '@mui/material/colors';
+import Alert from '@mui/material/Alert';
 import FilterDrawer from '../../../components/FilterDrawer';
 import ProtectionIcon from '../../../assets/Abduction-kidnapping.png';
 import DataTable from './DataTable';
-
+import useFetch from '../../../useFetch';
 function PartnerDisplacementDashBoard() {
-  const date = new Date();
-  const daysAgo = new Date(date.getTime());
-  const dateStr = (myDate = date, format='en-US') => myDate.toLocaleDateString(format).replace(/\//g, '-');
+  const date = useMemo(
+    () => { return new Date(); }, [],
+  );
+  const daysAgo = new Date(date.getTime());  
+  const dateStr = useCallback(
+    (myDate = date, format='en-US') => {
+      return myDate.toLocaleDateString(format).replace(/\//g, '-');
+    },
+    [date],
+  );
+  
   const startDate = (period) => new Date(daysAgo.setDate(date.getDate() - period)).toLocaleDateString()
-  const [tableData, setTableData] = useState([])
+
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [query, setQuery] = useState('');  
+
 
   const [state, setState] = useState({
     data: {},
@@ -65,24 +74,30 @@ function PartnerDisplacementDashBoard() {
   }
 
   useEffect(() => {
-    let getUrl = () => {
-      let regions = filters.regions.length ? filters.regions.join(',') : 'All';
-      let violations = filters.violations.length ? filters.violations.join(',') : 'All';
-      let perpetrators = filters.perpetrators.length ? filters.perpetrators.join(',') : 'All';
-      return `/api/partner-protection-data/${filters.period}D/${regions}/${violations}/${perpetrators}`
+    let regions = filters.regions.length ? filters.regions.join(',') : 'All';
+    let violations = filters.violations.length ? filters.violations.join(',') : 'All';
+    let perpetrators = filters.perpetrators.length ? filters.perpetrators.join(',') : 'All';
+    
+  
+    if (filters.filterByDates) {
+      setQuery(`${regions}/${violations}/${perpetrators}/d/${dateStr(filters.start)}/${dateStr(filters.end)}`);
+    } else { 
+      setQuery(`${regions}/${violations}/${perpetrators}/${filters.period}D`)
     }
+  
+  }, [dateStr, filters]);
 
-    const getProtectiontData = async () => {
-      setIsLoading(true);
-      const res = await fetch(getUrl());
-      const data = await res.json();
-      setTableData(data);
-      setIsLoading(false);
-    };
 
-    console.log("Data: ")
-    getProtectiontData().catch(console.error);
-  }, [filters]);
+  const url = query && `/api/partner-protection-data/${query}`;
+  const geoData = false;
+  
+  const {
+    loading,  
+    error,
+    data
+  } = useFetch(url, geoData)
+    
+
 
   const handleDrawerOpen = () => {
     setOpenFilterDrawer(true);
@@ -108,6 +123,7 @@ function PartnerDisplacementDashBoard() {
         >
           <Grid item xs={12}>
             <Card sx={{ mb: 1 }}>
+            {error && <Alert severity={"error"} >{error}</Alert>}
                 <CardHeader
                   avatar={
                       <img src={ProtectionIcon} alt="Protection Dashboard Icon" width={50}/>
@@ -118,19 +134,17 @@ function PartnerDisplacementDashBoard() {
                         </IconButton>
                     }
                     title="Protection Data"
-                    subheader={isLoading ? <Skeleton variant="text" width={300} /> : `Displacement between dates  ${filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} to ${filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate }`}
+                    subheader={loading ? <Skeleton variant="text" width={300} /> : `Displacement between dates  ${filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} to ${filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate }`}
                 />
             </Card>
             <Grid container spacing={2}>
               <div style={{ height: 800, width: '98%', marginLeft: 20, marginTop: 30 }}>
-                <DataTable protectionData={tableData} />
+                <DataTable protectionData={data} />
           </div>
                 
           </Grid>
           
         </Grid>
-        
-     
       </Grid>
       </Box>
     <FilterDrawer
