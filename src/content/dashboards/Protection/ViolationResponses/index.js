@@ -50,8 +50,8 @@ import ViolationResponsesChart from './ViolationResponsesChart';
       };
   
     return (
-        <Box sx={{ py: 1, pb: 2, height: '100%'}}>
-            <Box height={200}>
+        <Box sx={{ py: 1, pb: 0, height: '100%'}}>
+            <Box height={235}>
             <ViolationResponsesChartWrapper 
                 data={violation_cases} 
                 labels={generic.Responses.labels}

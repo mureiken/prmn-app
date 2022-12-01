@@ -197,7 +197,7 @@ export default function FilterDrawer({ open, handleClick, handleFilterChange, fi
                 <MultiSelect names={VIOLATION_CATEGORIES} handleFilter={handleFilterChange} target="Violations" selectedVals={filters.violations} />
               </Box>
               <Box>
-                <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>perpetrator Groups</Typography>
+                <Typography variant="h6" color="primary" sx={{ mt: 2, pl: 1 }}>Perpetrator Groups</Typography>
                 <MultiSelect names={PERPETRATOR_GROUPS} handleFilter={handleFilterChange} target="Perpetrators" selectedVals={filters.perpetrators} />
               </Box>
             </Box>

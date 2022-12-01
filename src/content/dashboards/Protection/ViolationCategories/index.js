@@ -51,12 +51,14 @@ import ViolationCategoriesChart from './ViolationCategoriesChart';
       };
   
     return (
-        <Box sx={{ py: 1, pb: 2}}>
-            <Box height={200}>
-            <ViolationCategoriesChartWrapper 
-                data={violationCases} 
-                labels={generic.categories.labels}
-                />
+        <Box sx={{ py: 1, pb: 0}}>
+            <Box height={185}>
+              <ViolationCategoriesChartWrapper 
+                  data={violationCases} 
+                  labels={generic.categories.labels}
+                  handleFilter={props.handleFilterChange}
+
+              />
             </Box>
         </Box>   
     );

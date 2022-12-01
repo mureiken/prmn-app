@@ -167,5 +167,5 @@ export const PERPETRATOR_GROUPS = [
   'Non-State Actors',
   'International Actors',
   'Unaffiliated Private Person',
-  'Child Protection',
+  //'Child Protection',
 ]

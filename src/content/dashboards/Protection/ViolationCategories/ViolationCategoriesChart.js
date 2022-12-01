@@ -4,6 +4,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useTheme } from '@mui/material/styles';
 
 const ViolationCategoriesChart = ({
+  handleFilter,
   data: dataProp,
   labels,
   ...rest
@@ -123,9 +124,10 @@ const ViolationCategoriesChart = ({
     },
     onClick: function(evt, element) {
       if (element.length > 0) {
-        console.log(myData.labels[element[0]._index]);
-        // you can also get dataset of your selected element
-        //console.log(myData.datasets[element[0]._datasetIndex].data[element[0]._index])
+        handleFilter(
+          "Violations", 
+          [myData.labels[element[0]._index]]
+        )
       }
     }
   };

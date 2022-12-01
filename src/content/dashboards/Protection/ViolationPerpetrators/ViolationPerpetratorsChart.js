@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Doughnut } from 'react-chartjs-2';
 import { useTheme } from '@mui/material/styles';
 
-const ViolationPerpetratorsChart = ({ data: dataProp, ...rest }) => {
+const ViolationPerpetratorsChart = ({ handleFilter, data: dataProp, ...rest }) => {
   const theme = useTheme();
 
   function numberWithCommas(x) {
@@ -58,9 +58,10 @@ const ViolationPerpetratorsChart = ({ data: dataProp, ...rest }) => {
     },
     onClick: function(evt, element) {
       if (element.length > 0) {
-        console.log(data.labels[element[0]._index]);
-        // you can also get dataset of your selected element
-        //console.log(myData.datasets[element[0]._datasetIndex].data[element[0]._index])
+        handleFilter(
+          "Perpetrators", 
+          [data.labels[element[0]._index]]
+        )
       }
     }
   };

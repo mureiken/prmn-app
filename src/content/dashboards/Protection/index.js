@@ -5,7 +5,9 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
 import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
@@ -16,6 +18,8 @@ import ViolationPerpetrators from './ViolationPerpetrators';
 import ViolationTrend from './ViolationTrend';
 import IconButton from '@mui/material/IconButton';
 import TuneTwoToneIcon from '@mui/icons-material/TuneTwoTone';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined';
 import Map from './Map';
 import './index.css';
 import SubscriptionForm from '../../applications/EmailSubscription';
@@ -121,29 +125,6 @@ function DashboardMain() {
   } = useFetch(url, geoData)
     
 
-  // useEffect(() => {
-  //   let getUrl = () => {
-  //     let regions = filters.regions.length ? filters.regions.join(',') : 'All';
-  //     let violations = filters.violations.length ? filters.violations.join(',') : 'All';
-  //     let perpetrators = filters.perpetrators.length ? filters.perpetrators.join(',') : 'All';
-  //     return `/api/protection-data/${filters.period}D/${regions}/${violations}/${perpetrators}`
-  //   }
-
-  //   const getProtectiontData = async () => {
-  //     setIsLoading(true);
-  //     const res = await fetch(getUrl());
-  //     const data = await res.json();
-  //     setState((prevState) => ({
-  //       ...prevState,
-  //       data: data,
-  //     }));
-  //     setIsLoading(false);
-  //   };
-
-  //   console.log("Data: ")
-  //   getProtectiontData().catch(console.error);
-  // }, [filters]);
-
   const handleDrawerOpen = () => {
     setOpenFilterDrawer(true);
   };
@@ -188,9 +169,23 @@ function DashboardMain() {
                     <img src={ProtectionIcon} alt="Protection Dashboard Icon" width={50}/>
                     }
                     action={
+                      <Tooltip
+                        PopperProps={{
+                          disablePortal: true,
+                        }}
+                    
+                        open="open"
+                        disableFocusListener
+                        disableHoverListener
+                        disableTouchListener
+                        title="Use filter to query data on dashboard"
+                        placement="left"
+                        arrow
+                        >
                         <IconButton aria-label="settings"  onClick={handleDrawerOpen}>
                             <TuneTwoToneIcon />
                         </IconButton>
+                      </Tooltip>
                     }
                     title={loading ? <Skeleton variant="text" width={100} /> : <><Typography variant="h1"  color="secondary">{Number(data.total_violation_cases).toLocaleString('en')} </Typography></>}
                     subheader={loading ? <Skeleton variant="text" width={300} /> : <> violation cases between dates  {state.startDate} - {state.endDate}</>}
@@ -204,10 +199,63 @@ function DashboardMain() {
                   <SkeletonWrapper />
                   ) : (
                     <Card>
-                        <CardHeader title="Top Violation Categories" />
+                        <CardHeader 
+                          title="Top Violation Categories" 
+                          action={
+                            <Tooltip
+                              title="Top 5 Violation categories based on reports by victims.Click on chart element to filter data."
+                              placement="left-end"
+                              arrow
+                            >
+                              <IconButton aria-label="help">
+                                <HelpOutlineOutlinedIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          }
+                        />
                         <Divider />
                         <CardContent>
-                            <ViolationCategories data={data} />
+                            <ViolationCategories 
+                              data={data}
+                              handleFilterChange={handleFilterChange}
+                            />
+                        </CardContent>
+                        <CardActions disableSpacing>
+                          <IconButton 
+                            onClick={()=>handleFilterChange(
+                              "Violations", 
+                              [])} aria-label="Reset">
+                            <RestartAltOutlinedIcon />
+                          </IconButton>
+                        </CardActions>
+                    </Card>
+                  )}
+                </Grid>
+                <Grid item xs={12} md={4}>
+                {loading ? (
+                  <SkeletonWrapper />
+                  ) : (
+                    <Card>
+                        <CardHeader 
+                          title="Top Protection Responses"
+                          action={
+                            <Tooltip
+                              title="Top 5 protection responses after violation cases where reported."
+                              placement="left-end"
+                              arrow
+                            >
+                              <IconButton aria-label="help">
+                                <HelpOutlineOutlinedIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          }
+                        />
+                        <Divider />
+                        <CardContent>
+                          <ViolationResponses 
+                            data={data}
+                            handleFilterChange={handleFilterChange}
+                          />
                         </CardContent>
                     </Card>
                   )}
@@ -217,24 +265,35 @@ function DashboardMain() {
                   <SkeletonWrapper />
                   ) : (
                     <Card>
-                        <CardHeader title="Top Protection Responses" />
+                        <CardHeader 
+                          title="Top Violation Perpetrators"
+                          action={
+                            <Tooltip
+                              title="Top perpetrators groups that affected victims. Click on chart element to filter data"
+                              placement="left-end"
+                              arrow
+                            >
+                              <IconButton aria-label="help">
+                                <HelpOutlineOutlinedIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          }
+                        />
                         <Divider />
                         <CardContent>
-                            <ViolationResponses data={data} />
+                            <ViolationPerpetrators 
+                              data={data}
+                              handleFilterChange={handleFilterChange}
+                            />
                         </CardContent>
-                    </Card>
-                  )}
-                </Grid>
-                <Grid item xs={12} md={4}>
-                {loading ? (
-                  <SkeletonWrapper />
-                  ) : (
-                    <Card>
-                        <CardHeader title="Top Violation Perpetrators" />
-                        <Divider />
-                        <CardContent>
-                            <ViolationPerpetrators data={data} />
-                        </CardContent>
+                        <CardActions disableSpacing>
+                          <IconButton 
+                            onClick={()=>handleFilterChange(
+                              "Perpetrators", 
+                              [])} aria-label="Reset">
+                            <RestartAltOutlinedIcon />
+                          </IconButton>
+                        </CardActions>
                     </Card>
                   )}
                 </Grid>
@@ -256,7 +315,20 @@ function DashboardMain() {
           <SkeletonWrapper />
           ) : (
             <Card>
-              <CardHeader title="Weekly Protection Cases Trend" />
+              <CardHeader 
+                title="Weekly Protection Cases Trend"
+                action={
+                  <Tooltip
+                    title="Trend of total violation cases on week by week basis."
+                    placement="left-end"
+                    arrow
+                  >
+                    <IconButton aria-label="help">
+                      <HelpOutlineOutlinedIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                }
+              />
               <Divider />
               <CardContent>
                 <ViolationTrend data={data} />
