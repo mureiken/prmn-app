@@ -188,8 +188,19 @@ function DashboardMain() {
                       </Tooltip>
                     }
                     title={loading ? <Skeleton variant="text" width={100} /> : <><Typography variant="h1"  color="secondary">{Number(data.total_violation_cases).toLocaleString('en')} </Typography></>}
-                    subheader={loading ? <Skeleton variant="text" width={300} /> : <> violation cases between dates  {state.startDate} - {state.endDate}</>}
-                />
+                    subheader={ 
+                      loading ? 
+                        <Skeleton variant="text" width={300} /> 
+                      : 
+                        <React.Fragment> 
+                          Violation cases between dates  {state.startDate} - {state.endDate}
+          
+                          {filters.regions.length ? <React.Fragment> Violation regions:  [{filters.regions.join(',')}] </React.Fragment>: ''}
+                          {filters.violations.length ? <React.Fragment><br /><strong>Violation Categories</strong>: [{filters.violations.join(',')}] </React.Fragment>: ''}
+                          {filters.perpetrators.length ? <React.Fragment><br /><strong>Perpetrator Groups:</strong> [{filters.perpetrators.join(',')}] </React.Fragment>: ''}
+                        </React.Fragment> 
+                      }
+                    />
             </Card>
             </Grid>
             <Grid item xs={12}>
