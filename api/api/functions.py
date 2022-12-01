@@ -128,8 +128,8 @@ def displacement_filters_protection(df, regions, violations, perpetrators, perio
     return df
 
 #This function geojson for daily displacement data
-#@pandas_cache
-def get_daily_displacement_data():
+@pandas_cache("t")
+def get_daily_displacement_data(t):
     """Retrieve displacement data"""
 
     tp = pd.read_csv(
@@ -201,7 +201,7 @@ def get_daily_displacement_data():
     
     return df
 
-#@pandas_cache
+@pandas_cache
 def get_daily_protection_data():
     tp = pd.read_csv(
         'data/protection_data.csv',
@@ -275,7 +275,7 @@ def get_daily_protection_data():
 
 def get_total_arrivals(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
     
-    df = get_daily_displacement_data()
+    df = get_daily_displacement_data(t)
     
     df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
@@ -286,7 +286,7 @@ def get_total_arrivals(cregions, cdistricts, pregions, pdistricts, needs, causes
     
 def get_top_displacement_regions(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
     
-    df = get_daily_displacement_data()
+    df = get_daily_displacement_data(t)
     
     df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
@@ -297,7 +297,7 @@ def get_top_displacement_regions(cregions, cdistricts, pregions, pdistricts, nee
 
 def get_top_displacement_districts(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
     
-    df = get_daily_displacement_data()
+    df = get_daily_displacement_data(t)
     
     df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
@@ -308,7 +308,7 @@ def get_top_displacement_districts(cregions, cdistricts, pregions, pdistricts, n
 
 def get_top_displacement_settlements(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
     
-    df = get_daily_displacement_data()
+    df = get_daily_displacement_data(t)
     
     df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
@@ -319,7 +319,7 @@ def get_top_displacement_settlements(cregions, cdistricts, pregions, pdistricts,
 
 def get_top_displacement_needs(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
     
-    df = get_daily_displacement_data()
+    df = get_daily_displacement_data(t)
     
     df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
@@ -334,7 +334,7 @@ def get_top_displacement_needs(cregions, cdistricts, pregions, pdistricts, needs
 
 def get_top_displacement_causes(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
     
-    df = get_daily_displacement_data()
+    df = get_daily_displacement_data(t)
     
     df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
     
@@ -377,7 +377,7 @@ def df_to_geojson(df, properties, lat='CurrentSettLon', lon='CurrentSettLat'):
 #This function geojson for filtered daily displacement data based on passed parameters
 def get_filtered_daily_displacement_data(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
     """filter displacement data"""
-    df = get_daily_displacement_data()
+    df = get_daily_displacement_data(t)
     
     df['Needs'] = df['Need1'] + ',' + df['Need2'] 
     df['Date'] = df['Arrival'].astype(str)
@@ -400,7 +400,7 @@ def get_filtered_daily_displacement_data(cregions, cdistricts, pregions, pdistri
 
 def get_weekly_displacement(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):
    """filter displacement data"""
-   df = get_daily_displacement_data()
+   df = get_daily_displacement_data(t)
    df = df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs)
    df['Week_Number'] = df['Arrival'].dt.isocalendar().week
    
@@ -411,7 +411,7 @@ def get_weekly_displacement(cregions, cdistricts, pregions, pdistricts, needs, c
 
 def get_partner_displacement_data(cregions, cdistricts, pregions, pdistricts, needs, causes, period, *args, **kwargs):              
     """filter displacement data"""
-    df = get_daily_displacement_data()
+    df = get_daily_displacement_data(t)
     
     df['Needs'] = df['Need1'] + ',' + df['Need2'] 
     df['ArrivalDate'] = df['Arrival'].astype(str)
@@ -432,7 +432,7 @@ def get_partner_displacement_data(cregions, cdistricts, pregions, pdistricts, ne
 #This function returns daily displacement data based on regions
 def get_filtered_daily_displacement_alerts():
     """daily displacement data based on region"""
-    df = get_daily_displacement_data()
+    df = get_daily_displacement_data(t)
     
     df['Needs'] = df['Need1'] + ',' + df['Need2'] 
     df['Date'] = df['Arrival'].astype(str)
@@ -462,7 +462,7 @@ def get_filtered_daily_displacement_alerts():
 #This function geojson for filtered weekly displacement data based on passed parameters
 def get_filtered_weekly_displacement_alerts(regions='Middle Juba'):
     """weekly displacement data based on region"""
-    df = get_daily_displacement_data()
+    df = get_daily_displacement_data(t)
     
     df['Needs'] = df['Need1'] + ',' + df['Need2'] 
     df['Date'] = df['Arrival'].astype(str)
@@ -491,7 +491,7 @@ def get_filtered_weekly_displacement_alerts(regions='Middle Juba'):
 #This function geojson for filtered weekly displacement data based on passed parameters
 def get_filtered_monthly_displacement_alerts(regions='Middle Juba'):
     """monthly displacement data based on region"""
-    df = get_daily_displacement_data()
+    df = get_daily_displacement_data(t)
     
     df['Needs'] = df['Need1'] + ',' + df['Need2'] 
     df['Date'] = df['Arrival'].astype(str)
@@ -520,7 +520,7 @@ def get_filtered_monthly_displacement_alerts(regions='Middle Juba'):
 # Functions returns data on details of arrivals in a settlement in a particular date 
 def current_settlement_arrival_details(currentsettlement, arrival_date):
     """Retrieve displacement details by current settlement and arrival date"""
-    df = get_daily_displacement_data()
+    df = get_daily_displacement_data(t)
     df =  df.set_index('CurrentSettlement')
 
     df['Needs'] = df['Need1'] + ',' + df['Need2'] 
