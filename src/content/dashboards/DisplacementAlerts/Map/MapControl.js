@@ -73,14 +73,14 @@ const MapControlComponent = ({ handleFilter }) => {
             </Legend>
             <Legend component="Button" sx={{border: 0}} onClick={()=>handleFilter("Causes", ["Flood"])}>
               <Avatar 
-                sx={{ bgcolor: "#c974a2", width: 24, height: 24,  mr: 2 }}>
+                sx={{ bgcolor: "#a07b5e", width: 24, height: 24,  mr: 2 }}>
                     &nbsp;
                 </Avatar>
                 Flood
             </Legend>
             <Legend component="Button" sx={{border: 0}} onClick={()=>handleFilter("Causes", ["Other"])}>
               <Avatar 
-                sx={{ bgcolor: "#a07b5e", width: 24, height: 24, mr: 2 }}>
+                sx={{ bgcolor: "#c974a2", width: 24, height: 24, mr: 2 }}>
                     &nbsp;
                 </Avatar>
                 Other
