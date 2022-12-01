@@ -131,7 +131,7 @@ def displacement_filters_protection(df, regions, violations, perpetrators, perio
 @pandas_cache("t")
 def get_daily_displacement_data(t):
     """Retrieve displacement data"""
-
+    # read data
     tp = pd.read_csv(
             'data/displacement_data.csv',
             # usecols=[
