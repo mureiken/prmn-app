@@ -26,6 +26,7 @@ chrome-user-data
 .env
 .env.development
 .env.production
+src/setupProxy.js
 api/.flaskenv
 api/profile
 
