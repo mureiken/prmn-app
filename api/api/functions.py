@@ -164,7 +164,6 @@ def get_daily_displacement_data(t):
                 ],
             sep=',',
             parse_dates=['Arrival'],
-            engine='c',
             iterator=True, 
             chunksize=50000,
             dtype={
@@ -233,7 +232,6 @@ def get_daily_protection_data():
             ],
         sep=',',
         parse_dates=['ReportDate'],
-        engine='c',
         dtype={
             'VictimId': 'int32',
             'OrganisationAcronym': 'str',
