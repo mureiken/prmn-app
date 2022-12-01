@@ -6,12 +6,14 @@ const proxy = {
     changeOrigin: true
 }
 
+const proxy2 = {
+  target: 'https://data.unhcr.org',
+  changeOrigin: true
+}
+
+
 module.exports = function(app) {
-  app.use(
-    '/api',
-    createProxyMiddleware(proxy)
-  );
-
-//   app.use(morgan('combined'));
-
+  app.use('/api',createProxyMiddleware(proxy));
+  app.use('/api-content',createProxyMiddleware(proxy2));
+  //   app.use(morgan('combined'));
 }

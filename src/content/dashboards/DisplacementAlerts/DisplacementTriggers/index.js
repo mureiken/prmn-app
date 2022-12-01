@@ -62,9 +62,12 @@ import DisplacementTriggersChart from './DisplacementTriggersChart';
     };
   
     return (
-        <Box sx={{ py: 1, pb: 2, height: '100%' }}>
-            <Box height={200}>
-              <DisplacementTriggersChartWrapper data={numberOfPeople} />
+        <Box sx={{ py: 1, pb:0, height: '100%' }}>
+            <Box height={185}>
+              <DisplacementTriggersChartWrapper 
+                data={numberOfPeople}
+                handleFilter={props.handleFilterChange}
+              />
             </Box>
         </Box>   
     );

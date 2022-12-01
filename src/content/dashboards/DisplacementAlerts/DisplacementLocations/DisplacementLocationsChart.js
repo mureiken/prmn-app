@@ -3,12 +3,16 @@ import { HorizontalBar } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useTheme } from '@mui/material/styles';
 
+
 const DisplacementLocationsChart = ({
+  handleFilter,
+  category,
   data: dataProp,
   labels,
   ...rest
 }) => {
   const theme = useTheme();
+
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -125,9 +129,15 @@ const DisplacementLocationsChart = ({
     },
     onClick: function(evt, element) {
       if (element.length > 0) {
-        console.log(myData.labels[element[0]._index]);
         // you can also get dataset of your selected element
         //console.log(myData.datasets[element[0]._datasetIndex].data[element[0]._index])
+       // setValue( [myData.labels[element[0]._index]])
+        if (category==="Regions" || category === "Districts")(
+          handleFilter(
+            category==="Regions" ? "CurrentRegions": "CurrentDistricts", 
+            [myData.labels[element[0]._index]]
+        )
+        )
       }
     }
   };

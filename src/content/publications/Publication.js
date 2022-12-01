@@ -93,12 +93,24 @@ const Publication = ({ publications }) => {
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredPublications = applyFilters(publications, filters);
+  const search = function (anyArray, searchTerm) {
+    return anyArray.filter((obj) => {
+      if (obj.title.includes(searchTerm)) {
+        return obj.title;
+      }
+      return false;
+    });
+  };
+
+  const prmnPublications = search(publications, 'PRMN');
+
+  const filteredPublications = applyFilters(prmnPublications, filters);
   const paginatedPublications = applyPagination(
     filteredPublications,
     page,
     limit
   );
+
 
   return (
     <Card>
@@ -145,7 +157,7 @@ const Publication = ({ publications }) => {
                 <Grid container spacing={2}>
                   <Grid item>
                     <ButtonBase sx={{ width: 128, height: 128 }}>
-                      <Img alt="complex" src={publication.thumbnail} />
+                      <Img alt="complex" src={publication.thumbnailFile} />
                     </ButtonBase>
                   </Grid>
                   <Grid item xs={12} sm container>
@@ -155,14 +167,14 @@ const Publication = ({ publications }) => {
                           {publication.title}
                         </Typography>
                         <Typography variant="body2" gutterBottom>
-                        {publication.summary}
+                        {publication.description}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                          Publish Date: {publication.publishDate}
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Link href={publication.link} target="_blank" rel="noreferrer">
+                        <Link href={publication.downloadLink} target="_blank" rel="noreferrer">
                           <Typography sx={{ cursor: 'pointer' }} variant="body2">Download</Typography>
                         </Link> 
                       </Grid>

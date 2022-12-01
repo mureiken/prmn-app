@@ -6,55 +6,7 @@ import { CIRCLE_OPACITY, LAYER_ID, COLORS, MAX_RADIUS, MIN_RADIUS } from '../../
 import Circles from './Circles/index'
 import Polygons from './Polygons/index'
 import Modal from './Modal';
-import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
-
-const MapLegendWrapper = styled(Box)({
-  color: 'darkslategray',
-  backgroundColor: 'transparent',
-  padding: 8,
-  borderRadius: 4,
-  width: '25%',
-  //zIndex: '999 !important',
-  position: 'absolute', 
-  left: 0
-});
-
-const DroughtLegend = styled(Box)({
-  color: 'darkslategray',
-  backgroundColor: '#f7941d',
-  padding: 4,
-  borderRadius: 3,
-  width: '25%',
-
-});
-
-const ConflictLegend = styled(Box)({
-  color: 'darkslategray',
-  backgroundColor: '#e7646a',
-  padding: 4,
-  borderRadius: 3,
-  width: '35%',
-
-});
-
-const FloodLegend = styled(Box)({
-  color: 'darkslategray',
-  backgroundColor: '#c974a2',
-  padding: 4,
-  borderRadius: 3,
-  width: '25%',
-
-});
-
-const OtherLegend = styled(Box)({
-  color: 'darkslategray',
-  backgroundColor: '#a07b5e',
-  padding: 4,
-  borderRadius: 3,
-  width: '25%',
-
-});
+import MapControlComponent from './MapControl'
 
 
 
@@ -253,22 +205,7 @@ return (
           data_id="currentSettlements"
       />
       <NavigationControl />
-    <MapLegendWrapper>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          p: 1,
-          m: 1,
-        }}
-      >
-        <ConflictLegend>Conflict/Insecurity</ConflictLegend>
-        <DroughtLegend>Drought</DroughtLegend>
-        <FloodLegend>Flood</FloodLegend>
-        <OtherLegend>Other</OtherLegend>
-      </Box>
-    </MapLegendWrapper>
+      <MapControlComponent handleFilter={props.handleFilterChange} />
   </ReactMapGL>
   {state.popupInfo && <Modal {...state} handleClose={handleClose} />}
   </div>

@@ -52,11 +52,13 @@ import DisplacementLocationsChart from './DisplacementLocationsChart';
       };
   
     return (
-        <Box sx={{ py: 1, pb: 2, height: '100%' }}>
-            <Box height={200}>
+        <Box sx={{ py: 1, pb: 0, height: '100%' }}>
+            <Box height={185}>
             <DisplacementLocationsChartWrapper 
                 data={population} 
+                category={props.category}
                 labels={generic.Locations.labels}
+                handleFilter={props.handleFilterChange}
                 />
             </Box>
         </Box>   

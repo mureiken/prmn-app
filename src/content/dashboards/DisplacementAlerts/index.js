@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack'
@@ -17,6 +18,9 @@ import DisplacementTriggers from './DisplacementTriggers';
 import DisplacementTrend from './DisplacementTrend';
 import IconButton from '@mui/material/IconButton';
 import TuneTwoToneIcon from '@mui/icons-material/TuneTwoTone';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined';
+import Tooltip from '@mui/material/Tooltip';
 import Map from './Map';
 import './index.css';
 import SubscriptionForm from '../../applications/EmailSubscription';
@@ -62,7 +66,8 @@ function DashboardMain() {
   })
 
   
-  const handleFilterChange = (target ,value) => {
+  const handleFilterChange = (target, value) => {
+    console.log('target', target, value)
     if (target === 'Period') {
       setFilters((prevState) => ({
         ...prevState,
@@ -194,9 +199,28 @@ function DashboardMain() {
                     <img src={InternallyDisplacedIcon} alt="" width={75} />
                     }
                     action={
+                      <Tooltip
+                        PopperProps={{
+                          disablePortal: true,
+                          // sx: {
+                          //   "& .MuiTooltip-tooltip": {
+                          //     backgroundColor: theme.palette.text.secondary,
+                          //   }
+                          // }
+                        }}
+                    
+                        open="open"
+                        disableFocusListener
+                        disableHoverListener
+                        disableTouchListener
+                        title="Use filter to query data on dashboard"
+                        placement="left"
+                        arrow
+                        >
                         <IconButton aria-label="settings"  onClick={handleDrawerOpen}>
                             <TuneTwoToneIcon />
                         </IconButton>
+                      </Tooltip>
                     }
                     title={loading ? <Skeleton variant="text" width={150} /> : <React.Fragment> <Typography variant="h1" color="secondary">{Number(data.total_arrivals).toLocaleString('en')} </Typography> </React.Fragment> }
                     subheader={ 
@@ -204,7 +228,7 @@ function DashboardMain() {
                         <Skeleton variant="text" width={300} /> 
                       : 
                         <React.Fragment> 
-                          Displaced between dates {filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} to {filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate }
+                          Reporting on arrival, IDPs displaced between {filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} - {filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate }
                           {(filters.currentRegions.length || filters.currentDistricts.length || filters.previousRegions.length || filters.previousDistricts.length) ?  <React.Fragment><br /> <strong>Locations:</strong></React.Fragment> : ''}
                           {filters.currentRegions.length ? <React.Fragment> Current regions:  [{filters.currentRegions.join(',')}] </React.Fragment>: ''}
                           {filters.currentDistricts.length ? <React.Fragment> Current districts:  [{filters.currentDistricts.join(', ')}] </React.Fragment> : ''}
@@ -224,11 +248,38 @@ function DashboardMain() {
                     <SkeletonWrapper />
                     ) : (
                     <Card>
-                        <CardHeader title={`Top ${data.top_locations_category}`} />
+                        <CardHeader 
+                          title={`Top ${data.top_locations_category}`}
+                          action={
+                            <Tooltip
+                              title={`Top 5 ${data.top_locations_category} that reported most IDPs arrivals.`}
+                              placement="left-end"
+                              arrow
+                            >
+                              <IconButton aria-label="help">
+                                <HelpOutlineOutlinedIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          }
+                        />
                         <Divider />
                         <CardContent>
-                            <DisplacementLocations data={data} />
+                            <DisplacementLocations
+                              data={data} 
+                              category={data.top_locations_category} 
+                              handleFilterChange={handleFilterChange}
+                            />
                         </CardContent>
+                        <CardActions disableSpacing>
+                          <IconButton 
+                            onClick={()=>handleFilterChange(
+                              data.top_locations_category==="Districts" ? "CurrentRegions"
+                              : data.top_locations_category==="Settlements" ? "CurrentDistricts"
+                              : "CurrentRegions", 
+                              [])} aria-label="Reset">
+                            <RestartAltOutlinedIcon />
+                          </IconButton>
+                        </CardActions>
                     </Card>
                   )}
                 </Grid>
@@ -237,11 +288,35 @@ function DashboardMain() {
                     <SkeletonWrapper />
                     ) : (
                     <Card>
-                        <CardHeader title="Top Needs" />
+                        <CardHeader 
+                          title="Top Needs" 
+                          action={
+                            <Tooltip
+                            title={`Top 5 humanitarian needs based on survey done on IDPs on arrival in their settlements.`}
+                            placement="left-end"
+                            arrow
+                          >
+                            <IconButton aria-label="help">
+                              <HelpOutlineOutlinedIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                          }
+                        />
                         <Divider />
                         <CardContent>
-                            <DisplacementNeeds data={data} />
+                            <DisplacementNeeds 
+                              data={data}
+                              handleFilterChange={handleFilterChange}
+                          />
                         </CardContent>
+                        <CardActions disableSpacing>
+                          <IconButton 
+                            onClick={()=>handleFilterChange(
+                              "Needs", 
+                              [])} aria-label="Reset">
+                            <RestartAltOutlinedIcon />
+                          </IconButton>
+                      </CardActions>
                     </Card>
                     )}
                 </Grid>
@@ -250,11 +325,35 @@ function DashboardMain() {
                     <SkeletonWrapper />
                     ) : (
                     <Card>
-                        <CardHeader title="Top Causes" />
+                        <CardHeader 
+                          title="Top Reasons" 
+                          action={
+                            <Tooltip
+                            title={`Top reasons that caused IDPs to be displaced from their previous locations.`}
+                            placement="left-end"
+                            arrow
+                          >
+                            <IconButton aria-label="help">
+                              <HelpOutlineOutlinedIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                          }
+                        />
                         <Divider />
                         <CardContent>
-                            <DisplacementTriggers data={data} />
+                            <DisplacementTriggers 
+                              data={data}
+                              handleFilterChange={handleFilterChange}
+                            />
                         </CardContent>
+                        <CardActions disableSpacing>
+                          <IconButton 
+                            onClick={()=>handleFilterChange(
+                              "Causes", 
+                              [])} aria-label="Reset">
+                            <RestartAltOutlinedIcon />
+                          </IconButton>
+                    </CardActions>
                     </Card>
                   )}
                 </Grid>
@@ -264,7 +363,12 @@ function DashboardMain() {
           <Grid item xs={12} md={12} mb={1}>
             <Stack spacing={2}>
                 <Card>
-                    <Map data={data} viewport={state.viewport} setState={setState} />           
+                    <Map 
+                      data={data} 
+                      viewport={state.viewport} 
+                      setState={setState}
+                      handleFilterChange={handleFilterChange}
+                    />           
                 </Card>
             </Stack>
         </Grid>
@@ -276,7 +380,20 @@ function DashboardMain() {
             <SkeletonWrapper />
             ) : (
             <Card>
-              <CardHeader title="Weekly Displacement Trend" />
+              <CardHeader 
+                title="Weekly Displacement Trend"
+                action={
+                  <Tooltip
+                  title="Trend on IDP displacement on weekly basis."
+                  placement="left-end"
+                  arrow
+                >
+                  <IconButton aria-label="help">
+                    <HelpOutlineOutlinedIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+                }
+              />
               <Divider />
               <CardContent>
                 <DisplacementTrend data={data}/>

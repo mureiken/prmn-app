@@ -15,9 +15,7 @@ import Typography from '@mui/material/Typography'
 
 import { styled, lighten } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
-import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
-//import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
-import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+import VolunteerActivismTwoToneIcon from '@mui/icons-material/VolunteerActivismTwoTone';
 import TransferWithinAStationTwoToneIcon from '@mui/icons-material/TransferWithinAStationTwoTone';
 import HealthAndSafetyTwoToneIcon from '@mui/icons-material/HealthAndSafetyTwoTone';
 import { SignOutButton }  from '../../../../components/SignOutButton';
@@ -124,17 +122,9 @@ function HeaderUserbox({ logout }) {
             <HealthAndSafetyTwoToneIcon fontSize="small" />
             <ListItemText primary="Partner Protection Data" />
           </ListItem>
-          <ListItem button to="//private/donors" component={NavLink}>
-            <AccountBoxTwoToneIcon fontSize="small" />
+          <ListItem button to="/private/donors" component={NavLink}>
+            <VolunteerActivismTwoToneIcon fontSize="small" />
             <ListItemText primary="Donors" />
-          </ListItem>
-          <ListItem
-            button
-            to="/private/publications"
-            component={NavLink}
-          >
-            <AccountTreeTwoToneIcon fontSize="small" />
-            <ListItemText primary="Publications" />
           </ListItem>
         </List>
         <Divider />

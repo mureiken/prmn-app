@@ -41,13 +41,13 @@ export const REGION_NAMES = [
   'Galgaduud',
   'Hiraan',
   'Bakool',
-  'Shabelle Dhexe',
+  'Middle Shabelle',
   'Banadir',
-  'Shabelle Hoose',
+  'Lower Shabelle',
   'Bay',
   'Gedo',
-  'Juba Dhexe',
-  'Juba Hoose',
+  'Middle Juba',
+  'Lower Juba',
 ];
 
 export const DISTRICT_NAMES = [

@@ -52,12 +52,13 @@ import DisplacementNeedsChart from './DisplacementNeedsChart';
       };
   
     return (
-        <Box sx={{ py: 1, pb: 2, height: '100%' }}>
-            <Box height={200}>
+        <Box sx={{ py: 1, pb: 0, height: '100%' }}>
+            <Box height={185}>
             <DisplacementNeedsChartWrapper 
-                data={population} 
-                labels={generic.Needs.labels}
-                />
+              data={population} 
+              labels={generic.Needs.labels}
+              handleFilter={props.handleFilterChange}
+            />
             </Box>
         </Box>   
     );
