@@ -4,6 +4,7 @@ import { HorizontalBar } from 'react-chartjs-2';
 import { useTheme } from '@mui/material/styles';
 
 const ViolationPerpetratorsChart = ({
+  handleFilter,
   data: dataProp,
   labels,
   ...rest
