@@ -128,46 +128,45 @@ def displacement_filters_protection(df, regions, violations, perpetrators, perio
     return df
 
 #This function geojson for daily displacement data
-#@pandas_cache
+@pandas_cache
 def get_daily_displacement_data():
     """Retrieve displacement data"""
     # read data
-    tp = pd.read_csv(
+    df = pd.read_csv(
             'data/displacement_data.csv',
-            usecols=[
-                'PreviousSettlement', 
-                'PreviousDistrict', 
-                'PreviousRegion',
-                'CurrentSettlement', 
-                'CurrentDistrict', 
-                'CurentRegion', 
-                'Reason',
-                'Category',
-                'Need1',
-                'Need2', 
-                'Arrival', 
-                'CurrentSettLon', 
-                'CurrentSettLat', 
-                'AllPeople',
-                'TotalM',
-                'TotalF',
-                '0-4M',
-                '0-4F',	
-                '5-11M',
-                '5-11F',	
-                '12-17M',	
-                '12-17F',	
-                '18_59M',	
-                '18_59F',	
-                '60+M',	
-                '60+F',
-                ],
-            encoding = 'utf8',
+            # usecols=[
+            #     'PreviousSettlement', 
+            #     'PreviousDistrict', 
+            #     'PreviousRegion',
+            #     'CurrentSettlement', 
+            #     'CurrentDistrict', 
+            #     'CurentRegion', 
+            #     'Reason',
+            #     'Category',
+            #     'Need1',
+            #     'Need2', 
+            #     'Arrival', 
+            #     'CurrentSettLon', 
+            #     'CurrentSettLat', 
+            #     'AllPeople',
+            #     'TotalM',
+            #     'TotalF',
+            #     '0-4M',
+            #     '0-4F',	
+            #     '5-11M',
+            #     '5-11F',	
+            #     '12-17M',	
+            #     '12-17F',	
+            #     '18_59M',	
+            #     '18_59F',	
+            #     '60+M',	
+            #     '60+F',
+            #     ],
             engine='c',
             sep=',',
             parse_dates=['Arrival'],
-            iterator=True, 
-            chunksize=50000,
+            # iterator=True, 
+            # chunksize=50000,
             dtype={
                 'PreviousSettlement': 'str', 
                 'PreviousDistrict': 'str',  
@@ -198,7 +197,7 @@ def get_daily_displacement_data():
         )
     
     
-    df = pd.concat(tp, ignore_index=True)
+   
     
     return df
 
