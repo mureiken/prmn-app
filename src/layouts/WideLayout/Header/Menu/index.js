@@ -118,7 +118,7 @@ function HeaderMenu() {
               }
             />
           </ListItem>
-          {/* <ListItem
+          <ListItem
             classes={{ root: 'MuiListItem-indicators' }}
             button
             component={NavLink}
@@ -128,7 +128,7 @@ function HeaderMenu() {
               primaryTypographyProps={{ noWrap: true }}
               primary="Publications"
             />
-            </ListItem> */ }
+            </ListItem>
           <ListItem
             classes={{ root: 'MuiListItem-indicators' }}
             button

@@ -13,7 +13,7 @@ import useFetch from '../../useFetch';
 import Footer from '../../components/Footer';
 function Publications() {
 
-  const url = '/api-content/documents.json?API_KEY=464c9e68-ebc3-4972-81d5-784909c404c1&order[created]=desc&country=som';
+  const url = '/api/publications';
   const geoData = false;
 
   
