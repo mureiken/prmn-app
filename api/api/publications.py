@@ -7,10 +7,13 @@ publications = Blueprint('publications', __name__)
 
 @publications.route('/publications')
 def all():
-    resp = requests.get(
-            "https://data.unhcr.org/api-content/documents.json",
-            params={"API_KEY":"464c9e68-ebc3-4972-81d5-784909c404c1", "order[created]":"desc", "country":"som"}
-       )
+    try:
+        resp = requests.get(
+                "https://data.unhcr.org/api-content/documents.json", verify=False, 
+                params={"API_KEY":Config.API_KEY_UNHCR, "order[created]":"desc", "country":"som"}
+        )
+    except requests.exceptions.SSLError:
+        pass
     publications = resp.json()
     
     return json.dumps(publications)
