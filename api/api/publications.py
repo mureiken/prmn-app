@@ -2,7 +2,7 @@ import json
 import requests
 from flask import Blueprint
 from config import Config
-# verify='/etc/ssl/certs/ca-certificates.crt', 
+# verify='/etc/ssl/cert.pem', 
 publications = Blueprint('publications', __name__)
 
 @publications.route('/publications')
@@ -10,7 +10,7 @@ def all():
     try:
         resp = requests.get(
                 "https://data.unhcr.org/api-content/documents.json", 
-                verify='/etc/ssl/cert.pem', params={"API_KEY":Config.API_KEY_UNHCR, "order[created]":"desc", "country":"som"}
+                verify='/etc/ssl/certs/ca-certificates.crt', params={"API_KEY":Config.API_KEY_UNHCR, "order[created]":"desc", "country":"som"}
         )
     except requests.exceptions.SSLError:
         pass
