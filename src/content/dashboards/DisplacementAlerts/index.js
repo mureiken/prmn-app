@@ -26,8 +26,8 @@ import './index.css';
 import SubscriptionForm from '../../applications/EmailSubscription';
 import Footer from '../../../components/Footer';
 import FilterDrawer from '../../../components/FilterDrawer';
-import useFetch from '../../../useFetch';
 import InternallyDisplacedIcon from '../../../assets/Internally-displaced.png';
+import useFetch from '../../../useFetch';
 
 function DashboardMain() {
   const date = useMemo(
@@ -193,8 +193,20 @@ function DashboardMain() {
         >
         <Grid item xs={12} sx={{ mb: 1, position: 'sticky', top: 0, zIndex: 1, opacity: 0.9 }}>
           <Card>
-            {error && <Alert severity={"error"} >{error}</Alert>}
-                <CardHeader
+            {error && 
+                <Alert severity={"error"} >
+                {
+                  error.includes("Unexpected token") ?
+                    "Error - Please try again later."
+                  :
+                    isNaN(Number(data.total_arrivals)) ?
+                      "No displacement records found for the selected period"
+                  :
+                    error
+                } 
+                </Alert>
+            }
+              <CardHeader
                   avatar={
                     <img src={InternallyDisplacedIcon} alt="" width={75} />
                     }
@@ -222,12 +234,24 @@ function DashboardMain() {
                         </IconButton>
                       </Tooltip>
                     }
-                    title={loading ? <Skeleton variant="text" width={150} /> : <React.Fragment> <Typography variant="h1" color="secondary">{Number(data.total_arrivals).toLocaleString('en')} </Typography> </React.Fragment> }
+                    title={loading ? <Skeleton variant="text" width={150} /> : 
+                      <React.Fragment> 
+                        <Typography variant="h1" color="secondary">
+                          {
+                            isNaN(Number(data.total_arrivals)) ?
+                              0
+                            :
+                            Number(data.total_arrivals).toLocaleString('en')
+                          } 
+                        </Typography> 
+                      </React.Fragment> 
+                    }
                     subheader={ 
                       loading ? 
                         <Skeleton variant="text" width={300} /> 
                       : 
                         <React.Fragment> 
+                         
                           Reporting on arrival, IDPs displaced between {filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} - {filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate }
                           {(filters.currentRegions.length || filters.currentDistricts.length || filters.previousRegions.length || filters.previousDistricts.length) ?  <React.Fragment><br /> <strong>Locations:</strong></React.Fragment> : ''}
                           {filters.currentRegions.length ? <React.Fragment> Current regions:  [{filters.currentRegions.join(',')}] </React.Fragment>: ''}
@@ -249,7 +273,7 @@ function DashboardMain() {
                     ) : (
                     <Card>
                         <CardHeader 
-                          title={`Top ${data.top_locations_category}`}
+                          title={`Top ${data.top_locations_category ? data.top_locations_category : 'Locations'}`}
                           action={
                             <Tooltip
                               title={`Top 5 ${data.top_locations_category} that reported most IDPs arrivals.`}
@@ -271,14 +295,20 @@ function DashboardMain() {
                             />
                         </CardContent>
                         <CardActions disableSpacing>
-                          <IconButton 
-                            onClick={()=>handleFilterChange(
-                              data.top_locations_category==="Districts" ? "CurrentRegions"
-                              : data.top_locations_category==="Settlements" ? "CurrentDistricts"
-                              : "CurrentRegions", 
-                              [])} aria-label="Reset">
-                            <RestartAltOutlinedIcon />
-                          </IconButton>
+                          <Tooltip
+                              title="Reset filter"
+                              placement="left-end"
+                              arrow
+                            >
+                              <IconButton 
+                                onClick={()=>handleFilterChange(
+                                  data.top_locations_category==="Districts" ? "CurrentRegions"
+                                  : data.top_locations_category==="Settlements" ? "CurrentDistricts"
+                                  : "CurrentRegions", 
+                                  [])} aria-label="Reset">
+                                    <RestartAltOutlinedIcon />
+                               </IconButton>
+                            </Tooltip>
                         </CardActions>
                     </Card>
                   )}
@@ -310,12 +340,18 @@ function DashboardMain() {
                           />
                         </CardContent>
                         <CardActions disableSpacing>
-                          <IconButton 
-                            onClick={()=>handleFilterChange(
-                              "Needs", 
-                              [])} aria-label="Reset">
-                            <RestartAltOutlinedIcon />
-                          </IconButton>
+                          <Tooltip
+                            title="Reset filter"
+                            placement="left-end"
+                            arrow
+                          >
+                            <IconButton 
+                              onClick={()=>handleFilterChange(
+                                "Needs", 
+                                [])} aria-label="Reset">
+                              <RestartAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
                       </CardActions>
                     </Card>
                     )}
@@ -347,12 +383,18 @@ function DashboardMain() {
                             />
                         </CardContent>
                         <CardActions disableSpacing>
-                          <IconButton 
-                            onClick={()=>handleFilterChange(
-                              "Causes", 
-                              [])} aria-label="Reset">
-                            <RestartAltOutlinedIcon />
-                          </IconButton>
+                          <Tooltip
+                            title="Reset filter"
+                            placement="left-end"
+                            arrow
+                          >
+                            <IconButton 
+                              onClick={()=>handleFilterChange(
+                                "Causes", 
+                                [])} aria-label="Reset">
+                              <RestartAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
                     </CardActions>
                     </Card>
                   )}

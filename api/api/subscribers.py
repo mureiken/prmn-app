@@ -50,10 +50,11 @@ def daily_subs():
      
     for subscriber in subscribers:
         email = subscriber.email
-        #regions = subscriber.region
+
         message = "Daily displacement alerts from PRMN"
         body = get_filtered_daily_displacement_alerts()
         send_email(email, message, body)
     
     return None
+    
          

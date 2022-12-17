@@ -163,7 +163,19 @@ function DashboardMain() {
         >
            <Grid item xs={12} sx={{ mb: 1, position: 'sticky', top: 0, zIndex: 1, opacity: 0.9 }}>
             <Card sx={{ mb: 1 }}>
-                {error && <Alert severity={"error"} >{error}</Alert>}
+            {error && 
+              <Alert severity={"error"} >
+              {
+                error.includes("Unexpected token") ?
+                  "Error - Please try again later."
+                :
+                  isNaN(Number(data.total_violation_cases)) ?
+                    "No protection cases found for the selected period"
+                :
+                  error
+              } 
+              </Alert>
+          }
                 <CardHeader
                 avatar={
                     <img src={ProtectionIcon} alt="Protection Dashboard Icon" width={50}/>
@@ -187,7 +199,18 @@ function DashboardMain() {
                         </IconButton>
                       </Tooltip>
                     }
-                    title={loading ? <Skeleton variant="text" width={100} /> : <><Typography variant="h1"  color="secondary">{Number(data.total_violation_cases).toLocaleString('en')} </Typography></>}
+                    title={loading ? <Skeleton variant="text" width={100} /> : 
+                      <>
+                        <Typography variant="h1"  color="secondary">
+                        {
+                          isNaN(Number(data.total_violation_cases)) ?
+                            0
+                          :
+                          Number(data.total_violation_cases).toLocaleString('en')
+                        } 
+                        </Typography>
+                      </>
+                    }
                     subheader={ 
                       loading ? 
                         <Skeleton variant="text" width={300} /> 
@@ -232,12 +255,18 @@ function DashboardMain() {
                             />
                         </CardContent>
                         <CardActions disableSpacing>
-                          <IconButton 
-                            onClick={()=>handleFilterChange(
-                              "Violations", 
-                              [])} aria-label="Reset">
-                            <RestartAltOutlinedIcon />
-                          </IconButton>
+                          <Tooltip
+                              title="Reset filter"
+                              placement="left-end"
+                              arrow
+                          >
+                            <IconButton 
+                              onClick={()=>handleFilterChange(
+                                "Violations", 
+                                [])} aria-label="Reset">
+                              <RestartAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
                         </CardActions>
                     </Card>
                   )}
@@ -298,12 +327,18 @@ function DashboardMain() {
                             />
                         </CardContent>
                         <CardActions disableSpacing>
-                          <IconButton 
-                            onClick={()=>handleFilterChange(
-                              "Perpetrators", 
-                              [])} aria-label="Reset">
-                            <RestartAltOutlinedIcon />
-                          </IconButton>
+                          <Tooltip
+                            title="Reset filter"
+                            placement="left-end"
+                            arrow
+                          >
+                            <IconButton 
+                              onClick={()=>handleFilterChange(
+                                "Perpetrators", 
+                                [])} aria-label="Reset">
+                              <RestartAltOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
                         </CardActions>
                     </Card>
                   )}
@@ -364,6 +399,7 @@ function DashboardMain() {
        open={openFilterDrawer}
        setOpenFilterDrawer={setOpenFilterDrawer}
        handleClick={handleDrawerClose}
+      
        handleFilterChange={handleFilterChange}
        filters={filters}
       >

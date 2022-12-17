@@ -88,11 +88,17 @@ const MapControlComponent = ({ handleFilter }) => {
           </Stack>
         </CardContent>
         <CardActions disableSpacing sx={{  mt: 0, pt: 0 }}>
+          <Tooltip
+            title="Reset filter"
+            placement="left-end"
+            arrow
+          >
             <IconButton 
                 onClick={()=>handleFilter("Causes", [])} 
                 aria-label="Reset">
                 <RestartAltOutlinedIcon />
             </IconButton>
+          </Tooltip>
         </CardActions>
       </MapLegendWrapper>
     )

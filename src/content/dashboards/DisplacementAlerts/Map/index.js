@@ -9,7 +9,6 @@ import Modal from './Modal';
 import MapControlComponent from './MapControl'
 
 
-
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN; // Set your mapbox token here
 
 function Map(props) {
@@ -68,8 +67,7 @@ function Map(props) {
     } = event;
     //const hoveredFeature = features && features[0];
     const hoveredFeature = features && features.find((f) => f.layer.id === LAYER_ID);
-    console.log("id: ", hoveredFeature.layer.id);
-
+  
     // prettier-ignore
     //setHoverInfo(hoveredFeature && {feature: hoveredFeature, x, y});
     setState((prevState) => ({ ...prevState, popupInfo: hoveredFeature, isOpen: true }));

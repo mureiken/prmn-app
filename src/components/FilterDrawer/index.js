@@ -88,6 +88,7 @@ export default function FilterDrawer({ open, handleClick, handleFilterChange, fi
   return (  
     <Drawer
         anchor="right"
+        ModalProps={{ onBackdropClick: handleClick }}
         open={open}
         PaperProps={{
             sx: {

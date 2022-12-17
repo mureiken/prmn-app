@@ -253,7 +253,7 @@ class Donor(db.Model):
         id = sqla.Column(sqla.Integer, primary_key=True)
         donor_name = sqla.Column(sqla.String(120), index=True,
                         nullable=False)
-        logo_image = sqla.Column(sqla.String(), index=True,
+        logo_image = sqla.Column(sqla.String, index=True,
                         nullable=False)    
         
         def __repr__(self):  # pragma: no cover

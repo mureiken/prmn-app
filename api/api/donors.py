@@ -28,7 +28,7 @@ def new(args):
 @response(donors_schema)
 def all():
     """Retrieve all donors"""
-    all_donors = db.session.query(Donor).all()
+    all_donors = db.session.query(Donor).order_by('donor_name').all()
     return all_donors
 
 @donors.route('/donors/<int:id>', methods=['DELETE'])
