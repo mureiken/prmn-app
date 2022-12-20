@@ -34,21 +34,21 @@ function DashboardMain() {
   );
   const daysAgo = new Date(date.getTime());  
   const dateStr = useCallback(
-    (myDate = date, format='en-US') => {
-      return myDate.toLocaleDateString(format).replace(/\//g, '-');
+    (myDate = date) => {
+      return myDate.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}).replace(/\//g, '-');
     },
     [date],
   );
   
-  const startDate = (period) => new Date(daysAgo.setDate(date.getDate() - period)).toLocaleDateString()
+  const startDate = (period) => new Date(daysAgo.setDate(date.getDate() - period+1)).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'})
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   //const [isLoading, setIsLoading] = useState(false);  
   const [query, setQuery] = useState('');  
   const [state, setState] = useState({
     data: {},
     todaysDate: new Date(),
-    startDate: new Date(daysAgo.setDate(date.getDate() - 7)).toLocaleDateString(),
-    endDate: new Date().toLocaleDateString(),
+    startDate: new Date(daysAgo.setDate(date.getDate() - 7)).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}),
+    endDate: new Date().toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}),
   });
 
   const [filters, setFilters] = useState({
@@ -216,7 +216,7 @@ function DashboardMain() {
                         <Skeleton variant="text" width={300} /> 
                       : 
                         <React.Fragment> 
-                          Violation cases between dates  {state.startDate} - {state.endDate}
+                          Violation cases between dates {filters.filterByDates ? dateStr(filters.start, 'en-GB') : state.startDate} - {filters.filterByDates ? dateStr(filters.end, 'en-GB') : state.endDate }
           
                           {filters.regions.length ? <React.Fragment> Violation regions:  [{filters.regions.join(',')}] </React.Fragment>: ''}
                           {filters.violations.length ? <React.Fragment><br /><strong>Violation Categories</strong>: [{filters.violations.join(',')}] </React.Fragment>: ''}

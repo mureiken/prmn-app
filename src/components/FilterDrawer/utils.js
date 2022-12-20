@@ -9,7 +9,7 @@ const days_passed = (dt) => {
 
     let periodObj = {}
     const dt = new Date();
-    const num = days_passed(dt)-1;
+    const num = days_passed(dt);
 
     if (num <= 7) { 
       periodObj['7D'] = '7 Days'

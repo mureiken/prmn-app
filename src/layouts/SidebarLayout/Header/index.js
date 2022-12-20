@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 import {
   Box,
@@ -15,9 +15,14 @@ import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import { SidebarContext } from '../../../contexts/SidebarContext';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 import Hidden from '@mui/material/Hidden';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import { NavLink } from 'react-router-dom';
 import HeaderButtons from './Buttons';
 import HeaderUserbox from './Userbox';
 import HeaderMenu from './Menu';
+import Logo from '../../../components/Logo';
 
 const HeaderWrapper = styled(Box)(
   ({ theme }) => `
@@ -39,8 +44,19 @@ const HeaderWrapper = styled(Box)(
 );
 
 function Header() {
-  const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
+  const { mobileMenuToggle } = useContext(SidebarContext);
   const theme = useTheme();
+
+  const [anchorElNav, setAnchorElNav] = useState(null);
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
 
   return (
     <HeaderWrapper
@@ -63,6 +79,22 @@ function Header() {
       }}
     >
     <Box display="flex" justifyContent="space-between">
+      <Box sx={{ display: {xs: 'block', md: 'none'} }}>
+      <Box display="flex" flexDirection="row-reverse">
+      <Box>
+         <Logo />
+      </Box>
+      <Box>
+       <Hidden lgUp>
+         <Tooltip arrow title="Toggle Menu">
+           <IconButton sx={{ mt: 1 }} color="primary" onClick={handleOpenNavMenu}>
+             {!mobileMenuToggle ? <MenuTwoToneIcon /> : <CloseTwoToneIcon />}
+           </IconButton>
+         </Tooltip>
+       </Hidden>
+      </Box>
+   </Box>
+      </Box>
       <Hidden mdDown>
         <HeaderMenu />
       </Hidden>
@@ -77,15 +109,33 @@ function Header() {
             display: { lg: 'none', xs: 'inline-block' }
           }}
         >
-          <Tooltip arrow title="Toggle Menu">
-            <IconButton color="primary" onClick={toggleSidebar}>
-              {!sidebarToggle ? (
-                <MenuTwoToneIcon fontSize="small" />
-              ) : (
-                <CloseTwoToneIcon fontSize="small" />
-              )}
-            </IconButton>
-          </Tooltip>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorElNav}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left', }}
+            keepMounted
+            transformOrigin={{ vertical: 'top', horizontal: 'left', }}
+            open={Boolean(anchorElNav)}
+            onClose={handleCloseNavMenu}
+            sx={{ display: { xs: 'block', md: 'none' },}}
+           >
+          
+            <MenuItem component={NavLink} to="/dashboard/displacement-report">
+                <Typography textAlign="center">Displacement</Typography>
+            </MenuItem>
+            <MenuItem component={NavLink} to="/dashboard/protection-report">
+                <Typography textAlign="center">Protection</Typography>
+            </MenuItem>
+            <MenuItem component={NavLink} to="/publications">
+                <Typography textAlign="center">Publications</Typography>
+            </MenuItem>
+            <MenuItem component={NavLink} to="/about">
+                <Typography textAlign="center">About</Typography>
+            </MenuItem>
+            <MenuItem component={NavLink} to="/contcat">
+                <Typography textAlign="center">Contact</Typography>
+            </MenuItem>
+          </Menu>
         </Box>
       </Box>
     </HeaderWrapper>

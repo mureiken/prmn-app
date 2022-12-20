@@ -76,7 +76,7 @@ function HeaderMenu() {
 
   return (
     <>
-      <ListWrapper sx={{ ml: 5}}>
+      <ListWrapper sx={{ ml: 0}}>
         <List disablePadding component={Box} display="flex">
           <ListItem
             classes={{ root: 'MuiListItem-indicators' }}

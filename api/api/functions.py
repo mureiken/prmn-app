@@ -27,7 +27,7 @@ def df_filters_displacement(df, cregions, cdistricts, pregions, pdistricts, need
                      & (df.Arrival < end)]
     else:
         #Filter by period
-        df = df[df.Arrival > pd.Timestamp.today() - pd.Timedelta(period)]
+        df = df[df.Arrival >= pd.Timestamp.today() - pd.Timedelta(period)]
     
     #Filter by current regions
     if cregions != 'All':
@@ -108,7 +108,7 @@ def displacement_filters_protection(df, regions, violations, perpetrators, perio
     df['DistrictX'] = df['DistrictX'].astype(float)
     df['DistrictY'] = df['DistrictY'].astype(float)
      
-    #region filter
+    
     if regions != 'All':
         regions_filter_list = regions.split(",")
         df = df.loc[df['ViolationRegion'].isin(regions_filter_list)]
@@ -436,11 +436,6 @@ def get_filtered_daily_displacement_alerts():
     #Filter by period
     df = df[df['Arrival'] > pd.Timestamp.today() - pd.Timedelta('1D')]
     
-    #Filter by regions
-    # if regions != 'All':
-    #     regions_filter_list = regions.split(",")
-    #     df = df[df['CurentRegion'].isin(regions_filter_list)]
-        
     df_grouped =  df.groupby(
         ['CurrentSettlement', 'CurrentDistrict', 'CurentRegion', 'Reason', 'Arrival'], 
         dropna=True)['AllPeople'].sum().to_frame().reset_index()

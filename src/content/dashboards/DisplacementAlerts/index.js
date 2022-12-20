@@ -35,20 +35,20 @@ function DashboardMain() {
   );
   const daysAgo = new Date(date.getTime());  
   const dateStr = useCallback(
-    (myDate = date, format='en-US') => {
-      return myDate.toLocaleDateString(format).replace(/\//g, '-');
+    (myDate = date) => {
+      return myDate.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}).replace(/\//g, '-');
     },
     [date],
   );
   
-  const startDate = (period) => new Date(daysAgo.setDate(date.getDate() - period)).toLocaleDateString()
+  const startDate = (period) => new Date(daysAgo.setDate(date.getDate() - period+1)).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'})
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   // const [isLoading, setIsLoading] = useState(false); 
   const [query, setQuery] = useState('');    
   const [state, setState] = useState({
     todaysDate: new Date(),
     startDate: startDate(7),
-    endDate: new Date().toLocaleDateString(),
+    endDate: new Date().toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}),
   });
 
  
@@ -219,8 +219,13 @@ function DashboardMain() {
                           //     backgroundColor: theme.palette.text.secondary,
                           //   }
                           // }
+                          sx: {
+                            "& .MuiTooltip-tooltip": {
+                            display: {xs: 'none', md: 'block'}
+                           }
+                          }
                         }}
-                    
+                      
                         open="open"
                         disableFocusListener
                         disableHoverListener
