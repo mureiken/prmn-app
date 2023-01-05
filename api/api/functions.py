@@ -4,6 +4,7 @@ from xml.dom import WRONG_DOCUMENT_ERR
 import pandas as pd
 from datetime import date, timedelta
 from urllib.parse import quote
+from config import Config
 
 custom_date_parser = lambda x: datetime.strptime(x, "%d-%-%Y %H:%M:%S")
 
@@ -132,6 +133,7 @@ def displacement_filters_protection(df, regions, violations, perpetrators, perio
 def get_daily_displacement_data():
     """Retrieve displacement data"""
     # read data
+    # df = pd.read_sql_table("approved_displacement",  Config.MB_PRMN_DATABASE_URL)
     df = pd.read_csv(
             'data/displacement_data.csv',
             # usecols=[
@@ -197,7 +199,11 @@ def get_daily_displacement_data():
         )
     
     
-   
+    # columns = ['CurentRegion', 'CurrentDistrict', 'CurrentSettlement',
+    #    'PreviousRegion', 'PreviousDistrict', 'PreviousSettlement', 'Reason',
+    #    'Category', 'Need1', 'Need2']
+    
+    # df = df.loc[:,columns] = df[columns].applymap(str)
     
     return df
 
