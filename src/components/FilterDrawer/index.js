@@ -13,7 +13,7 @@ import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 import MultiSelect from './MultiSelect';
 import PeriodSelectBtn from './PeriodSelectBtn';
 import {CAUSES, NEEDS, REGION_NAMES, DISTRICT_NAMES, VIOLATION_CATEGORIES, PERPETRATOR_GROUPS} from '../../constants';
-import {periods} from './utils';
+import {periods, days_passed} from './utils';
 import DatePicker from '../DatePicker';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -60,7 +60,7 @@ function TabPanel(props) {
   }
 
 export default function FilterDrawer({ open, handleClick, handleFilterChange, filters, type }) {
-
+  
   const [periodObj, setPeriodObj] = useState({})
   const [value, setValue] = React.useState(0);
   
@@ -108,40 +108,64 @@ export default function FilterDrawer({ open, handleClick, handleFilterChange, fi
         </DrawerHeader>
        
         <Box sx={{ p: 1 }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            textColor="secondary"
-            indicatorColor="secondary"
-            aria-label="secondary tabs example"
-          >
-            <Tab label="Period(Days Ago)" {...a11yProps(0)} />
-            <Tab label="Dates" {...a11yProps(1)} />
-          </Tabs>
-          <Divider />
-          <TabPanel value={value} index={0}>
-            <Box>
-              {periodSelectBtns()}
-            </Box>
-          </TabPanel>
-          <TabPanel value={value} index={1}>
+        {days_passed > 30 ?
+          <React.Fragment>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              textColor="secondary"
+              indicatorColor="secondary"
+              aria-label="secondary tabs example"
+            > 
+                <Tab label="Period(Days Ago)" {...a11yProps(0)} />
+                <Tab label="Dates" {...a11yProps(1)} />
+              
+            </Tabs>
+            <Divider />
+            
+            <TabPanel value={value} index={0}>
+              <Box>
+                {periodSelectBtns()}
+              </Box>
+            </TabPanel>
+          
+            <TabPanel value={value} index={1}>
+              <Grid spacing={2} sx={{ display: 'flex', flexDirection: 'row' }}>
+                <Grid item xs={12} md={6} mr={1} mt={2}>
+                  <DatePicker 
+                    handleFilter={handleFilterChange}
+                    selectedVals={filters.start}
+                    label="Start Date" 
+                    name="start"  />
+                </Grid>
+                <Grid item xs={12} md={6} mt={2}>
+                  <DatePicker 
+                    handleFilter={handleFilterChange} 
+                    selectedVals={filters.end}
+                    label="End Date" 
+                    name="end"  />
+                </Grid>
+              </Grid>
+            </TabPanel>
+            </React.Fragment>
+            :
             <Grid spacing={2} sx={{ display: 'flex', flexDirection: 'row' }}>
-              <Grid item xs={12} md={6} mr={1} mt={2}>
-                <DatePicker 
-                  handleFilter={handleFilterChange}
-                  selectedVals={filters.start}
-                  label="Start Date" 
-                  name="start"  />
+                <Grid item xs={12} md={6} mr={1} mt={2}>
+                  <DatePicker 
+                    handleFilter={handleFilterChange}
+                    selectedVals={filters.start}
+                    label="Start Date" 
+                    name="start"  />
+                </Grid>
+                <Grid item xs={12} md={6} mt={2}>
+                  <DatePicker 
+                    handleFilter={handleFilterChange} 
+                    selectedVals={filters.end}
+                    label="End Date" 
+                    name="end"  />
+                </Grid>
               </Grid>
-              <Grid item xs={12} md={6} mt={2}>
-                <DatePicker 
-                  handleFilter={handleFilterChange} 
-                  selectedVals={filters.end}
-                  label="End Date" 
-                  name="end"  />
-              </Grid>
-            </Grid>
-          </TabPanel>
+          }
           <Divider sx={{ mt: 1 }} />
           { type === 'displacement' ?
           <>

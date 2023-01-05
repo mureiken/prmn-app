@@ -85,7 +85,6 @@ function Header() {
               </Tooltip>
             </Hidden>
            </Box>
-          
         </Box>
         <PRMNLogoText sx={{ textAlign: 'right', mt: 2}}>
           <Hidden mdDown>

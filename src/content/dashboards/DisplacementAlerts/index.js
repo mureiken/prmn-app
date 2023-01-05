@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -30,39 +30,37 @@ import InternallyDisplacedIcon from '../../../assets/Internally-displaced.png';
 import useFetch from '../../../useFetch';
 
 function DashboardMain() {
-  const date = useMemo(
-    () => { return new Date(); }, [],
-  );
-  const daysAgo = new Date(date.getTime());  
-  const dateStr = useCallback(
-    (myDate = date) => {
-      return myDate.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}).replace(/\//g, '-');
-    },
-    [date],
-  );
-  
-  const startDate = (period) => new Date(daysAgo.setDate(date.getDate() - period+1)).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'})
+  const startDate = (period) => new Date(new Date(new Date().getTime()).setDate(new Date().getDate() - period + 1)).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   // const [isLoading, setIsLoading] = useState(false); 
   const [query, setQuery] = useState('');    
   const [state, setState] = useState({
-    todaysDate: new Date(),
     startDate: startDate(7),
     endDate: new Date().toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}),
   });
 
- 
+  const dateStr = useCallback(
+    (myDate = state.date) => {
+      return myDate.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}).replace(/\//g, '-');
+    },
+    [state.date],
+  );
+
   const [filters, setFilters] = useState({
     filterByDates: false,
-    period: '30',
+    period: '7',
     causes: [],
     needs: [],
     currentRegions: [],
     currentDistricts: [],
     previousRegions: [],
     previousDistricts: [],
-    start: date,
-    end: date,
+    start: new Date(),
+    end: new Date(),
   })
 
   
