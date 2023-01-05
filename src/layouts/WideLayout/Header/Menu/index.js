@@ -118,7 +118,7 @@ function HeaderMenu() {
               }
             />
           </ListItem>
-          <ListItem
+         {/* <ListItem
             classes={{ root: 'MuiListItem-indicators' }}
             button
             component={NavLink}
@@ -129,6 +129,7 @@ function HeaderMenu() {
               primary="Publications"
             />
             </ListItem>
+          */} 
           <ListItem
             classes={{ root: 'MuiListItem-indicators' }}
             button
